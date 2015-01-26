@@ -1,1 +1,5 @@
 *.class
+<<<<<<< HEAD
+=======
+.DS_Store
+>>>>>>> cc614aea0c1ef46ffc63cccac2819c8cf7e49d76

@@ -1,4 +1,4 @@
-class Planet {
+public class Planet {
 
 	public double x;
 	public double y;
@@ -9,6 +9,9 @@ class Planet {
 
 	public double xNetForce;
 	public double yNetForce;
+
+	public double xAccel;
+	public double yAccel;
 
 	public static void main(String[] args) {
 		Planet p1 = new Planet(1.0, 1.0, 3.0, 4.0, 5.0, "images/jupiter.gif");
@@ -54,7 +57,16 @@ class Planet {
 	}
 
 	public void draw() {
-		StdDraw.picture(this.x, this.y, this.img);
+		StdDraw.picture(this.x, this.y, "images/" + this.img);
+	}
+
+	public void update(double dt) {
+		this.xAccel = this.xNetForce / this.mass;
+		this.yAccel = this.yNetForce / this.mass;
+		this.xVelocity = this.xVelocity + dt * this.xAccel;
+		this.yVelocity = this.yVelocity + dt * this.yAccel;
+		this.x = this.x + dt * this.xVelocity;
+		this.y = this.y + dt * this.yVelocity;
 	}
 }
 
