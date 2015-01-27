@@ -36,7 +36,12 @@ public class NBody {
 			}
 			StdDraw.show(10);
 			time += dt;
-			System.out.println(time + " " + T );
+		}
+		StdOut.printf("%d\n", numPlanets);
+		StdOut.printf("%.2e\n", universeRadius);
+		for (Planet planet : planets) {
+		    StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+		                   planet.x, planet.y, planet.xVelocity, planet.yVelocity, planet.mass, planet.img);
 		}
 	}
 
