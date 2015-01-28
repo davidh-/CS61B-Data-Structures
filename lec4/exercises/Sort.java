@@ -13,27 +13,16 @@ public class Sort {
         sort(a, 0);
     }
 
+
     /** Sorts A starting from position START. */
     private static void sort(String[] a, int start) {
         if (start == a.length)
             return;
-        // find the smallest item
-        int mindex = indexOfSmallest(a, start);
+        int mindex = indexOfSmallest(s, start);
 
-        // move it to the front (by swapping)
         swap(a, start, mindex);
 
-        // selection sort the rest
         sort(a, start + 1);
-    }
-
-    /** Swaps items in position ix and iy such that the
-      * actual data in the array is changed. */
-    public static void swap(String[] a, int ix, int iy) {
-        /* YOUR CODE HERE */
-        String temp = a[ix];
-        a[ix] = a[iy];
-        a[iy] = temp;
     }
 
     /** Find the smallest item in A starting from START. */
@@ -42,14 +31,25 @@ public class Sort {
         int mindex = start;
         int i = start;
         while (i < a.length) {
-            int cmp = a[i].compareTo(a[mindex]);
-            if (cmp < 0) {
+            int compareNumber = a[i].comapreTo(a[mindex]);
+            if (a[i] < a[mindex]) {
                 mindex = i;
             }
-            i += 1;
+            i+=1;
         }
-        return mindex;
     }
+
+
+    /** Swaps items in position ix and iy such that the
+      * actual data in the array is changed. */
+    public static void swap(String[] a, int ix, int iy) {
+        /* YOUR CODE HERE */
+        String temp = a[ix];
+        a[ix] = a[iy];
+        
+    }
+
+
 
     /** Prints A. */
     public static void print(String[] a) {
@@ -60,6 +60,6 @@ public class Sort {
      */
 
     public static void main(String[] args) {
-        
+        testIndexOfSmallest();
     }
 } 
