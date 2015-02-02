@@ -64,14 +64,9 @@ public class CalculatorTest {
         assertEquals(7006652, zero);
     }
 
-
-
-
     /* Run the unit tests in this file. */
     public static void main(String... args) {
         jh61b.junit.textui.runClasses(CalculatorTest.class);
     }       
-
-
 
 }
