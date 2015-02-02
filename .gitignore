@@ -1,5 +1,18 @@
 *.class
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .DS_Store
 >>>>>>> cc614aea0c1ef46ffc63cccac2819c8cf7e49d76
+=======
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+>>>>>>> 97ebda5e930db6b1fe3a92f8cf7e43430c0550d0
