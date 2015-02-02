@@ -15,15 +15,63 @@ public class CalculatorTest {
      **/
     @Before
     public void setUp() {
-        tester = new StaffCalculator(); // Comment me out to test your Calculator
-        // tester = new Calculator();   // Un-comment me to test your Calculator
+        // tester = new StaffCalculator(); // Comment me out to test your Calculator
+        tester = new Calculator();   // Un-comment me to test your Calculator
     }
 
     // TASK 1: WRITE JUNIT TESTS
     // YOUR CODE HERE
+    @Test
+    public void testAdditionWithTwoPositives() {
+        int add = tester.add(3, 4);
+        assertEquals(7, add);
+    }
+    @Test
+    public void testAdditionWithTwoNegatives() {
+        int negative = tester.add(-2, -5);
+        assertEquals(-7, negative);
+    }
+    @Test
+    public void testAdditionWithOneNegative() {
+        int positive = tester.add(-3, 5);
+        assertEquals(2, positive);
+    }
+
+
+    @Test
+    public void testMultiplicationWithTwoPositives() {
+        int positive = tester.multiply(16, 2);
+        assertEquals(32, positive);
+    }
+    @Test
+    public void testMultiplicationWithTwoNegatives() {
+        int positive = tester.multiply(-8, -10);
+        assertEquals(80, positive);
+    }
+    @Test
+    public void testMultiplicationWithOneNegative() {
+        int negative = tester.multiply(-3, 5);
+        assertEquals(-15, negative);
+    }
+    @Test
+    public void testMultiplicationWithOneZero() {
+        int zero = tester.multiply(-3, 0);
+        assertEquals(0, zero);
+    }
+    @Test
+    public void testMultiplicationWithBigNumbers() {
+        int zero = tester.multiply(1234, 5678);
+        assertEquals(7006652, zero);
+    }
+
+
+
 
     /* Run the unit tests in this file. */
     public static void main(String... args) {
         jh61b.junit.textui.runClasses(CalculatorTest.class);
     }       
+
+
+
 }

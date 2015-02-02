@@ -2,7 +2,7 @@ import list.EquationList;
 
 public class Calculator {
     // YOU MAY WISH TO ADD SOME FIELDS
-
+    EquationList list;
     /**
      * TASK 2: ADDING WITH BIT OPERATIONS
      * add() is a method which computes the sum of two integers x and y using 
@@ -12,8 +12,18 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
+        int carry = x & y;
+        int base = x ^ y;
+        int newCarry = 0;
+        int newBase = 0;
+        while (carry != 0) {
+            carry = carry << 1;
+            newCarry = carry & base;
+            newBase = carry ^ base;
+            carry = newCarry;
+            base = newBase;
+        }
+        return base;
     }
 
     /**
@@ -25,8 +35,18 @@ public class Calculator {
      * @return the product of x and y
      **/
     public int multiply(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
+        int sum = 0;
+        int shift = 0;
+        while (y != 0) {
+            if ((y & 1) == 1) {
+                sum = add(sum, add(x << shift, 0));
+                shift = add(shift, 1);
+            }
+            else
+                shift = add(shift, 1); 
+            y = y >>> 1;
+        }
+        return sum;
     }
 
     /**
@@ -39,7 +59,13 @@ public class Calculator {
      * @param result is an integer corresponding to the result of the equation
      **/
     public void saveEquation(String equation, int result) {
-        // YOUR CODE HERE
+        if (list != null) {
+            list.next = new EquationList(list.equation, list.result, list.next);
+            list.equation = equation;
+            list.result = result;
+        }
+        else
+            list = new EquationList(equation, result, null);
     }
 
     /**
@@ -50,7 +76,7 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printAllHistory() {
-        // YOUR CODE HERE
+        printHistory(2147483647);
     }
 
     /**
@@ -61,7 +87,20 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printHistory(int n) {
-        // YOUR CODE HERE
+        if (list == null)
+            return;
+        EquationList temp = list;
+        while (n > 0) {
+            if (temp.next == null) {
+                System.out.println(temp.equation + " = " + temp.result);
+                n = 0;
+            }
+            else {
+                System.out.println(temp.equation + " = " + temp.result);
+                temp = temp.next;
+                n -= 1;
+            }
+        }
     }    
 
     /**
@@ -69,7 +108,7 @@ public class Calculator {
      * undoEquation() removes the most recent equation we saved to our history.
     **/
     public void undoEquation() {
-        // YOUR CODE HERE
+        list = list.next;
     }
 
     /**
@@ -77,7 +116,7 @@ public class Calculator {
      * clearHistory() removes all entries in our history.
      **/
     public void clearHistory() {
-        // YOUR CODE HERE
+        list = null;
     }
 
     /**
@@ -87,8 +126,13 @@ public class Calculator {
      * @return the sum of all of the results in history
      **/
     public int cumulativeSum() {
-        // YOUR CODE HERE
-        return -1;
+        EquationList pointer = list;
+        int total = 0;
+        while (pointer != null) {
+            total += pointer.result;
+            pointer = pointer.next;
+        }
+        return total;
     }
 
     /**
@@ -98,7 +142,13 @@ public class Calculator {
      * @return the product of all of the results in history
      **/
     public int cumulativeProduct() {
-        // YOUR CODE HERE
-        return -1;
+        EquationList pointer = list;
+        int total = 1;
+        while (pointer != null) {
+            total *= pointer.result;
+            pointer = pointer.next;
+        }
+        return total;
     }
+
 }
