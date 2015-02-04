@@ -39,7 +39,7 @@ public class Calculator {
         int shift = 0;
         while (y != 0) {
             if ((y & 1) == 1) {
-                sum = add(sum, add(x << shift, 0));
+                sum = add(sum, x << shift);
                 shift = add(shift, 1);
             }
             else
