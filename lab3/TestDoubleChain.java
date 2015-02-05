@@ -20,15 +20,15 @@ public class TestDoubleChain {
     @Test
     public void testBasicOperations() {
         DoubleChain d = new DoubleChain(5);
-        assertEquals(d.getFront().val, 5, 1e-11);
-        assertEquals(d.getBack().val, 5, 1e-11);
+        assertEquals(5, d.getFront().val, 1e-11);
+        assertEquals(5, d.getBack().val, 1e-11);
 
         d.insertFront(2);
         d.insertFront(1);
         d.insertBack(7);
         d.insertBack(8);
-        assertEquals(d.getFront().val, 1, 1e-11);
-        assertEquals(d.getBack().val, 8, 1e-11);
+        assertEquals(1, d.getFront().val, 1e-11);
+        assertEquals(8, d.getBack().val, 1e-11);
     }
 
     public static void main(String[] args) {
