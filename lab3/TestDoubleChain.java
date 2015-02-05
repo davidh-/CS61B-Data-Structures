@@ -30,6 +30,33 @@ public class TestDoubleChain {
         assertEquals(1, d.getFront().val, 1e-11);
         assertEquals(8, d.getBack().val, 1e-11);
     }
+    @Test
+    public void testDeleteBack() {
+        DoubleChain d = new DoubleChain(5);
+        DoubleChain pointer = d;
+        d.insertFront(2);
+        d.insertFront(1);
+        d.insertBack(7);
+        d.insertBack(8);
+        assertEquals(8, d.deleteBack().val, 1e-11);
+        assertEquals(7, d.deleteBack().val, 1e-11);
+        assertEquals(5, d.deleteBack().val, 1e-11);
+        assertEquals(2, d.deleteBack().val, 1e-11);
+        d.deleteBack();
+        assertEquals(null, d.deleteBack());
+    }
+    @Test
+    public void testToString() {
+        DoubleChain d = new DoubleChain(5);
+        d.insertFront(2);
+        d.insertFront(1);
+        d.insertBack(7);
+        d.insertBack(8);
+        assertEquals("<[1.0, 2.0, 5.0, 7.0, 8.0]>", d.toString());
+    }
+
+
+
 
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(TestDoubleChain.class);
