@@ -5,7 +5,12 @@ public class DoubleChain {
 	private DNode head;
 	
 	public DoubleChain(double val) {
+<<<<<<< HEAD
 		head = new DNode(val); 
+=======
+		/* your code here. */
+		head = null; 
+>>>>>>> 381c3a368c326f86003c2b20977dfba70cc132f0
 	}
 
 	public DNode getFront() {
