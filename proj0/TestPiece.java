@@ -10,46 +10,54 @@ public class TestPiece {
 
 	//dont test move() method
     
+
     @Test
-    public void testPieceConstructor() {
-    	Board testBoard = new Board(false);
+    public void testIsFire() {
+		Board testBoard = new Board(false);
     	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
     	assertEquals(false, testPiece.isFire());
     }
 
     @Test
-    public void testIsFire() {
-
-    }
-
-    @Test
     public void testSide() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(1, testPiece.side());
     }
 
     @Test
     public void testIsKing() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(false, testPiece.isKing());
     }
 
     @Test
     public void testIsBomb() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(false, testPiece.isBomb());
     }
 
     @Test
     public void testIsShield() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(false, testPiece.isShield());
     }
 
     @Test
     public void testHasCaptured() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(false, testPiece.hasCaptured());
     }
 
     @Test
     public void testDoneCapturing() {
-
+		Board testBoard = new Board(false);
+    	Piece testPiece = new Piece(false, testBoard, 0, 0, "pawn");
+    	assertEquals(false, testPiece.hasCaptured());
     }
 
 
