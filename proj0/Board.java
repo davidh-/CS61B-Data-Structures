@@ -97,6 +97,7 @@ public class Board {
 			return this.gamePieces[x][y];
 	}
 
+
 	public boolean canSelect(int x, int y) {
 		return false;
 	}
