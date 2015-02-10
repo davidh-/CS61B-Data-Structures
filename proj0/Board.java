@@ -119,6 +119,7 @@ public class Board {
 
 	}
 
+
 	public Piece remove(int x, int y) {
 		return null;
 	}
