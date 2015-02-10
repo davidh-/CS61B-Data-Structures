@@ -7,10 +7,12 @@ public class Board {
 
     private boolean emptyBoard;
     private Piece gamePieces[][];
+    private int currentPlayer;
 
 	public Board(boolean shouldBeEmpty) {
 		this.emptyBoard = shouldBeEmpty;
 		this.gamePieces = new Piece[8][8];
+		this.currentPlayer = 0;
 		if(!this.emptyBoard)
 			this.createPieces();
 	}
@@ -96,7 +98,7 @@ public class Board {
 	}
 
 	public boolean canSelect(int x, int y) {
-		return false; //might want to use validMove...... >>>>>
+		return false;
 	}
 
 	// private boolean validMove(int xi, int yi, int xf, int yf) {
@@ -109,19 +111,46 @@ public class Board {
 	}
 
 	public void place(Piece p, int x, int y) {
-		if (this.outOfBounds(x, y) || p == null)
-			;
-		else if (this.gamePieces[x][y] != null) {
-			Piece piecePointer = p;
+		if (!this.outOfBounds(x, y) || p != null) {
+			int[] pLocation = this.getLocation(p);
+			if (pLocation != null) {
+				Piece piecePointer = this.gamePieces[x][y];
+				this.remove(pLocation[0], pLocation[1]);
+			}
+			if (this.gamePieces[x][y] != null) {
+				Piece removed = this.remove(x, y);
+				this.gamePieces[x][y] = p;
+			}
+			
 		}
-		else
-			;
 
 	}
-
+	private int[] getLocation(Piece p) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+            	if (p == this.gamePieces[i][j]);
+            		int[] location = {i, j};
+            		return location;
+            }
+        }
+        return null;
+	} 
 
 	public Piece remove(int x, int y) {
-		return null;
+		if (this.outOfBounds(x, y)) {
+			System.out.println("Tried to remove a piece that was out of bounds at (" + x + ", " + y + ").");
+			return null;
+		}
+		else if (this.gamePieces[x][y] == null) {
+			System.out.println("Tried to remove a piece that was not there at (" + x + ", " + y + ").");
+			return null;
+		}
+		else {
+			Piece pointer = this.gamePieces[x][y];
+			this.gamePieces[x][y] = null;
+			return pointer;
+		}
+
 	}
 
 	public boolean canEndTurn() {
@@ -129,7 +158,10 @@ public class Board {
 	}
 
 	public void endturn() {
-
+		if (this.currentPlayer == 0)
+			this.currentPlayer = 1;
+		else
+			this.currentPlayer = 0;
 	}
 
 	public String winner() {
