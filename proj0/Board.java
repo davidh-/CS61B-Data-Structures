@@ -25,7 +25,7 @@ public class Board {
 
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-                
+
                 Piece piecePointer = this.gamePieces[i][j];
                 if (piecePointer != null) {
                     StdDrawPlus.picture(i + .5, j + .5, this.getIcon(piecePointer), 1, 1);
@@ -81,24 +81,41 @@ public class Board {
     	}
     }
 
+	private boolean outOfBounds(int x, int y) {
+		if (x > 7 || y > 7 || x < 0 || y < 0)
+			return true;
+		else
+			return false;
+	}
 
 	public Piece pieceAt(int x, int y) {
-		return null;
+		if (this.outOfBounds(x, y) || this.gamePieces[x][y] == null)
+			return null;
+		else
+			return this.gamePieces[x][y];
 	}
 
 	public boolean canSelect(int x, int y) {
-		return false;
+		return false; //might want to use validMove...... >>>>>
 	}
 
-	public boolean validMove(int xi, int yi, int xf, int yf) {
-		return false;
-	}
+	// private boolean validMove(int xi, int yi, int xf, int yf) {
+	// 	return false;
+	// }
+	// Might want to use it  for canSelect
 
 	public void select(int x, int y) {
 
 	}
 
 	public void place(Piece p, int x, int y) {
+		if (this.outOfBounds(x, y) || p == null)
+			;
+		else if (this.gamePieces[x][y] != null) {
+			Piece piecePointer = p;
+		}
+		else
+			;
 
 	}
 
