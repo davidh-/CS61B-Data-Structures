@@ -8,50 +8,79 @@ public class Board {
     private boolean emptyBoard;
     private Piece gamePieces[][];
 
+	public Board(boolean shouldBeEmpty) {
+		this.emptyBoard = shouldBeEmpty;
+		this.gamePieces = new Piece[8][8];
+		if(!this.emptyBoard)
+			this.createPieces();
+	}
 
-    private static void drawBoard(int N) {
+    private void drawBoard(int N) {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if ((i + j) % 2 == 0) StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
-                else                  StdDrawPlus.setPenColor(StdDrawPlus.RED);
+                if ((i + j) % 2 == 0) 
+                	StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
+                else                  
+                	StdDrawPlus.setPenColor(StdDrawPlus.RED);
+
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-                if (pieces[i][j]) {
-                    StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire-crowned.png", 1, 1);
+                
+                Piece piecePointer = this.gamePieces[i][j];
+                if (piecePointer != null) {
+                    StdDrawPlus.picture(i + .5, j + .5, this.getIcon(piecePointer), 1, 1);
                 }
             }
         }
+    }
+    private String getIcon(Piece a){
+    	String iconLocation = "img/";
+
+    	if (a.isBomb())
+    		iconLocation += "bomb";
+    	else if (a.isShield()) 
+    		iconLocation += "shield";
+    	else
+    		iconLocation += "pawn";
+
+    	if (a.isFire())
+    		iconLocation += "-fire";
+    	else
+    		iconLocation += "-water";
+
+    	if (a.isKing())
+    		iconLocation += "-crowned";
+    	iconLocation += ".png";
+    	return iconLocation;
     }
 
     private void startBoardGame() {
         int N = 8;
         StdDrawPlus.setXscale(0, N);
         StdDrawPlus.setYscale(0, N);
-        pieces = new boolean[N][N];
-
+        // pieces = new boolean[N][N];
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
-        while(true) {
-            drawBoard(N);
-            if (StdDrawPlus.mousePressed()) {
-                double x = StdDrawPlus.mouseX();
-                double y = StdDrawPlus.mouseY();
-                pieces[(int) x][(int) y] = true;
-            }            
-            StdDrawPlus.show(100);
-        }
+        drawBoard(N);     
+        StdDrawPlus.show(100);
     }
 
+    private void createPieces() {
+    	for(int i = 0; i < 8; i += 2) {
+    		// (0, 0) is the bottom left and (7, 7) is top right. [x][y], not [row][column]:
+    		
+    		gamePieces[i][0] = new Piece(false, this, i, 0, "pawn"); //fire pawns
+    		gamePieces[i+1][7] = new Piece(true, this, i+1, 7, "pawn"); //water pawns
 
+    		gamePieces[i+1][1] = new Piece(false, this, i+1, 1, "shield"); //fire shields
+    		gamePieces[i][6] = new Piece(true, this, i, 6, "shield"); //water shields
 
-	public Board(boolean shouldBeEmpty) {
-		this.emptyBoard = shouldBeEmpty;
-		this.gamePieces = new Piece[8][8];
-		// if(shouldBeEmpty == false)
+    		gamePieces[i][2] = new Piece(false, this, i, 2, "bomb"); //fire bombs
+    		gamePieces[i+1][5] = new Piece(true, this, i+1, 5, "bomb"); //water bombs
 
+    	}
+    }
 
-
-	}
 
 	public Piece pieceAt(int x, int y) {
 		return null;
