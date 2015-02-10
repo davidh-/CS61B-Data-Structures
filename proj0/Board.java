@@ -171,7 +171,6 @@ public class Board {
 		return null;
 	}
 
-
 	public static void main(String[] args) {
 		Board gameBoard = new Board(false);
 		gameBoard.startBoardGame();
