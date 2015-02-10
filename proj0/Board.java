@@ -157,7 +157,7 @@ public class Board {
 		return false;
 	}
 
-	public void endturn() {
+	public void endTurn() {
 		if (this.currentPlayer == 0)
 			this.currentPlayer = 1;
 		else
