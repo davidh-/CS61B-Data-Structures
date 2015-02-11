@@ -5,15 +5,23 @@ public class Board {
 	 */
     private static boolean[][] pieces;
 
-    private boolean emptyBoard;
     private Piece gamePieces[][];
     private int currentPlayer;
+    private Piece currentPiece;
+    private boolean currentPieceSelected;
+    private int selectedPieceX;
+    private int selectedPieceY; 
+
+    // private int targetPieceX
+    // private int targetPieceY;
+
+    private boolean turnFinished;
 
 	public Board(boolean shouldBeEmpty) {
-		this.emptyBoard = shouldBeEmpty;
+		this.turnFinished = false;
 		this.gamePieces = new Piece[8][8];
 		this.currentPlayer = 0;
-		if(!this.emptyBoard)
+		if(!shouldBeEmpty)
 			this.createPieces();
 	}
 
@@ -26,9 +34,12 @@ public class Board {
                 else                  
                 	StdDrawPlus.setPenColor(StdDrawPlus.RED);
 
-                StdDrawPlus.filledSquare(i + .5, j + .5, .5);
-                StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
 
+                //draw new stuff right here
+                if (currentPiece != null && i == selectedPieceX && j == selectedPieceY)
+                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                
+                StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 Piece piecePointer = this.gamePieces[i][j];
                 if (piecePointer != null) {
                     StdDrawPlus.picture(i + .5, j + .5, this.getIcon(piecePointer), 1, 1);
@@ -64,8 +75,22 @@ public class Board {
         // pieces = new boolean[N][N];
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
-        drawBoard(N);     
-        StdDrawPlus.show(100);
+        while(true) {
+
+	        drawBoard(N);
+            if (StdDrawPlus.mousePressed()) {
+
+                int x = (int)StdDrawPlus.mouseX();
+                int y = (int)StdDrawPlus.mouseY();
+
+                if (this.canSelect(x, y))
+                	this.select(x, y);
+            }  
+
+            if (this.canEndTurn() && this.turnFinished)
+            	this.endTurn();   
+	        StdDrawPlus.show(100);
+	    }
     }
 
     private void createPieces() {
@@ -100,15 +125,34 @@ public class Board {
 
 
 	public boolean canSelect(int x, int y) {
+		if (this.gamePieces[x][y] != null) {
+			if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
+				return true;
+			else
+				return false;
+		}
+		else {
+			if (this.currentPieceSelected && !this.turnFinished && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y))
+				return true;
+			else if (this.currentPieceSelected && this.gamePieces[selectedPieceX][selectedPieceY].hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) 
+				return true;
+			else
+				return false;
+		}
+	}
+
+	private boolean validMove(int xi, int yi, int xf, int yf) {
 		return false;
 	}
 
-	// private boolean validMove(int xi, int yi, int xf, int yf) {
-	// 	return false;
-	// }
-	// Might want to use it  for canSelect
-
 	public void select(int x, int y) {
+		if (this.pieceAt(x, y) == null) {
+			this.currentPiece.move(x, y);
+			this.currentPieceSelected = true;
+		}
+		this.currentPiece = this.pieceAt(x, y);
+		this.selectedPieceX = x;
+		this.selectedPieceY = y;
 
 	}
 
@@ -158,7 +202,12 @@ public class Board {
 
 
 	public boolean canEndTurn() {
-		return false;
+		if (this.currentPiece == null)
+			return false;
+		if (this.turnFinished || this.currentPiece.hasCaptured())
+			return true;
+		else
+			return false;
 	}
 
 	public void endTurn() {
@@ -166,12 +215,42 @@ public class Board {
 			this.currentPlayer = 1;
 		else
 			this.currentPlayer = 0;
+
+		this.currentPieceSelected = false;
+		this.turnFinished = false;
+
+		if (this.currentPiece != null) {
+			this.currentPiece.doneCapturing();
+			this.currentPiece = null;
+		}
 	}
 
 
 	public String winner() {
-		return null;
+		int player0PiecesLeft = this.countPlayerPiecesLeft(0);
+		int player1PiecesLeft = this.countPlayerPiecesLeft(1);
+
+		if (player1PiecesLeft == 0 && player0PiecesLeft == 0)
+			return "No one";
+		else if (player1PiecesLeft == 0)
+			return "Water";
+		else if (player0PiecesLeft == 1)
+			return "Fire";
+		else
+			return null;
 	}
+
+	private int countPlayerPiecesLeft(int currentPlayer) {
+		int total = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+            	if (this.gamePieces[i][j].side() == this.currentPlayer)
+            		total += 1;
+            }
+        }
+        return total;
+	}
+
 
 	public static void main(String[] args) {
 		Board gameBoard = new Board(false);
