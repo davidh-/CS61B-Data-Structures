@@ -123,20 +123,21 @@ public class Board {
 
 
 	public boolean canSelect(int x, int y) {
-		if (this.gamePieces[x][y] != null) {
-			if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
-				return true;
-			else
-				return false;
-		}
-		else {
-			if (this.currentPieceSelected && !this.turnFinished && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y))
-				return true;
-			else if (this.currentPieceSelected && this.gamePieces[selectedPieceX][selectedPieceY].hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) 
-				return true;
-			else
-				return false;
-		}
+		// if (this.gamePieces[x][y] != null) {
+		// 	if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
+		// 		return true;
+		// 	else
+		// 		return false;
+		// }
+		// else {
+		// 	if (this.currentPieceSelected && !this.turnFinished && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y))
+		// 		return true;
+		// 	else if (this.currentPieceSelected && this.gamePieces[selectedPieceX][selectedPieceY].hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) 
+		// 		return true;
+		// 	else
+		// 		return false;
+		// }
+		return true;
 	}
 
 	private boolean validMove(int xi, int yi, int xf, int yf) {
