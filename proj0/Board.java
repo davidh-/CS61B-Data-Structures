@@ -157,31 +157,9 @@ public class Board {
 	}
 
 	public void place(Piece p, int x, int y) {
-		if (!this.outOfBounds(x, y) || p != null) {
-			int[] pLocation = this.getLocation(p);
-			if (pLocation != null) {
-				Piece piecePointer = this.gamePieces[x][y];
-				this.remove(pLocation[0], pLocation[1]);
-			}
-			if (this.gamePieces[x][y] != null) {
-				Piece removed = this.remove(x, y);
+		if (!this.outOfBounds(x, y) && p != null) 
 				this.gamePieces[x][y] = p;
-			}
-			
-		}
 	}
-	
-	private int[] getLocation(Piece p) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-            	if (p == this.gamePieces[i][j]) {
-            		int[] location = {i, j};
-            		return location;
-            	}
-            }
-        }
-        return null;
-	} 
 
 	public Piece remove(int x, int y) {
 		if (this.outOfBounds(x, y)) {
