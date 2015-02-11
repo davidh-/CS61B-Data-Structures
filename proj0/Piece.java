@@ -69,7 +69,4 @@ public class Piece {
 		this.hasCaptured = false;
 	}
 
-	public static void main(String[] args) {
-
-	}
 }

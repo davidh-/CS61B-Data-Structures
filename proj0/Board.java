@@ -26,9 +26,9 @@ public class Board {
 	}
 
 
-    private void drawBoard(int N) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+    private void drawBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 if ((i + j) % 2 == 0) 
                 	StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
                 else                  
@@ -67,15 +67,14 @@ public class Board {
     }
 
     private void startBoardGame() {
-        int N = 8;
-        StdDrawPlus.setXscale(0, N);
-        StdDrawPlus.setYscale(0, N);
+        StdDrawPlus.setXscale(0, 8);
+        StdDrawPlus.setYscale(0, 8);
         // pieces = new boolean[N][N];
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
         while(true) {
 
-	        drawBoard(N);
+	        drawBoard();
             if (StdDrawPlus.mousePressed()) {
 
                 int x = (int)StdDrawPlus.mouseX();
