@@ -48,7 +48,17 @@ public class Piece {
 	}
 
 	public void move(int x, int y) {
+		Piece removedPiece = this.gameBoard.remove(x, y);
+		this.gameBoard.place(this, x, y);
+		// if (Math.abs(positionX - x) == 2) {
 
+		// }
+		// else {
+		// 	this.positionX = x;
+		// 	this.positionY = y;
+		// }
+		this.positionX = x;
+		this.positionY = y;
 	}
 
 	public boolean hasCaptured() {

@@ -33,8 +33,6 @@ public class Board {
                 	StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
                 else                  
                 	StdDrawPlus.setPenColor(StdDrawPlus.RED);
-
-
                 //draw new stuff right here
                 if (currentPiece != null && i == selectedPieceX && j == selectedPieceY)
                 	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
@@ -142,7 +140,7 @@ public class Board {
 	}
 
 	private boolean validMove(int xi, int yi, int xf, int yf) {
-		return false;
+		return true;
 	}
 
 	public void select(int x, int y) {
