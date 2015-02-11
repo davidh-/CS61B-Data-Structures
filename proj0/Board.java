@@ -130,9 +130,10 @@ public class Board {
 	private int[] getLocation(Piece p) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-            	if (p == this.gamePieces[i][j]);
+            	if (p == this.gamePieces[i][j]) {
             		int[] location = {i, j};
             		return location;
+            	}
             }
         }
         return null;
