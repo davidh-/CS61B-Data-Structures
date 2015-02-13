@@ -47,11 +47,47 @@ public class Piece {
 		return this.type == "shield";
 	}
 
+	private int[] locateCapturePiece(int xi, int yi, int xf, int yf) {
+		int horizontalMove = xf - xi;
+		int verticalMove = yf - yi;
+
+		int inBetweenPieceX = xi;
+		int inBetweenPieceY = yi;
+
+		boolean isKingAndLateralCaptureMove = (this.isKing() && (((Math.abs(verticalMove) == 2) && (Math.abs(horizontalMove) == 0)) || ((Math.abs(verticalMove) == 0) && (Math.abs(horizontalMove) == 2))));
+
+		if (isKingAndLateralCaptureMove) {
+			//this one is for up down or left and right
+			if (xf == xi && verticalMove > 0) 
+				inBetweenPieceY = yi + 1;
+			else if (xf == xi && verticalMove < 0)
+				inBetweenPieceY = yi - 1;
+			if (yf == yi && horizontalMove > 0)
+				inBetweenPieceX = xi + 1;
+			else if (yf == yi && horizontalMove < 0)
+				inBetweenPieceX = xi - 1;
+		}
+		else {
+			//this one is for diagonal
+			if (this.isFire()) 
+				inBetweenPieceY = yi + 1;
+			else
+				inBetweenPieceY = yi - 1;
+			if (horizontalMove > 0)
+				inBetweenPieceX = xi + 1;
+			else
+				inBetweenPieceX = xi - 1;
+		}
+		return new int[] {inBetweenPieceX, inBetweenPieceY};
+	}
+
 	public void move(int x, int y) {
-		Piece oldPiece = this.gameBoard.pieceAt(x, y);
-		if (oldPiece != null) {
+		if (Math.abs(x - this.positionX) == 2 || Math.abs(y - this.positionY) == 2) {
+			int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
+			int capturedX = capturedXY[0];
+			int capturedY = capturedXY[1];
+			this.gameBoard.remove(capturedX, capturedY);
 			this.hasCaptured = true;
-			this.gameBoard.remove(x, y);
 		}
 		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
