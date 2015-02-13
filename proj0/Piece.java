@@ -55,70 +55,72 @@ public class Piece {
 		int inBetweenPieceY = yi;
 
 		boolean isKingAndLateralCaptureMove = (this.isKing() && (((Math.abs(verticalMove) == 2) && (Math.abs(horizontalMove) == 0)) || ((Math.abs(verticalMove) == 0) && (Math.abs(horizontalMove) == 2))));
-if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
-				//this one is for diagonal
-				if (this.isKing()) {
-					if (horizontalMove > 0 && verticalMove > 0) {
-						System.out.println("hit king only capture for lateral 1");
-						inBetweenPieceX = xi + 1;
-						inBetweenPieceY = yi + 1;
-					}
-					else if (horizontalMove > 0 && verticalMove < 0) {
-						System.out.println("hit king only capture for lateral 2");
-						inBetweenPieceX = xi + 1;						
-						inBetweenPieceY = yi - 1;
-					}
-					if (horizontalMove < 0 && verticalMove > 0) {
-						System.out.println("hit king only capture for lateral 3");
-						inBetweenPieceX = xi - 1;
-						inBetweenPieceY = yi + 1;
-					}
-					else if (horizontalMove < 0 && horizontalMove < 0) {
-						System.out.println("hit king only capture for lateral 4");
-						inBetweenPieceX = xi - 1;
-						inBetweenPieceY = yi - 1;
-					}
-				}
-				else {
-					System.out.println("hit diagonal capture");	
-					if (this.isFire()) { 
-						System.out.println("hit diagonal capture 1");	
-						inBetweenPieceY = yi + 1;
-					}
-					else {
-						System.out.println("hit diagonal capture 2");	
-						inBetweenPieceY = yi - 1;
-					}
-					if (horizontalMove > 0) {
-						System.out.println("hit diagonal capture 3");	
-						inBetweenPieceX = xi + 1;
-					}
-					else {
-						System.out.println("hit diagonal capture 4");	
-						inBetweenPieceX = xi - 1;
-					}
-				}
-			}
-			else if (isKingAndLateralCaptureMove) {
-				//this one is for up down or left and right
-				System.out.println("hit king only capture for lateral");	
-				if (xf == xi && verticalMove > 0) {
+		
+		if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
+			//this one is for diagonal
+			if (this.isKing()) {
+				if (horizontalMove > 0 && verticalMove > 0) {
 					System.out.println("hit king only capture for lateral 1");
+					inBetweenPieceX = xi + 1;
 					inBetweenPieceY = yi + 1;
 				}
-				else if (xf == xi && verticalMove < 0) {
+				else if (horizontalMove > 0 && verticalMove < 0) {
 					System.out.println("hit king only capture for lateral 2");
+					inBetweenPieceX = xi + 1;						
 					inBetweenPieceY = yi - 1;
 				}
-				if (yf == yi && horizontalMove > 0) {
+				if (horizontalMove < 0 && verticalMove > 0) {
 					System.out.println("hit king only capture for lateral 3");
+					inBetweenPieceX = xi - 1;
+					inBetweenPieceY = yi + 1;
+				}
+				else if (horizontalMove < 0 && horizontalMove < 0) {
+					System.out.println("hit king only capture for lateral 4");
+					inBetweenPieceX = xi - 1;
+					inBetweenPieceY = yi - 1;
+				}
+			}
+			else {
+				System.out.println("hit diagonal capture");	
+				if (this.isFire()) { 
+					System.out.println("hit diagonal capture 1");	
+					inBetweenPieceY = yi + 1;
+				}
+				else {
+					System.out.println("hit diagonal capture 2");	
+					inBetweenPieceY = yi - 1;
+				}
+				if (horizontalMove > 0) {
+					System.out.println("hit diagonal capture 3");	
 					inBetweenPieceX = xi + 1;
 				}
-				else if (yf == yi && horizontalMove < 0) {
-					System.out.println("hit king only capture for lateral 4");
+				else {
+					System.out.println("hit diagonal capture 4");	
 					inBetweenPieceX = xi - 1;
 				}
 			}
+		}
+		else if (isKingAndLateralCaptureMove) {
+			//this one is for up down or left and right
+			System.out.println("hit king only capture for lateral");	
+			if (xf == xi && verticalMove > 0) {
+				System.out.println("hit king only capture for lateral 1");
+				inBetweenPieceY = yi + 1;
+			}
+			else if (xf == xi && verticalMove < 0) {
+				System.out.println("hit king only capture for lateral 2");
+				inBetweenPieceY = yi - 1;
+			}
+			if (yf == yi && horizontalMove > 0) {
+				System.out.println("hit king only capture for lateral 3");
+				inBetweenPieceX = xi + 1;
+			}
+			else if (yf == yi && horizontalMove < 0) {
+				System.out.println("hit king only capture for lateral 4");
+				inBetweenPieceX = xi - 1;
+			}
+		}
+
 
 		return new int[] {inBetweenPieceX, inBetweenPieceY};
 	}
