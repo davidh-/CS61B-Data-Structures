@@ -144,40 +144,59 @@ public class Board {
 			return false;
 	}
 
-
 	private boolean validMove(int xi, int yi, int xf, int yf) {
 		int horizontalMove = xf - xi;
 		int verticalMove = yf - yi;
 		int inBetweenPieceX = 0;
 		int inBetweenPieceY = 0;
 
-		// determine location if there is a piece to capture
-		if (this.currentPiece.isFire()) 
-			inBetweenPieceY = yi + 1;
-		else
-			inBetweenPieceY = yi - 1;
-
-		if (horizontalMove > 0)
-			inBetweenPieceX = xi + 1;
-		else
-			inBetweenPieceX = xi - 1;
-
-		Piece possibleCapture = this.pieceAt(inBetweenPieceX, inBetweenPieceY);
-
-		if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
-			if (this.currentPiece.isKing())
+		if (Math.abs(verticalMove) == 1 || Math.abs(horizontalMove) == 1) {
+			if (this.currentPiece.isKing() && ((Math.abs(verticalMove) == 0 && Math.abs(horizontalMove) == 1) || (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 0))) {
+				System.out.println("hit 2");				
 				return true;
+			}
+
+			else if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
+				if (this.currentPiece.isKing())
+					return true;
+				else
+					return correctDirectionMove(verticalMove);
+			}
 			else
-				return correctDirectionMove(verticalMove);
+				return false;
 		}
-		else if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2 && possibleCapture != null && ((possibleCapture.isFire() && !this.currentPiece.isFire()) || (!possibleCapture.isFire() && this.currentPiece.isFire()))) {
-			if (this.currentPiece.isKing())
+		else if (Math.abs(verticalMove) == 2 || Math.abs(horizontalMove) == 2) {
+			// determine location if there is a piece to capture
+			if ((this.currentPiece.isKing() && xf == xi && verticalMove > 0) || this.currentPiece.isFire()) 
+				inBetweenPieceY = yi + 1;
+			else
+				inBetweenPieceY = yi - 1;
+			if ((this.currentPiece.isKing() && yf == yi && horizontalMove > 0) || horizontalMove > 0)
+				inBetweenPieceX = xi + 1;
+			else
+				inBetweenPieceX = xi - 1;
+
+			Piece possibleCapture = this.pieceAt(inBetweenPieceX, inBetweenPieceY);
+			if ((possibleCapture != null))
+				System.out.println("hit 1st" + " " +  Math.abs(verticalMove)  + " " + Math.abs(horizontalMove) + " " +  (possibleCapture != null) + " " +  possibleCapture.isFire() + " " +  this.currentPiece.isFire() );
+			else
+				System.out.println("hit 1st" + " " +  Math.abs(verticalMove) + " " + Math.abs(horizontalMove) + " " +  (possibleCapture != null) + " " +  this.currentPiece.isFire() );
+
+			if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2 && possibleCapture != null && ((possibleCapture.isFire() && !this.currentPiece.isFire()) || (!possibleCapture.isFire() && this.currentPiece.isFire()))) {
+				if (this.currentPiece.isKing())
+					return true;
+				else
+					return correctDirectionMove(verticalMove);
+			}
+			else if (this.currentPiece.isKing() &&  (((Math.abs(verticalMove) == 2) && (Math.abs(horizontalMove) == 0)) || ((Math.abs(verticalMove) == 0) && (Math.abs(horizontalMove) == 2))) && (possibleCapture != null) && ((possibleCapture.isFire() && !this.currentPiece.isFire()) || (!possibleCapture.isFire() && this.currentPiece.isFire()))) {
 				return true;
+			}
 			else
-				return correctDirectionMove(verticalMove);
+				return false;
 		}
-		else 
+		else {
 			return false;
+		}
 	}
 
 	public void select(int x, int y) {
