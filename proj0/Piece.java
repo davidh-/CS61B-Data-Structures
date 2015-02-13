@@ -126,13 +126,33 @@ public class Piece {
 	}
 
 	public void move(int x, int y) {
+		boolean bombWentOff = false;
 		if (Math.abs(x - this.positionX) == 2 || Math.abs(y - this.positionY) == 2) {
-			int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
-			int capturedX = capturedXY[0];
-			int capturedY = capturedXY[1];
-			this.gameBoard.remove(capturedX, capturedY);
+			System.out.println("did you get here???\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			
+			if (this.isBomb()) {
+				System.out.println("did you get here???222222");
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
+						if ((this.gameBoard.pieceAt(x + i, y + j) != null) && this.gameBoard.pieceAt(x + i, y + j).isShield() == false) {
+							System.out.println("BINGO: " + (i) + " " + (j));
+							this.gameBoard.remove(x + i, y + j);
+							bombWentOff = true;
+						}
+					}
+				}
+			}
+
+			else {
+				int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
+				int capturedX = capturedXY[0];
+				int capturedY = capturedXY[1];
+				this.gameBoard.remove(capturedX, capturedY);
+			}
 			this.hasCaptured = true;
 		}
+
 		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
 		this.positionX = x;
@@ -141,6 +161,9 @@ public class Piece {
 		// check if you need to King the piece
 		if ((this.isFire() && y == 7) || (!this.isFire() && y == 0))
 			this.isKing = true;
+		// if (bombWentOff) {
+		// 	this.gameBoard.remove(x, y);
+		// }
 
 	}
 

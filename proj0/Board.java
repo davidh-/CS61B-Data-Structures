@@ -13,10 +13,12 @@ public class Board {
 
     private boolean pieceMoved;
     private boolean turnFinished;
+    private boolean bombExploded;
 
 
 	public Board(boolean shouldBeEmpty) {
 		this.pieceMoved = false;
+		this.bombExploded = false;
 		this.gamePieces = new Piece[8][8];
 		this.currentPlayer = 0;
 		if(!shouldBeEmpty) {
@@ -93,7 +95,11 @@ public class Board {
                 }
             }  
             if (StdDrawPlus.isSpacePressed() && this.pieceMoved) {
-	            if (this.canEndTurn()) {
+	            if (this.bombExploded) {
+	            	this.endTurn();
+	            	this.remove(selectedPieceX, selectedPieceY);
+	            }
+	            else if (this.canEndTurn() && this.pieceMoved) {
 	            	this.endTurn();
 	            }
 			}
@@ -139,7 +145,6 @@ public class Board {
 
 	public boolean canSelect(int x, int y) {
 		System.out.println("hit TOP OF CANSelect");
-		
 		if (this.outOfBounds(x, y)) {
 			System.out.println("out of bounds");
 			return false;
@@ -154,7 +159,7 @@ public class Board {
 				return true;
 			}
 			else {
-				System.out.println("hit CAN2S");
+				System.out.println("hit CAN2S " + this.pieceMoved);
 				return this.currentPieceSelected && this.currentPiece.hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y);
 			}
 		}
@@ -352,12 +357,17 @@ public class Board {
 		this.selectedPieceX = x;
 		this.selectedPieceY = y;
 		this.currentPieceSelected = true;
+
+		if(this.currentPiece.isBomb() && this.currentPiece.hasCaptured()) {
+			this.bombExploded = true;
+		}
+
 		System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n \n");
 	}
 
 	public void place(Piece p, int x, int y) {
 		if (this.outOfBounds(x, y) || p == null) {
-			
+			return;
 		}
 		else {
 			this.gamePieces[x][y] = p;
@@ -382,7 +392,10 @@ public class Board {
 
 
 	public boolean canEndTurn() {
-		if (this.currentPiece == null) {
+		if (this.bombExploded) {
+			return true;
+		}
+		else if (this.currentPiece == null) {
 			return false;
 		}
 		else if (this.turnFinished || this.currentPiece.hasCaptured()) {
@@ -403,6 +416,7 @@ public class Board {
 
 		this.currentPieceSelected = false;
 		this.pieceMoved = false;
+		this.bombExploded = false;
 
 		if (this.currentPiece != null) {
 			this.currentPiece.doneCapturing();
