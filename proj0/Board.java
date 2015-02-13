@@ -14,6 +14,7 @@ public class Board {
     private boolean pieceMoved;
     private boolean turnFinished;
 
+
 	public Board(boolean shouldBeEmpty) {
 		this.pieceMoved = false;
 		this.gamePieces = new Piece[8][8];
@@ -355,7 +356,10 @@ public class Board {
 	}
 
 	public void place(Piece p, int x, int y) {
-		if (!this.outOfBounds(x, y) && p != null) {
+		if (this.outOfBounds(x, y) || p == null) {
+			
+		}
+		else {
 			this.gamePieces[x][y] = p;
 		}
 	}
@@ -429,7 +433,7 @@ public class Board {
 		int total = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-            	if (this.gamePieces[i][j].side() == this.currentPlayer) {
+            	if (this.gamePieces[i][j] != null && this.gamePieces[i][j].side() == this.currentPlayer) {
             		total += 1;
             	}
             }
