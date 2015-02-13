@@ -74,7 +74,7 @@ public class Piece {
 					inBetweenPieceX = xi - 1;
 					inBetweenPieceY = yi + 1;
 				}
-				else if (horizontalMove < 0 && horizontalMove < 0) {
+				else if (horizontalMove < 0 && verticalMove < 0) {
 					System.out.println("hit king only capture for lateral 4");
 					inBetweenPieceX = xi - 1;
 					inBetweenPieceY = yi - 1;
@@ -144,10 +144,10 @@ public class Piece {
 				}
 			}
 
-			else {
-				int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
-				int capturedX = capturedXY[0];
-				int capturedY = capturedXY[1];
+			int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
+			int capturedX = capturedXY[0];
+			int capturedY = capturedXY[1];
+			if (this.gameBoard.pieceAt(capturedX, capturedY) != null) {
 				this.gameBoard.remove(capturedX, capturedY);
 			}
 			this.hasCaptured = true;

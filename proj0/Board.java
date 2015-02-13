@@ -435,7 +435,7 @@ public class Board {
 		else if (player1PiecesLeft == 0) {
 			return "Water";
 		}
-		else if (player0PiecesLeft == 1) {
+		else if (player0PiecesLeft == 0) {
 			return "Fire";
 		}
 		else {
