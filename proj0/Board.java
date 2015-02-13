@@ -148,7 +148,6 @@ public class Board {
 	private boolean validMove(int xi, int yi, int xf, int yf) {
 		int horizontalMove = xf - xi;
 		int verticalMove = yf - yi;
-<<<<<<< HEAD
 		int inBetweenPieceX = 0;
 		int inBetweenPieceY = 0;
 
@@ -165,10 +164,6 @@ public class Board {
 
 		else
 			inBetweenPieceX = xi - 1;
-=======
-
-
->>>>>>> 7f252028167060a4e50c4388baeef933e7fd6b4a
 
 		if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
 			if (this.currentPiece.isKing())
@@ -176,11 +171,7 @@ public class Board {
 			else
 				return correctDirectionMove(verticalMove);
 		}
-<<<<<<< HEAD
 		else if (this.pieceAt(inBetweenPieceX, inBetweenPieceY) != null && Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
-=======
-		else if ( Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
->>>>>>> 7f252028167060a4e50c4388baeef933e7fd6b4a
 			if (this.currentPiece.isKing())
 				return true;
 			else
