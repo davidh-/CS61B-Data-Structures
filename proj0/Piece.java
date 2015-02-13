@@ -55,16 +55,15 @@ public class Piece {
 		}
 		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
-		// if (Math.abs(positionX - x) == 2) {
-
-		// }
-		// else {
-		// 	this.positionX = x;
-		// 	this.positionY = y;
-		// }
 		this.positionX = x;
 		this.positionY = y;
+
+		// check if you need to King the piece
+		if ((this.isFire() && y == 7) || (!this.isFire() && y == 0))
+			this.isKing = true;
+
 	}
+
 
 	public boolean hasCaptured() {
 		return this.hasCaptured;

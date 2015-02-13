@@ -151,20 +151,18 @@ public class Board {
 		int inBetweenPieceX = 0;
 		int inBetweenPieceY = 0;
 
-		// determine if there is a piece to capture
+		// determine location if there is a piece to capture
 		if (this.currentPiece.isFire()) 
 			inBetweenPieceY = yi + 1;
-
 		else
 			inBetweenPieceY = yi - 1;
 
-
 		if (horizontalMove > 0)
 			inBetweenPieceX = xi + 1;
-
 		else
 			inBetweenPieceX = xi - 1;
 
+		Piece possibleCapture = this.pieceAt(inBetweenPieceX, inBetweenPieceY);
 
 		if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
 			if (this.currentPiece.isKing())
@@ -172,13 +170,12 @@ public class Board {
 			else
 				return correctDirectionMove(verticalMove);
 		}
-		else if (this.pieceAt(inBetweenPieceX, inBetweenPieceY) != null && Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
+		else if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2 && possibleCapture != null && ((possibleCapture.isFire() && !this.currentPiece.isFire()) || (!possibleCapture.isFire() && this.currentPiece.isFire()))) {
 			if (this.currentPiece.isKing())
 				return true;
 			else
 				return correctDirectionMove(verticalMove);
 		}
-
 		else 
 			return false;
 	}
