@@ -55,7 +55,6 @@ public class Piece {
 		}
 		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
-
 		// if (Math.abs(positionX - x) == 2) {
 
 		// }

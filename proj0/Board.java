@@ -175,7 +175,6 @@ public class Board {
 			this.gamePieces[x][y] = null;
 			return pointer;
 		}
-
 	}
 
 
