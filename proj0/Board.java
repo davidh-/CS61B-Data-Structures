@@ -3,7 +3,6 @@ public class Board {
 	 *  @author David Dominguez Hooper
 	 *  [Do not modify this file.]
 	 */
-    private static boolean[][] pieces;
 
     private Piece gamePieces[][];
     private int currentPlayer;
@@ -11,10 +10,6 @@ public class Board {
     private boolean currentPieceSelected;
     private int selectedPieceX;
     private int selectedPieceY; 
-
-    // private int targetPieceX
-    // private int targetPieceY;
-
     private boolean turnFinished;
 
 	public Board(boolean shouldBeEmpty) {
@@ -122,7 +117,9 @@ public class Board {
 
 
 	public boolean canSelect(int x, int y) {
-		if (this.gamePieces[x][y] != null) {
+		if (this.outOfBounds(x, y))
+			return false;
+		else if (this.gamePieces[x][y] != null) {
 			if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
 				return true;
 			else
@@ -138,22 +135,49 @@ public class Board {
 		}
 	}
 
+	private boolean correctDirectionMove(int verticalMove) {
+		if (this.currentPiece.isFire() && verticalMove > 0)
+			return true;
+		else if (!this.currentPiece.isFire() && verticalMove < 0)
+			return true;
+		else
+			return false;
+	}
+
+
 	private boolean validMove(int xi, int yi, int xf, int yf) {
-		return true;
+		int horizontalMove = xf - xi;
+		int verticalMove = yf - yi;
+
+
+
+		if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
+			if (this.currentPiece.isKing())
+				return true;
+			else
+				return correctDirectionMove(verticalMove);
+		}
+		else if ( Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
+			if (this.currentPiece.isKing())
+				return true;
+			else
+				return correctDirectionMove(verticalMove);
+		}
+
+		else 
+			return false;
 	}
 
 	public void select(int x, int y) {
 		if (this.pieceAt(x, y) == null) {
 			this.currentPiece.move(x, y);
-			this.currentPieceSelected = true;
 			this.turnFinished = true;
 		}
-
 		this.currentPiece = this.pieceAt(x, y);
 		this.selectedPieceX = x;
 		this.selectedPieceY = y;
 		this.currentPieceSelected = true;
-
+		System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n");
 	}
 
 	public void place(Piece p, int x, int y) {
