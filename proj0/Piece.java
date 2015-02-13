@@ -48,8 +48,14 @@ public class Piece {
 	}
 
 	public void move(int x, int y) {
-		Piece removedPiece = this.gameBoard.remove(x, y);
+		Piece oldPiece = this.gameBoard.pieceAt(x, y);
+		if (oldPiece != null) {
+			this.hasCaptured = true;
+			this.gameBoard.remove(x, y);
+		}
+		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
+
 		// if (Math.abs(positionX - x) == 2) {
 
 		// }

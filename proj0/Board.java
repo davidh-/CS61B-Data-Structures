@@ -69,7 +69,6 @@ public class Board {
     private void startBoardGame() {
         StdDrawPlus.setXscale(0, 8);
         StdDrawPlus.setYscale(0, 8);
-        // pieces = new boolean[N][N];
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
         while(true) {
@@ -83,10 +82,11 @@ public class Board {
                 if (this.canSelect(x, y))
                 	this.select(x, y);
             }  
-
-            if (this.canEndTurn() && this.turnFinished)
-            	this.endTurn();   
-	        StdDrawPlus.show(100);
+            if (StdDrawPlus.isSpacePressed()) {
+	            if (this.canEndTurn() && this.turnFinished)
+	            	this.endTurn();
+			}
+	        StdDrawPlus.show(25);
 	    }
     }
 
@@ -94,14 +94,14 @@ public class Board {
     	for(int i = 0; i < 8; i += 2) {
     		// (0, 0) is the bottom left and (7, 7) is top right. [x][y], not [row][column]:
     		
-    		gamePieces[i][0] = new Piece(false, this, i, 0, "pawn"); //fire pawns
-    		gamePieces[i+1][7] = new Piece(true, this, i+1, 7, "pawn"); //water pawns
+    		gamePieces[i][0] = new Piece(true, this, i, 0, "pawn"); //fire pawns
+    		gamePieces[i+1][7] = new Piece(false, this, i+1, 7, "pawn"); //water pawns
 
-    		gamePieces[i+1][1] = new Piece(false, this, i+1, 1, "shield"); //fire shields
-    		gamePieces[i][6] = new Piece(true, this, i, 6, "shield"); //water shields
+    		gamePieces[i+1][1] = new Piece(true, this, i+1, 1, "shield"); //fire shields
+    		gamePieces[i][6] = new Piece(false, this, i, 6, "shield"); //water shields
 
-    		gamePieces[i][2] = new Piece(false, this, i, 2, "bomb"); //fire bombs
-    		gamePieces[i+1][5] = new Piece(true, this, i+1, 5, "bomb"); //water bombs
+    		gamePieces[i][2] = new Piece(true, this, i, 2, "bomb"); //fire bombs
+    		gamePieces[i+1][5] = new Piece(false, this, i+1, 5, "bomb"); //water bombs
 
     	}
     }
@@ -122,21 +122,20 @@ public class Board {
 
 
 	public boolean canSelect(int x, int y) {
-		// if (this.gamePieces[x][y] != null) {
-		// 	if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
-		// 		return true;
-		// 	else
-		// 		return false;
-		// }
-		// else {
-		// 	if (this.currentPieceSelected && !this.turnFinished && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y))
-		// 		return true;
-		// 	else if (this.currentPieceSelected && this.gamePieces[selectedPieceX][selectedPieceY].hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) 
-		// 		return true;
-		// 	else
-		// 		return false;
-		// }
-		return true;
+		if (this.gamePieces[x][y] != null) {
+			if ((this.gamePieces[x][y].side() == this.currentPlayer) && ( !this.currentPieceSelected || (this.currentPieceSelected && !this.turnFinished)))
+				return true;
+			else
+				return false;
+		}
+		else {
+			if (this.currentPieceSelected && !this.turnFinished && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y))
+				return true;
+			else if (this.currentPieceSelected && this.gamePieces[selectedPieceX][selectedPieceY].hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) 
+				return true;
+			else
+				return false;
+		}
 	}
 
 	private boolean validMove(int xi, int yi, int xf, int yf) {
@@ -147,10 +146,13 @@ public class Board {
 		if (this.pieceAt(x, y) == null) {
 			this.currentPiece.move(x, y);
 			this.currentPieceSelected = true;
+			this.turnFinished = true;
 		}
+
 		this.currentPiece = this.pieceAt(x, y);
 		this.selectedPieceX = x;
 		this.selectedPieceY = y;
+		this.currentPieceSelected = true;
 
 	}
 
@@ -180,7 +182,7 @@ public class Board {
 	public boolean canEndTurn() {
 		if (this.currentPiece == null)
 			return false;
-		if (this.turnFinished || this.currentPiece.hasCaptured())
+		else if (this.turnFinished || this.currentPiece.hasCaptured())
 			return true;
 		else
 			return false;
