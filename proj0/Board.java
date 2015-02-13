@@ -145,6 +145,10 @@ public class Board {
 	}
 
 	private boolean validMove(int xi, int yi, int xf, int yf) {
+		if (this.pieceAt(xf, yf) != null){
+			System.out.println(this.pieceAt(xf, yf)  + " " + (xf) + " " + (yf));
+			return false;
+		}
 		int horizontalMove = xf - xi;
 		int verticalMove = yf - yi;
 		int inBetweenPieceX = xi;
@@ -219,14 +223,16 @@ public class Board {
 		else 
 			return false;
 	}
-	private boolean canMultiCapture(int x, int y) {
+	private boolean canMultiCapture(int xi, int yi, int xf, int yf) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				System.out.println("\n1canMulticapture: " + (x + i) + " " + (y + j));
-				if (i != 1 && j != 1 && this.pieceAt(x + i, y + j) != null ) {
-					System.out.println("2canMulticapture: " + (x + i) + " " + (y + j));
-					if (this.validMove(x, y, x + i, y + j))
+				System.out.println("\n1canMulticapture: " + (xi + i) + " " + (yi + j) + " xi & xf: " + xi + " " + yi + " xf & yf: " + xf + " " + yf);
+				if (i != 0 && j != 0 && this.pieceAt(xi + i, yi + j) != null ) {
+					System.out.println("2canMulticapture piece in middle: " + (xi + i) + " " + (yi + j));
+					if (this.validMove(xi, yi, xf, yf)) {
+						System.out.println("BINGO: " + (xf) + " " + (yf));
 						return true;
+					}
 				}
 			}
 		}
@@ -234,23 +240,30 @@ public class Board {
 	}
 
 	public void select(int x, int y) {
-		if (this.pieceAt(x, y) == null) {
+		if (this.currentPiece != null && this.currentPiece.hasCaptured() && this.canMultiCapture(x, y, this.selectedPieceX, this.selectedPieceY))
 			this.currentPiece.move(x, y);
-			System.out.println("\nboom 1");
-			if (this.currentPiece.hasCaptured() && this.canMultiCapture(x, y)){
-				System.out.println("boom 2");
-				this.turnFinished = false;
-			}
-			else {
-				System.out.println("boom 3");
-				this.turnFinished = true;
-			}
 
+		else if (this.pieceAt(x, y) == null) {
+			this.currentPiece.move(x, y);
+			System.out.println("\npieced moved");
+			this.turnFinished = true;
+			// if (this.currentPiece.hasCaptured())
+			// 	System.out.println("this might be it everyone");
+			// if (this.currentPiece.hasCaptured() && this.canMultiCapture(x, y, this.selectedPieceX, this.selectedPieceY)){
+			// 	System.out.println("boom 2");
+			// 	this.turnFinished = false;
+			// }
+			// else {
+			// 	System.out.println("boom 3");
+			// 	this.turnFinished = true;
+			// 	this.gamePieces[x][y].doneCapturing();
+			// }
 		}
-		this.currentPiece = this.pieceAt(x, y);
-		this.selectedPieceX = x;
-		this.selectedPieceY = y;
-		this.currentPieceSelected = true;
+			this.currentPiece = this.pieceAt(x, y);
+			this.selectedPieceX = x;
+			this.selectedPieceY = y;
+			this.currentPieceSelected = true;
+
 		System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n");
 	}
 
