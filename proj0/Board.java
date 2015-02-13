@@ -165,7 +165,6 @@ public class Board {
 		else
 			inBetweenPieceX = xi - 1;
 
-
 		if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
 			if (this.currentPiece.isKing())
 				return true;
