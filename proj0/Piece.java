@@ -128,26 +128,27 @@ public class Piece {
 	public void move(int x, int y) {
 		boolean bombWentOff = false;
 		if (Math.abs(x - this.positionX) == 2 || Math.abs(y - this.positionY) == 2) {
-			// System.out.println("did you get here???\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBEGIN Piece's move method: ");
 			
 			if (this.isBomb()) {
-				// System.out.println("did you get here???222222");
+				System.out.println("This is detection of things to blow up for a bomb:");
 				for (int i = -1; i < 2; i++) {
 					for (int j = -1; j < 2; j++) {
-						// System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
+						System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
 						if ((this.gameBoard.pieceAt(x + i, y + j) != null) && this.gameBoard.pieceAt(x + i, y + j).isShield() == false) {
-							// System.out.println("BINGO: " + (i) + " " + (j));
+							System.out.println("BINGO (actual bombs we should blow up): " + (i) + " " + (j));
 							this.gameBoard.remove(x + i, y + j);
 							bombWentOff = true;
 						}
 					}
 				}
 			}
-
+			System.out.println("Set up code if we need to remove piece we jumped over");
 			int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
 			int capturedX = capturedXY[0];
 			int capturedY = capturedXY[1];
 			if (this.gameBoard.pieceAt(capturedX, capturedY) != null) {
+				System.out.println("Actually removes a piece if it's not null(for bomb mostly)");
 				this.gameBoard.remove(capturedX, capturedY);
 			}
 			this.hasCaptured = true;
@@ -159,8 +160,10 @@ public class Piece {
 		this.positionY = y;
 
 		// check if you need to King the piece
-		if ((this.isFire() && y == 7) || (!this.isFire() && y == 0))
+		if ((this.isFire() && y == 7) || (!this.isFire() && y == 0)) {
+			System.out.println("We kinged a piece");
 			this.isKing = true;
+		}
 		// if (bombWentOff) {
 		// 	this.gameBoard.remove(x, y);
 		// }
