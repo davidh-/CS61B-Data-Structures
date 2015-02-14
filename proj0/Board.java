@@ -82,7 +82,6 @@ public class Board {
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
         while(true) {
-
 	        drawBoard();
             if (StdDrawPlus.mousePressed()) {
 
