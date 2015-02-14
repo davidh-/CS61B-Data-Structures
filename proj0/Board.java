@@ -15,17 +15,49 @@ public class Board {
     private boolean turnFinished;
     private boolean bombExploded;
 
+    private boolean gameInProgress;
+
 
 	public Board(boolean shouldBeEmpty) {
 		this.pieceMoved = false;
 		this.bombExploded = false;
+		this.gameInProgress = true;
 		this.gamePieces = new Piece[8][8];
 		this.currentPlayer = 0;
 		if(!shouldBeEmpty) {
 			this.createPieces();
 		}
 	}
+	private void startBoardGame() {
+        
+        StdDrawPlus.setXscale(0, 8);
+        StdDrawPlus.setYscale(0, 8);
+        /** Monitors for mouse presses. Wherever the mouse is pressed,
+            a new piece appears. */
+        while(this.gameInProgress) {
+	        this.drawBoard();
+            if (StdDrawPlus.mousePressed()) {
 
+                int x = (int)StdDrawPlus.mouseX();
+                int y = (int)StdDrawPlus.mouseY();
+
+                if (this.canSelect(x, y)) {
+					System.out.println("about to run select");
+                	this.select(x, y);
+                }
+            }  
+            if (StdDrawPlus.isSpacePressed() && this.pieceMoved) {
+	            if (this.bombExploded) {
+	            	this.endTurn();
+	            	this.remove(this.selectedPieceX, this.selectedPieceY);
+	            }
+	            else if (this.canEndTurn() && this.pieceMoved) {
+	            	this.endTurn();
+	            }
+			}
+	        StdDrawPlus.show(25);
+	    }
+	}
 
     private void drawBoard() {
         for (int i = 0; i < 8; i++) {
@@ -76,36 +108,6 @@ public class Board {
     	return iconLocation;
     }
 
-    private void startBoardGame() {
-        StdDrawPlus.setXscale(0, 8);
-        StdDrawPlus.setYscale(0, 8);
-        /** Monitors for mouse presses. Wherever the mouse is pressed,
-            a new piece appears. */
-        while(true) {
-	        drawBoard();
-            if (StdDrawPlus.mousePressed()) {
-
-                int x = (int)StdDrawPlus.mouseX();
-                int y = (int)StdDrawPlus.mouseY();
-
-                if (this.canSelect(x, y)) {
-					System.out.println("about to run select");
-                	this.select(x, y);
-                }
-            }  
-            if (StdDrawPlus.isSpacePressed() && this.pieceMoved) {
-	            if (this.bombExploded) {
-	            	this.endTurn();
-	            	this.remove(selectedPieceX, selectedPieceY);
-	            }
-	            else if (this.canEndTurn() && this.pieceMoved) {
-	            	this.endTurn();
-	            }
-			}
-	        StdDrawPlus.show(25);
-
-	    }
-    }
 
     private void createPieces() {
     	for(int i = 0; i < 8; i += 2) {
@@ -366,9 +368,11 @@ public class Board {
 
 	public void place(Piece p, int x, int y) {
 		if (this.outOfBounds(x, y) || p == null) {
+			System.out.println("Never actaully placing pieces");
 			return;
 		}
 		else {
+			System.out.println("Placed piece at : " + x + " " + y);
 			this.gamePieces[x][y] = p;
 		}
 	}
@@ -421,20 +425,22 @@ public class Board {
 			this.currentPiece.doneCapturing();
 			this.currentPiece = null;
 		}
+		if (this.winner() != null) {
+			this.gameInProgress = false;
+		}
 	}
 
 
 	public String winner() {
-		int player0PiecesLeft = this.countPlayerPiecesLeft(0);
-		int player1PiecesLeft = this.countPlayerPiecesLeft(1);
+		int[] playerPiecesLeft = this.countPlayerPiecesLeft();
 
-		if (player1PiecesLeft == 0 && player0PiecesLeft == 0) {
+		if (playerPiecesLeft[0] == 0 && playerPiecesLeft[0] == 0) {
 			return "No one";
 		}
-		else if (player1PiecesLeft == 0) {
+		else if (playerPiecesLeft[0] == 0) {
 			return "Water";
 		}
-		else if (player0PiecesLeft == 0) {
+		else if (playerPiecesLeft[1] == 0) {
 			return "Fire";
 		}
 		else {
@@ -442,21 +448,25 @@ public class Board {
 		}
 	}
 
-	private int countPlayerPiecesLeft(int currentPlayer) {
-		int total = 0;
+	public int[] countPlayerPiecesLeft() {
+		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-            	if (this.gamePieces[i][j] != null && this.gamePieces[i][j].side() == this.currentPlayer) {
-            		total += 1;
+            	if (this.gamePieces[i][j] != null && this.gamePieces[i][j].side() == 0) {
+            		totalPlayerPiecesForEachPlayer[0] += 1;
+            	}
+            	else if (this.gamePieces[i][j] != null && this.gamePieces[i][j].side() == 1) {
+            		totalPlayerPiecesForEachPlayer[1] += 1;
             	}
             }
         }
-        return total;
+        return totalPlayerPiecesForEachPlayer;
 	}
 
 
 	public static void main(String[] args) {
-		Board gameBoard = new Board(false);
+		Board gameBoard = new Board(true);
 		gameBoard.startBoardGame();
+	    return;
 	}
 }
