@@ -60,42 +60,42 @@ public class Piece {
 			//this one is for diagonal
 			if (this.isKing()) {
 				if (horizontalMove > 0 && verticalMove > 0) {
-					System.out.println("hit king only capture for lateral 1");
+					// System.out.println("hit king only capture for lateral 1");
 					inBetweenPieceX = xi + 1;
 					inBetweenPieceY = yi + 1;
 				}
 				else if (horizontalMove > 0 && verticalMove < 0) {
-					System.out.println("hit king only capture for lateral 2");
+					// System.out.println("hit king only capture for lateral 2");
 					inBetweenPieceX = xi + 1;						
 					inBetweenPieceY = yi - 1;
 				}
 				if (horizontalMove < 0 && verticalMove > 0) {
-					System.out.println("hit king only capture for lateral 3");
+					// System.out.println("hit king only capture for lateral 3");
 					inBetweenPieceX = xi - 1;
 					inBetweenPieceY = yi + 1;
 				}
 				else if (horizontalMove < 0 && verticalMove < 0) {
-					System.out.println("hit king only capture for lateral 4");
+					// System.out.println("hit king only capture for lateral 4");
 					inBetweenPieceX = xi - 1;
 					inBetweenPieceY = yi - 1;
 				}
 			}
 			else {
-				System.out.println("hit diagonal capture");	
+				// System.out.println("hit diagonal capture");	
 				if (this.isFire()) { 
-					System.out.println("hit diagonal capture 1");	
+					// System.out.println("hit diagonal capture 1");	
 					inBetweenPieceY = yi + 1;
 				}
 				else {
-					System.out.println("hit diagonal capture 2");	
+					// System.out.println("hit diagonal capture 2");	
 					inBetweenPieceY = yi - 1;
 				}
 				if (horizontalMove > 0) {
-					System.out.println("hit diagonal capture 3");	
+					// System.out.println("hit diagonal capture 3");	
 					inBetweenPieceX = xi + 1;
 				}
 				else {
-					System.out.println("hit diagonal capture 4");	
+					// System.out.println("hit diagonal capture 4");	
 					inBetweenPieceX = xi - 1;
 				}
 			}
@@ -128,15 +128,15 @@ public class Piece {
 	public void move(int x, int y) {
 		boolean bombWentOff = false;
 		if (Math.abs(x - this.positionX) == 2 || Math.abs(y - this.positionY) == 2) {
-			System.out.println("did you get here???\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			// System.out.println("did you get here???\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			
 			if (this.isBomb()) {
-				System.out.println("did you get here???222222");
+				// System.out.println("did you get here???222222");
 				for (int i = -1; i < 2; i++) {
 					for (int j = -1; j < 2; j++) {
-						System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
+						// System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
 						if ((this.gameBoard.pieceAt(x + i, y + j) != null) && this.gameBoard.pieceAt(x + i, y + j).isShield() == false) {
-							System.out.println("BINGO: " + (i) + " " + (j));
+							// System.out.println("BINGO: " + (i) + " " + (j));
 							this.gameBoard.remove(x + i, y + j);
 							bombWentOff = true;
 						}
