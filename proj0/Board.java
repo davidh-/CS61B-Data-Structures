@@ -430,7 +430,6 @@ public class Board {
 		}
 	}
 
-
 	public String winner() {
 		int[] playerPiecesLeft = this.countPlayerPiecesLeft();
 
@@ -447,7 +446,6 @@ public class Board {
 			return null;
 		}
 	}
-
 	public int[] countPlayerPiecesLeft() {
 		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
