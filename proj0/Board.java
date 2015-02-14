@@ -6,21 +6,21 @@ public class Board {
 
     private Piece gamePieces[][];
     private int currentPlayer;
-    private Piece currentPiece;
+    // private Piece currentPiece;
+    public Piece currentPiece;
+
     private boolean currentPieceSelected;
     private int selectedPieceX;
     private int selectedPieceY; 
 
     private boolean pieceMoved;
     private boolean turnFinished;
-    private boolean bombExploded;
 
     private boolean gameInProgress;
 
 
 	public Board(boolean shouldBeEmpty) {
 		this.pieceMoved = false;
-		this.bombExploded = false;
 		this.gameInProgress = true;
 		this.gamePieces = new Piece[8][8];
 		this.currentPlayer = 0;
@@ -47,11 +47,11 @@ public class Board {
                 }
             }  
             if (StdDrawPlus.isSpacePressed() && this.pieceMoved) {
-	            if (this.bombExploded) {
-	            	this.endTurn();
-	            	this.remove(this.selectedPieceX, this.selectedPieceY);
-	            }
-	            else if (this.canEndTurn() && this.pieceMoved) {
+	            // if (this.bombExploded) {
+	            // 	this.endTurn();
+	            // 	this.remove(this.selectedPieceX, this.selectedPieceY);
+	            // }
+	            if (this.canEndTurn() && this.pieceMoved) {
 	            	this.endTurn();
 	            }
 			}
@@ -360,7 +360,8 @@ public class Board {
 		this.currentPieceSelected = true;
 
 		if(this.currentPiece.isBomb() && this.currentPiece.hasCaptured()) {
-			this.bombExploded = true;
+			// this.bombExploded = true;
+			this.remove(x, y);
 		}
 
 		// System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n \n");
@@ -395,10 +396,10 @@ public class Board {
 
 
 	public boolean canEndTurn() {
-		if (this.bombExploded) {
-			return true;
-		}
-		else if (this.currentPiece == null) {
+		// if (this.bombExploded) {
+		// 	return true;
+		// }
+		if (this.currentPiece == null) {
 			return false;
 		}
 		else if (this.turnFinished || this.currentPiece.hasCaptured()) {
@@ -419,7 +420,7 @@ public class Board {
 
 		this.currentPieceSelected = false;
 		this.pieceMoved = false;
-		this.bombExploded = false;
+		// this.bombExploded = false;
 
 		if (this.currentPiece != null) {
 			this.currentPiece.doneCapturing();
@@ -446,7 +447,8 @@ public class Board {
 			return null;
 		}
 	}
-	public int[] countPlayerPiecesLeft() {
+	// public int[] countPlayerPiecesLeft() {
+	private int[] countPlayerPiecesLeft() {
 		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
