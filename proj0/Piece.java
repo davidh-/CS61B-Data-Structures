@@ -47,12 +47,112 @@ public class Piece {
 		return this.type == "shield";
 	}
 
-	public void move(int x, int y) {
-		Piece oldPiece = this.gameBoard.pieceAt(x, y);
-		if (oldPiece != null) {
-			this.hasCaptured = true;
-			this.gameBoard.remove(x, y);
+	private int[] locateCapturePiece(int xi, int yi, int xf, int yf) {
+		int horizontalMove = xf - xi;
+		int verticalMove = yf - yi;
+
+		int inBetweenPieceX = xi;
+		int inBetweenPieceY = yi;
+
+		boolean isKingAndLateralCaptureMove = (this.isKing() && (((Math.abs(verticalMove) == 2) && (Math.abs(horizontalMove) == 0)) || ((Math.abs(verticalMove) == 0) && (Math.abs(horizontalMove) == 2))));
+		
+		if (Math.abs(verticalMove) == 2 && Math.abs(horizontalMove) == 2) {
+			//this one is for diagonal
+			if (this.isKing()) {
+				if (horizontalMove > 0 && verticalMove > 0) {
+					// System.out.println("hit king only capture for lateral 1");
+					inBetweenPieceX = xi + 1;
+					inBetweenPieceY = yi + 1;
+				}
+				else if (horizontalMove > 0 && verticalMove < 0) {
+					// System.out.println("hit king only capture for lateral 2");
+					inBetweenPieceX = xi + 1;						
+					inBetweenPieceY = yi - 1;
+				}
+				if (horizontalMove < 0 && verticalMove > 0) {
+					// System.out.println("hit king only capture for lateral 3");
+					inBetweenPieceX = xi - 1;
+					inBetweenPieceY = yi + 1;
+				}
+				else if (horizontalMove < 0 && verticalMove < 0) {
+					// System.out.println("hit king only capture for lateral 4");
+					inBetweenPieceX = xi - 1;
+					inBetweenPieceY = yi - 1;
+				}
+			}
+			else {
+				// System.out.println("hit diagonal capture");	
+				if (this.isFire()) { 
+					// System.out.println("hit diagonal capture 1");	
+					inBetweenPieceY = yi + 1;
+				}
+				else {
+					// System.out.println("hit diagonal capture 2");	
+					inBetweenPieceY = yi - 1;
+				}
+				if (horizontalMove > 0) {
+					// System.out.println("hit diagonal capture 3");	
+					inBetweenPieceX = xi + 1;
+				}
+				else {
+					// System.out.println("hit diagonal capture 4");	
+					inBetweenPieceX = xi - 1;
+				}
+			}
 		}
+		else if (isKingAndLateralCaptureMove) {
+			//this one is for up down or left and right
+			System.out.println("hit king only capture for lateral");	
+			if (xf == xi && verticalMove > 0) {
+				System.out.println("hit king only capture for lateral 1");
+				inBetweenPieceY = yi + 1;
+			}
+			else if (xf == xi && verticalMove < 0) {
+				System.out.println("hit king only capture for lateral 2");
+				inBetweenPieceY = yi - 1;
+			}
+			if (yf == yi && horizontalMove > 0) {
+				System.out.println("hit king only capture for lateral 3");
+				inBetweenPieceX = xi + 1;
+			}
+			else if (yf == yi && horizontalMove < 0) {
+				System.out.println("hit king only capture for lateral 4");
+				inBetweenPieceX = xi - 1;
+			}
+		}
+
+
+		return new int[] {inBetweenPieceX, inBetweenPieceY};
+	}
+
+	public void move(int x, int y) {
+		boolean bombWentOff = false;
+		if (Math.abs(x - this.positionX) == 2 || Math.abs(y - this.positionY) == 2) {
+			// System.out.println("did you get here???\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			
+			if (this.isBomb()) {
+				// System.out.println("did you get here???222222");
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						// System.out.println("\nBOMBIESS: " + (x + i) + " " + (y + j) + " x & y: " + x + " " + y);
+						if ((this.gameBoard.pieceAt(x + i, y + j) != null) && this.gameBoard.pieceAt(x + i, y + j).isShield() == false) {
+							// System.out.println("BINGO: " + (i) + " " + (j));
+							this.gameBoard.remove(x + i, y + j);
+							bombWentOff = true;
+						}
+					}
+				}
+			}
+
+			int [] capturedXY = this.locateCapturePiece(this.positionX, this.positionY, x, y);
+			int capturedX = capturedXY[0];
+			int capturedY = capturedXY[1];
+			if (this.gameBoard.pieceAt(capturedX, capturedY) != null) {
+				this.gameBoard.remove(capturedX, capturedY);
+			}
+			this.hasCaptured = true;
+		}
+
 		this.gameBoard.remove(this.positionX, this.positionY);
 		this.gameBoard.place(this, x, y);
 		this.positionX = x;
@@ -61,6 +161,12 @@ public class Piece {
 		// check if you need to King the piece
 		if ((this.isFire() && y == 7) || (!this.isFire() && y == 0))
 			this.isKing = true;
+<<<<<<< HEAD
+=======
+		// if (bombWentOff) {
+		// 	this.gameBoard.remove(x, y);
+		// }
+>>>>>>> master
 
 	}
 
