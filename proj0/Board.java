@@ -1,6 +1,6 @@
 public class Board {
 	/** Board class will handle the Board operations of proj0.
-	 *  @author David Dominguez Hooper
+	 *  @author David Dominguez Hooper - Finished on 2/14/15 - 3:14AM
 	 *  [Do not modify this file.]
 	 */
 
