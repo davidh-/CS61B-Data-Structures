@@ -144,22 +144,22 @@ public class Board {
 
 
 	public boolean canSelect(int x, int y) {
-		System.out.println("hit TOP OF CANSelect");
+		// System.out.println("hit TOP OF CANSelect");
 		if (this.outOfBounds(x, y)) {
-			System.out.println("out of bounds");
+			// System.out.println("out of bounds");
 			return false;
 		}
 		else if (this.gamePieces[x][y] != null) {
-			System.out.println("hit CANS");
+			// System.out.println("hit CANS");
 			return (this.gamePieces[x][y].side() == this.currentPlayer) && ((this.currentPieceSelected == false) || (this.currentPieceSelected && this.pieceMoved == false));
 		}
 		else {
 			if (this.currentPieceSelected && this.pieceMoved == false  && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y)) {
-				System.out.println("hit CAN1S");
+				// System.out.println("hit CAN1S");
 				return true;
 			}
 			else {
-				System.out.println("hit CAN2S " + this.pieceMoved);
+				// System.out.println("hit CAN2S " + this.pieceMoved);
 				return this.currentPieceSelected && this.currentPiece.hasCaptured() && this.validMove(this.selectedPieceX, this.selectedPieceY, x, y);
 			}
 		}
@@ -180,7 +180,7 @@ public class Board {
 	private boolean validMove(int xi, int yi, int xf, int yf) {
 		System.out.println("xi and yi: " + (xi) + " " + (yi) + "xf and yf: " + (xf) + " " + (yf));
 		if (this.pieceAt(xf, yf) != null) {
-			System.out.println("hitttt begin");
+			// System.out.println("hitttt begin");
 			return false;
 		}
 		int horizontalMove = xf - xi;
@@ -188,31 +188,31 @@ public class Board {
 		int inBetweenPieceX = xi;
 		int inBetweenPieceY = yi;
 
-		System.out.println("fuck this");
+		// System.out.println("fuck this");
 
 		if (this.pieceMoved == false && (Math.abs(verticalMove) == 1 || Math.abs(horizontalMove) == 1)) {
-			System.out.println("\n" + " this is a one by one move");
+			// System.out.println("\n" + " this is a one by one move");
 
 			if (this.currentPiece.isKing() && ((Math.abs(verticalMove) == 0 && Math.abs(horizontalMove) == 1) || (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 0))) {
-				System.out.println("hit 1");
+				// System.out.println("hit 1");
 				this.turnFinished = true;				
 				return true;
 
 			}
 			else if (Math.abs(verticalMove) == 1 && Math.abs(horizontalMove) == 1) {
-				System.out.println("hit 2");	
+				// System.out.println("hit 2");	
 				this.turnFinished = true;
 				if (this.currentPiece.isKing()){
-					System.out.println("hit 2a");	
+					// System.out.println("hit 2a");	
 					return true;
 				}
 				else{
-					System.out.println("hit 2b");	
+					// System.out.println("hit 2b");	
 					return correctDirectionMove(verticalMove);
 				}
 			}
 			else {
-				System.out.println("hit 3");	
+				// System.out.println("hit 3");	
 				return false;
 			}
 		}
@@ -225,70 +225,70 @@ public class Board {
 				//this one is for diagonal
 				if (this.currentPiece.isKing()) {
 					if (horizontalMove > 0 && verticalMove > 0) {
-						System.out.println("hit king only capture for diagonal 1");
+						// System.out.println("hit king only capture for diagonal 1");
 						inBetweenPieceX = xi + 1;
 						inBetweenPieceY = yi + 1;
 					}
 					else if (horizontalMove > 0 && verticalMove < 0) {
-						System.out.println("hit king only capture for diagonal 2");
+						// System.out.println("hit king only capture for diagonal 2");
 						inBetweenPieceX = xi + 1;						
 						inBetweenPieceY = yi - 1;
 					}
 					if (horizontalMove < 0 && verticalMove > 0) {
-						System.out.println("hit king only capture for diagonal 3");
+						// System.out.println("hit king only capture for diagonal 3");
 						inBetweenPieceX = xi - 1;
 						inBetweenPieceY = yi + 1;
 					}
-					else if (horizontalMove < 0 && horizontalMove < 0) {
-						System.out.println("hit king only capture for diagonal 4");
+					else if (horizontalMove < 0 && verticalMove < 0) {
+						// System.out.println("hit king only capture for diagonal 4");
 						inBetweenPieceX = xi - 1;
 						inBetweenPieceY = yi - 1;
 					}
 				}
 				else {
-					System.out.println("hit diagonal capture");	
+					// System.out.println("hit diagonal capture");	
 					if (this.currentPiece.isFire()) { 
-						System.out.println("hit diagonal capture 1");	
+						// System.out.println("hit diagonal capture 1");	
 						inBetweenPieceY = yi + 1;
 					}
 					else {
-						System.out.println("hit diagonal capture 2");	
+						// System.out.println("hit diagonal capture 2");	
 						inBetweenPieceY = yi - 1;
 					}
 					if (horizontalMove > 0) {
-						System.out.println("hit diagonal capture 3");	
+						// System.out.println("hit diagonal capture 3");	
 						inBetweenPieceX = xi + 1;
 					}
 					else {
-						System.out.println("hit diagonal capture 4");	
+						// System.out.println("hit diagonal capture 4");	
 						inBetweenPieceX = xi - 1;
 					}
 				}
 			}
 			else if (isKingAndLateralCaptureMove) {
 				//this one is for up down or left and right
-				System.out.println("hit king only capture for lateral");	
+				// System.out.println("hit king only capture for lateral");	
 				if (xf == xi && verticalMove > 0) {
-					System.out.println("hit king only capture for lateral 1");
+					// System.out.println("hit king only capture for lateral 1");
 					inBetweenPieceY = yi + 1;
 				}
 				else if (xf == xi && verticalMove < 0) {
-					System.out.println("hit king only capture for lateral 2");
+					// System.out.println("hit king only capture for lateral 2");
 					inBetweenPieceY = yi - 1;
 				}
 				if (yf == yi && horizontalMove > 0) {
-					System.out.println("hit king only capture for lateral 3");
+					// System.out.println("hit king only capture for lateral 3");
 					inBetweenPieceX = xi + 1;
 				}
 				else if (yf == yi && horizontalMove < 0) {
-					System.out.println("hit king only capture for lateral 4");
+					// System.out.println("hit king only capture for lateral 4");
 					inBetweenPieceX = xi - 1;
 				}
 			}
 			Piece possibleCapture = this.pieceAt(inBetweenPieceX, inBetweenPieceY);
 			
 			if ((possibleCapture != null)) {
-				System.out.println("hit 1st" + " " + inBetweenPieceX + " " + inBetweenPieceY + " " + Math.abs(verticalMove)  + " " + Math.abs(horizontalMove) + " " +  (possibleCapture != null) + " " +  possibleCapture.isFire() + " " +  this.currentPiece.isFire() );
+				// System.out.println("hit 1st" + " " + inBetweenPieceX + " " + inBetweenPieceY + " " + Math.abs(verticalMove)  + " " + Math.abs(horizontalMove) + " " +  (possibleCapture != null) + " " +  possibleCapture.isFire() + " " +  this.currentPiece.isFire() );
 			}
 			else {
 				System.out.println("hit 2nd" + " " + inBetweenPieceX + " " + inBetweenPieceY + " " + Math.abs(verticalMove) + " " + Math.abs(horizontalMove) + " " +  (possibleCapture != null) + " " +  this.currentPiece.isFire() );
@@ -331,11 +331,11 @@ public class Board {
 		if (Math.abs(xf - xi) == 2 || Math.abs(yf - yi) == 2) {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
-					System.out.println("\n1canMulticapture: " + (xi + i) + " " + (yi + j) + " xi & yi: " + xi + " " + yi + " xf & yf: " + xf + " " + yf);
+					// System.out.println("\n1canMulticapture: " + (xi + i) + " " + (yi + j) + " xi & yi: " + xi + " " + yi + " xf & yf: " + xf + " " + yf);
 					if (!(i == 0 && j == 0) && this.pieceAt(xi + i, yi + j) != null ) {
-						System.out.println("2canMulticapture piece in middle: " + (xi + i) + " " + (yi + j));
+						// System.out.println("2canMulticapture piece in middle: " + (xi + i) + " " + (yi + j));
 						if (this.validMove(xi, yi, xf, yf)) {
-							System.out.println("BINGO: " + (xf) + " " + (yf));
+							// System.out.println("BINGO: " + (xf) + " " + (yf));
 							return true;
 						}
 					}
@@ -349,7 +349,7 @@ public class Board {
 
 	public void select(int x, int y) {
 		if (this.gamePieces[x][y] == null) {
-			System.out.println("check if select to a empty space works");
+			// System.out.println("check if select to a empty space works");
 			this.currentPiece.move(x, y);
 			this.pieceMoved = true;
 		}
@@ -362,7 +362,7 @@ public class Board {
 			this.bombExploded = true;
 		}
 
-		System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n \n");
+		// System.out.println("new piece location x(horiztonal): " + this.selectedPieceX + ", y(vertical): " + this.selectedPieceY + "\n \n");
 	}
 
 	public void place(Piece p, int x, int y) {
@@ -376,11 +376,11 @@ public class Board {
 
 	public Piece remove(int x, int y) {
 		if (this.outOfBounds(x, y)) {
-			System.out.println("Tried to remove a piece that was out of bounds at (" + x + ", " + y + ").");
+			// System.out.println("Tried to remove a piece that was out of bounds at (" + x + ", " + y + ").");
 			return null;
 		}
 		else if (this.gamePieces[x][y] == null) {
-			System.out.println("Tried to remove a piece that was not there at (" + x + ", " + y + ").");
+			// System.out.println("Tried to remove a piece that was not there at (" + x + ", " + y + ").");
 			return null;
 		}
 		else {
