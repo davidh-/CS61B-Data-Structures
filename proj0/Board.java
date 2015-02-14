@@ -448,7 +448,6 @@ public class Board {
 		}
 	}
 
-
 	public int[] countPlayerPiecesLeft() {
 		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
