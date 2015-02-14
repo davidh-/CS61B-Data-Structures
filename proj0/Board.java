@@ -6,8 +6,8 @@ public class Board {
 
     private Piece gamePieces[][];
     private int currentPlayer;
-    // private Piece currentPiece;
-    public Piece currentPiece;
+    private Piece currentPiece;
+    // public Piece currentPiece;
 
     private boolean currentPieceSelected;
     private int selectedPieceX;
