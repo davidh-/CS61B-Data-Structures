@@ -446,7 +446,7 @@ public class Board {
 			return null;
 		}
 	}
-	public int[] countPlayerPiecesLeft() {
+	private int[] countPlayerPiecesLeft() {
 		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -463,7 +463,7 @@ public class Board {
 
 
 	public static void main(String[] args) {
-		Board gameBoard = new Board(true);
+		Board gameBoard = new Board(false);
 		gameBoard.startBoardGame();
 	    return;
 	}
