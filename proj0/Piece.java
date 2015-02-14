@@ -1,6 +1,6 @@
 public class Piece {
 	/** Piece class will handle the Piece operations of proj0.
-	 *  @author David Dominguez Hooper
+	 *  @author David Dominguez Hooper - Finished on 2/14/15 - 3:14AM
 	 *  [Do not modify this file.]
 	 */
 	private int isWaterPiece;
