@@ -433,7 +433,7 @@ public class Board {
 	public String winner() {
 		int[] playerPiecesLeft = this.countPlayerPiecesLeft();
 
-		if (playerPiecesLeft[0] == 0 && playerPiecesLeft[0] == 0) {
+		if (playerPiecesLeft[0] == 0 && playerPiecesLeft[1] == 0) {
 			return "No one";
 		}
 		else if (playerPiecesLeft[0] == 0) {
@@ -446,7 +446,7 @@ public class Board {
 			return null;
 		}
 	}
-	private int[] countPlayerPiecesLeft() {
+	public int[] countPlayerPiecesLeft() {
 		int[] totalPlayerPiecesForEachPlayer = new int[2];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -463,6 +463,7 @@ public class Board {
 
 
 	public static void main(String[] args) {
+		// Board gameBoard = new Board(false);
 		Board gameBoard = new Board(false);
 		gameBoard.startBoardGame();
 	    return;

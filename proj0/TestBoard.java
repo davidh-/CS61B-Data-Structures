@@ -20,19 +20,10 @@ public class TestBoard {
     	testBoard.place(testPieceWater, 2, 6);
     	assertEquals(testPieceWater, testBoard.pieceAt(2, 6));
 
-
-    	assertEquals(1, testBoard.countPlayerPiecesLeft()[0]);
-    	assertEquals(1, testBoard.countPlayerPiecesLeft()[1]);
-
     	assertEquals(testBoard.winner(), null);
     	testBoard.select(3, 5);
 
-    	assertEquals(1, testBoard.countPlayerPiecesLeft()[0]);
-    	assertEquals(1, testBoard.countPlayerPiecesLeft()[1]);
-
     	testBoard.select(1, 7);
-    	assertEquals(1, testBoard.countPlayerPiecesLeft()[0]);
-    	assertEquals(0, testBoard.countPlayerPiecesLeft()[1]);
 
     	testBoard.endTurn();
 
