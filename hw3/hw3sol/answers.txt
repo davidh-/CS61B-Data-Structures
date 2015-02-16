@@ -10,10 +10,10 @@ Q2.
 (a) A
 (b) Ringding
 (c) Ringding
-(d) dyanmic
+(d) dynamic
 
 Q3.
 (a) True
-(b) Superanimal
+(b) SuperAnimal
 (c) SuperAnimal
 (d) static
