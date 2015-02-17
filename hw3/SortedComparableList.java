@@ -87,32 +87,38 @@ public class SortedComparableList {
 			// REPLACE THIS LINE WITH YOUR SOLUTION
 	}
 
-	/**
-	 *  Takes this list and, wherever two or more consecutive items are
-	 *  equal, it removes duplicates so that only one consecutive copy
-	 *  remains. No two consecutive items in this list are equals at the
-	 *  end of this method.
-	 *
-	 *  For example, if the input list is [ 0 0 0 0 1 1 0 0 0 3 3 3 1 1 0 ], the
-	 *  output list is [ 0 1 0 3 1 0 ].
-	 **/
-	public void squish() {
-			// REPLACE THIS LINE WITH YOUR SOLUTION
-	}
+    /**
+     *  Takes this list and, wherever two or more consecutive items are
+     *  equal, it removes duplicates so that only one consecutive copy
+     *  remains. No two consecutive items in this list are equals at the
+     *  end of this method.
+     *
+     *  You can assume the list is in sorted order when this method is
+     *  called.
+     *
+     *  For example, if the input list is [ 0 0 0 0 1 1 3 3 3 4 ], the
+     *  output list is [ 0 1 3 4 ].
+     **/
+    public void squish() {
+        // REPLACE THIS LINE WITH YOUR SOLUTION
+    }
 
-	/** Duplicates each Comparable so that for every original
-	 *  Comparable, there will end up being two consecutive Comparables.
-	 *
-	 *  For example, if the input list is [ 3 7 4 2 2 ], the
-	 *  output list is [ 3 3 7 7 4 4 2 2 2 2].
-	 *
-	 *  NOTE: Do not try to make copies of the Comparables. Set
-	 *  the HEAD variable equal to the HEAD variable you are trying to
-	 *  duplicate.
-	 **/
-	public void twin() {
-			// REPLACE THIS LINE WITH YOUR SOLUTION
-	}
+    /** Duplicates each Comparable so that for every original
+     *  Comparable, there will end up being two consecutive Comparables.
+     *
+     *  You can assume the list is in sorted order when this method is
+     *  called.
+     *
+     *  For example, if the input list is [ 2 3 4 7 ], the
+     *  output list is [ 2 2 3 3 4 4 7 7 ].
+     *
+     *  NOTE: Do not try to make copies of the Comparables. Set
+     *  the HEAD variable equal to the HEAD variable you are trying to
+     *  duplicate.
+     **/
+    public void twin() {
+        // REPLACE THIS LINE WITH YOUR SOLUTION
+    }
 
 	/** Returns NULL if no cycle exists, else returns cycle location. */
 	private int detectCycles(SortedComparableList A) {

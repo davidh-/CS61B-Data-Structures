@@ -125,13 +125,13 @@ __Then__, fill in the methods `subTail(SortedComparableList L, int start)`, `sub
 
 - `subTail(SortedComparableList L, int start)` returns a SortedComparableList consisting of the elements of L starting from position start, and going all the way to the end. The head of the list L is the 0th element of the list. This method cannot be destructive; it should NOT modify L.
 
-- `sublist(SortedComparableList L, int start, int len)` returns the sublist consisting of LEN items from list L, beginning with item START (where the first item is 0). Does not modify the original list elements. You can assume that start and len are always >= 0.
+- `sublist(SortedComparableList L, int start, int len)` returns the sublist consisting of LEN items from list L, beginning with item START (where the first item is 0). Does not modify the original list elements. You can assume that start and len are always >= 0. 
 
 - `expungeTail(SortedComparableList L, int len)` removes items from L at position len+1 or later.
 
-- `squish()` removes consecutive duplicates in the list so that only one consecutive copy remains. More details can be found in the java file.
+- `squish()` removes consecutive duplicates in the list so that only one consecutive copy remains. You can assume the list is already in sorted order when this method is called. More details can be found in the java file.
 
-- `twin()` duplicates each Comparable so that for every original Comparable, there will end up being two consecutive Comparables. More details can be found in the java file.
+- `twin()` duplicates each Comparable so that for every original Comparable, there will end up being two consecutive Comparables. You can assume the list is in sorted order when this method is called. More details can be found in the java file.
 
 #### Helpful notes:
 
