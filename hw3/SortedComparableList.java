@@ -45,6 +45,7 @@ public class SortedComparableList {
 		SortedComparableList pointer = this;
 		while (j < i) {
 			pointer = pointer.tail;
+			j += 1;
 		}
 		return pointer.head;
 	}
@@ -67,6 +68,7 @@ public class SortedComparableList {
 		int i = 0;
 		while (i < start) {
 			L = L.tail;
+			i += 1;
 		}
 		buildUp.extend(L);
 		return buildUp.tail;
@@ -79,12 +81,28 @@ public class SortedComparableList {
 	 *  Assume START and END are >= 0.
 	 */
 	public static SortedComparableList sublist(SortedComparableList L, int start, int len) {
-			return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+		SortedComparableList buildUp = subTail(L, start);
+		SortedComparableList pointer = buildUp;
+		int i = 0;
+		if (len == 0) {
+			return null;
+		}
+		while (i < len-1) {
+			pointer = pointer.tail;
+			i += 1;
+		}
+		pointer.tail = null;
+		return buildUp;
 	}
 
 	/** Removes items from L at position len+1 and later. */
 	public static void expungeTail(SortedComparableList L, int len) {
-			// REPLACE THIS LINE WITH YOUR SOLUTION
+		SortedComparableList pointer = L;
+		int i = 0;
+		while (i < len-1) {
+			pointer = pointer.tail;
+		}
+		pointer.tail = null;
 	}
 
     /**
@@ -100,7 +118,20 @@ public class SortedComparableList {
      *  output list is [ 0 1 3 4 ].
      **/
     public void squish() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+    	SortedComparableList pointer = this;
+    	while (pointer.tail != null) {
+    		if (pointer.head.compareTo(pointer.tail.head) == 0) {
+    			if (pointer.tail.tail != null) {
+    				pointer.tail = pointer.tail.tail;
+    			}
+    			else {
+    				pointer.tail = null;
+    			}
+    		}
+    		else {
+    			pointer = pointer.tail;
+    		}
+    	}
     }
 
     /** Duplicates each Comparable so that for every original
@@ -117,7 +148,11 @@ public class SortedComparableList {
      *  duplicate.
      **/
     public void twin() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+    	SortedComparableList pointer = this;
+        while (pointer.tail != null) {
+        	pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
+        	pointer = pointer.tail.tail;
+        }
     }
 
 	/** Returns NULL if no cycle exists, else returns cycle location. */
