@@ -32,7 +32,6 @@ Consider the following two classes `Animal` and `Fox`.
         public Fox() {
         }
         public Fox(String s) {
-            super();
             name = s;
             System.out.println(name);
         }
