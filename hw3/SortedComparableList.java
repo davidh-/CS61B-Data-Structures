@@ -104,8 +104,8 @@ public class SortedComparableList {
 		}
 		SortedComparableList pointer = L;
 		int i = 0;
-		while (i < len-1) {
-			pointer = pointer.tail; //nullpointer
+		while (i < len-1 && pointer.tail != null) {
+			pointer = pointer.tail; 
 		}
 		pointer.tail = null;
 	}

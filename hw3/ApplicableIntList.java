@@ -25,15 +25,15 @@ public class ApplicableIntList{
     /** Inserts int i into its correct location, doesn't handle cycles. */
     public void insert(int i) {
         ApplicableIntList pointer = this;
-        while (i > pointer.head){
-            pointer = pointer.tail;
-        }
-        if (i == pointer.head) {
-            System.out.println("c already exists in SortedComparableList");
-        }
-        else {
+        if (i < pointer.head) {
             pointer.tail = new ApplicableIntList(pointer.head, pointer.tail);
             pointer.head = i;
+        }
+        else {
+            while (pointer.tail != null && i > pointer.tail.head) {
+                pointer = pointer.tail;
+            }
+            pointer.tail = new ApplicableIntList(i, pointer.tail);
         }
     }
 
