@@ -12,29 +12,60 @@ public class ApplicableIntList{
 
     /** A list with head HEAD0 and tail TAIL0. */
     public ApplicableIntList(int head0, ApplicableIntList tail0) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this.head = head0;
+        this.tail = tail0;
     }
 
     /** A list with null tail, and head = 0. */
     public ApplicableIntList() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this.head = 0;
+        this.tail = null;
     }
 
     /** Inserts int i into its correct location, doesn't handle cycles. */
     public void insert(int i) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        ApplicableIntList pointer = this;
+        while (i < pointer.head){
+            pointer = pointer.tail;
+        }
+        if (i == pointer.head) {
+            System.out.println("c already exists in SortedComparableList");
+        }
+        else {
+            pointer.tail = new ApplicableIntList(pointer.head, pointer.tail);
+            pointer.head = i;
+        }
     }
 
     /** Returns the i-th int in this list.
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public int get(int i) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        int j = 0;
+        ApplicableIntList pointer = this;
+        while (j < i) {
+            pointer = pointer.tail;
+            j += 1;
+        }
+        return pointer.head;
     }
 
     /** Applies the function f to every item in this list. */
     public void apply(IntUnaryFunction f) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        ApplicableIntList pointer = this;
+        while (pointer != null) {
+            pointer.head = f.apply(pointer.head);
+            pointer = pointer.tail;
+        }
+        pointer = this;
+        ApplicableIntList inOrder = new ApplicableIntList(pointer.head, null);
+        pointer = pointer.tail;
+        while (pointer != null) {
+            inOrder.insert(pointer.head);
+            pointer = pointer.tail;
+        }
+        this.head = inOrder.head;
+        this.tail = inOrder.tail;
     }
 
     /** Returns NULL if no cycle exists, else returns cycle location. */

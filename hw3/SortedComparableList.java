@@ -149,7 +149,7 @@ public class SortedComparableList {
      **/
     public void twin() {
     	SortedComparableList pointer = this;
-        while (pointer.tail != null) {
+        while (pointer != null) {
         	pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
         	pointer = pointer.tail.tail;
         }
