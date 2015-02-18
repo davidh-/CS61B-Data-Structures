@@ -26,15 +26,15 @@ public class SortedComparableList {
 	public void insert(Comparable c) { 
 		if (c != null) {
 			SortedComparableList pointer = this;
-			while (c.compareTo(pointer.head) > 0){
-				pointer = pointer.tail;
-			}
-			if (c.compareTo(pointer.head) == 0) {
-				System.out.println("c already exists in SortedComparableList");
-			}
-			else {
+			if (c.compareTo(pointer.head) < 0) {
 				pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
 				pointer.head = c;
+			}
+			else {
+				while (pointer.tail != null && c.compareTo(pointer.tail.head) > 0) {
+					pointer = pointer.tail;
+				}
+				pointer.tail = new SortedComparableList(c, pointer.tail);
 			}
 		}
 	}
