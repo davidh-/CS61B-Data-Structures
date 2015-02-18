@@ -25,7 +25,7 @@ public class ApplicableIntList{
     /** Inserts int i into its correct location, doesn't handle cycles. */
     public void insert(int i) {
         ApplicableIntList pointer = this;
-        while (i < pointer.head){
+        while (i > pointer.head){
             pointer = pointer.tail;
         }
         if (i == pointer.head) {

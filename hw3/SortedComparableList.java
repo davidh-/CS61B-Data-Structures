@@ -23,17 +23,19 @@ public class SortedComparableList {
 	}
 
 	/** Inserts Comparable c into its correct location in this list. */
-	public void insert(Comparable c) {
-		SortedComparableList pointer = this;
-		while (c.compareTo(pointer.head) > 0){
-			pointer = pointer.tail;
-		}
-		if (c.compareTo(pointer.head) == 0) {
-			System.out.println("c already exists in SortedComparableList");
-		}
-		else {
-			pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
-			pointer.head = c;
+	public void insert(Comparable c) { 
+		if (c != null) {
+			SortedComparableList pointer = this;
+			while (c.compareTo(pointer.head) > 0){
+				pointer = pointer.tail;
+			}
+			if (c.compareTo(pointer.head) == 0) {
+				System.out.println("c already exists in SortedComparableList");
+			}
+			else {
+				pointer.tail = new SortedComparableList(pointer.head, pointer.tail);
+				pointer.head = c;
+			}
 		}
 	}
 
@@ -97,10 +99,13 @@ public class SortedComparableList {
 
 	/** Removes items from L at position len+1 and later. */
 	public static void expungeTail(SortedComparableList L, int len) {
+		if (L == null) {
+			return;
+		}
 		SortedComparableList pointer = L;
 		int i = 0;
 		while (i < len-1) {
-			pointer = pointer.tail;
+			pointer = pointer.tail; //nullpointer
 		}
 		pointer.tail = null;
 	}
