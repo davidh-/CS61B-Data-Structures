@@ -9,3 +9,5 @@ public interface BoundedQueue {
 	public double dequeue();        // delete and return item from the front
 	public double peek();           // return (but do not delete) item from the front
 }
+
+

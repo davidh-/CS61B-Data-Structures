@@ -11,7 +11,7 @@ public abstract class AbstractBoundedQueue implements BoundedQueue {
 		return fillCount;
 	}
 	public boolean isEmpty() {
-		return capacity == 0 ? true : false;
+		return fillCount == 0 ? true : false;
 	}
 	public boolean isFull() {
 		return capacity == fillCount ? true : false;
@@ -19,4 +19,5 @@ public abstract class AbstractBoundedQueue implements BoundedQueue {
 	public abstract double peek();
 	public abstract double dequeue();
 	public abstract void enqueue(double x);
+
 }
