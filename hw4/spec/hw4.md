@@ -106,7 +106,7 @@ Create a new abstract class in a .java file called `AbstractBoundedQueue.java` t
     public abstract double dequeue();
     public abstract void enqueue(double x);
 
-Note that `peek`, `dequeue`, and `enqueue` are inherited from RingBuffer, so you do not need to declare these explicitly.
+Note that `peek`, `dequeue`, and `enqueue` are inherited from BoundedQueue, so you do not need to declare these explicitly.
 
 If you're stuck, see [AbstractXList from lecture 10](https://github.com/Berkeley-CS61B/lectureCode/blob/master/lec10/live2/AbstractXList.java) for an example of an abstract class that provides default methods for an interface. This class provides a default implementation for the [XList class](https://github.com/Berkeley-CS61B/lectureCode/blob/master/lec10/live2/XList.java).
 
@@ -160,7 +160,7 @@ If we then enqueue 4, 5, 6, 7, 8, 9, the ring buffer is now as shown below:
 
 ![full](http://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Circular_buffer_-_6789345.svg/500px-Circular_buffer_-_6789345.svg.png)
 
-Note that the 6 was enqueued at the leftmost entry of the array (i.e. the buffer wraps around, like a ring). At this point, the ring buffer is full, and if another enqueue() is performed, then an Exception will occur. You will manually throw this Exception. These will be covered Monday in class, so if you're starting earlier than Monday, you'll need to either wait or read ahead about exceptions in HFJ.
+Note that the 6 was enqueued at the leftmost entry of the array (i.e. the buffer wraps around, like a ring). At this point, the ring buffer is full, and if another enqueue() is performed, then an Exception will occur. You will manually throw this Exception. See the section labeled <a href="#exceptions">Exceptions at the end of this HW for more</a>.
 
 We recommend you maintain one integer instance variable `first` that stores the index of the least recently inserted item; maintain a second integer instance variable `last` that stores the index one beyond the most recently inserted item. To insert an item, put it at index `last` and increment `last`. To remove an item, take it from index `first` and increment `first`. When either index equals capacity, make it wrap-around by changing the index to 0. Our skeleton file provides starter code along these lines. You're welcome to do something else if you'd like, since these variables are private and thus our tester will not be able to see them anyway.
 
@@ -170,7 +170,7 @@ Once you've fleshed out the TODOs, make sure `ArrayRingBuffer` compiles before m
 
     java synthesizer.TestArrayRingBuffer
 
-While we're at it, here's a new rule: You're now welcome to share test code for HW and lab. You should continue to not sure test code for projects. Feel free to put tests up on Piazza for this HW in the HW4 thread.
+While we're at it, here's a new rule: You're now welcome to share test code for HW and lab. You should continue to avoid sharing test code for projects. Feel free to put tests up on Piazza for this HW in the HW4 thread.
 
 <a name="string"></a>  Task 4:  Finishing up the Package
 --------------------------------
@@ -206,7 +206,7 @@ Write a program GuitarHero that is similar to GuitarHeroLite, but supports a tot
 
 This keyboard arrangement imitates a piano keyboard: The "white keys" are on the qwerty and zxcv rows and the "black keys" on the 12345 and asdf rows of the keyboard. 
 
-The ith character of the string keyboard corresponds to a frequency of 440 × 2(i - 24) / 12, so that the character 'q' is 110Hz, 'i' is 220Hz, 'v' is 440Hz, and ' ' is 880Hz. Don't even think of including 37 individual GuitarString variables or a 37-way if statement! Instead, create an array of 37 GuitarString objects and use keyboard.indexOf(key) to figure out which key was typed. Make sure your program does not crash if a key is pressed that does not correspond to one of your 37 notes.
+The ith character of the string keyboard corresponds to a frequency of 440 × 2^(i - 24) / 12, so that the character 'q' is 110Hz, 'i' is 220Hz, 'v' is 440Hz, and ' ' is 880Hz. Don't even think of including 37 individual GuitarString variables or a 37-way if statement! Instead, create an array of 37 GuitarString objects and use keyboard.indexOf(key) to figure out which key was typed. Make sure your program does not crash if a key is pressed that does not correspond to one of your 37 notes.
 
 <a name="string"></a> Even More
 --------------------------------
@@ -223,5 +223,24 @@ The two primary components that make the Karplus-Strong algorithm work are the r
 
  - The ring buffer feedback mechanism. The ring buffer models the medium (a string tied down at both ends) in which the energy travels back and forth. The length of the ring buffer determines the fundamental frequency of the resulting sound. Sonically, the feedback mechanism reinforces only the fundamental frequency and its harmonics (frequencies at integer multiples of the fundamental). The energy decay factor (.996 in this case) models the slight dissipation in energy as the wave makes a round trip through the string.
  - The averaging operation. The averaging operation serves as a gentle low-pass filter (which removes higher frequencies while allowing lower frequencies to pass, hence the name). Because it is in the path of the feedback, this has the effect of gradually attenuating the higher harmonics while keeping the lower ones, which corresponds closely with how a plucked guitar string sounds.
+
+
+<a id="exceptions"></a>Exceptions
+-----
+
+The original plan was to cover Exceptions in lecture on Monday, but it felt a bit forced. Consequently, you'll instead be introduced to them on this HW (or on pages HFJ) and we'll cover the nitty gritty on Wednesday. To throw an exception, one simply does the following:
+
+    throw new RuntimeException("Some kind of message")
+
+For example, suppose we want to write a method that takes an integer argument, and prints it as long as it is positive, but throws an exception otherwise. This method would be defined as follows:
+
+    public static void printPositiveNumber(int x) {
+        if (x <= 0) {
+            throw new RuntimeException("Number should be positive.");
+        }
+        System.out.println(x);
+    }
+
+An example of code using exceptions can be found in the demo folder (you'll need to ```git pull skeleton master```).
 
 Credits: RingBuffer figures from [wikipedia](http://en.wikipedia.org/wiki/Circular_buffer). This assignment adapted from [Kevin Wayne's Guitar Heroine](http://nifty.stanford.edu/2012/wayne-guitar-heroine/) assignment.
