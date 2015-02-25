@@ -21,7 +21,6 @@ public class Plip extends Creature {
     /** probability of taking a move when ample space available and clorus around. */
     private double moveProbability = 0.5;
 
-
     /** creates plip with energy equal to E. */
     public Plip(double e) {
         super("plip");
