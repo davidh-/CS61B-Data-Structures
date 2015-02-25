@@ -12,7 +12,7 @@ import huglife.Empty;
 import java.util.List;
 
 /** Tests the plip class   
- *  @authr FIXME
+ *  @author David Dominguez Hooper
  */
 
 public class TestPlip {
