@@ -84,8 +84,8 @@ public class Plip extends Creature {
     /** Plips take exactly the following actions based on NEIGHBORS:
      *  1. If no empty adjacent spaces, STAY.
      *  2. Otherwise, if energy >= 1, REPLICATE.
-     *  3. Otherwise, if any Cloruses, MOVE with 25% probability.
-     *  4. Otherwise, if nothing else, STAY and collect 0.1 energy.
+     *  3. Otherwise, if any Cloruses, MOVE with 50% probability.
+     *  4. Otherwise, if nothing else, STAY
      *
      *  Returns an object of type Action. See Action.java for the
      *  scoop on how Actions work. See SampleCreature.chooseAction()
