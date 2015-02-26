@@ -96,6 +96,11 @@ public class Plotter {
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String categoryLabel,
                                             int startYear, int endYear)
 
+    /** Creates overlaid category weight plots for each category label in CATEGORYLABELS
+      * from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
+    public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String[] categoryLabels,
+                                            int startYear, int endYear)
+
     /** Makes a plot showing overlaid individual normalized count for every word in WORDS
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
     public static void plotAllWords(NGramMap ngm, String[] words, int startYear, int endYear) 
