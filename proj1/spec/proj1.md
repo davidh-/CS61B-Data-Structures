@@ -25,7 +25,7 @@ To support these investigations, you will write a new package almost from scratc
     Test classes for the classes above.
     Any additional public classes you'd like.
 
-Along the way we'll get lots of experience with different useful data structures. The full technical specification for the ngordnet package can be found [here](add java docs). Below follows a description of each class. You can go in any order you choose, but we recommend that you work through the project in the order given in this document.
+Along the way we'll get lots of experience with different useful data structures. The full technical specification for the ngordnet package can be found [here](https://berkeley-cs61b.github.io/public_html/materials/proj/proj1/javadocs/index.html). Below follows a description of each class. You can go in any order you choose, but we recommend that you work through the project in the order given in this document.
 
 To get started, use the ever fun to type ```git pull skeleton master```. You'll also need to download the project 1 datafiles (not provided via github for space reasons). You can find them [at this link](http://www.cs.berkeley.edu/~hug/p1data.zip). You should unzip these into the proj1 directory. Note that we've set up hidden [.gitignore](https://help.github.com/articles/ignoring-files/) files in the skeleton code so that git will avoid uploading these data files. This is intentional. Uploading these files to github will result in a lot of headaches for everybody, so please don't mess with the .gitignore files. If you need to work on multiple machines, you should download the zip file once for each machine.
 
@@ -100,7 +100,7 @@ We now describe the two data files that you will use to create the wordnet digra
 
         36,AND_circuit AND_gate,a circuit in a computer that fires only when all of its inputs fire
 
-    means that the synset ```{ AND_circuit, AND_gate }``` has an id number of 36 and its definition is "a circuit in a computer that fires only when all of its inputs fire". The individual nouns that comprise a synset are separated by spaces (and a synset element is not permitted to contain a space). The S synset ids are numbered 0 through S − 1; the id numbers will appear consecutively in the synset file.
+    means that the synset ```{ AND_circuit, AND_gate }``` has an id number of 36 and its definition is "a circuit in a computer that fires only when all of its inputs fire". The individual nouns that comprise a synset are separated by spaces (and a synset element is not permitted to contain a space). The S synset ids are numbered 0 through S − 1; the id numbers will appear consecutively in the synset file. You will not (officially) use the definitions in this project, though you're welcome to create public subclasses of WordNet that do use them in some interesting way.
 
   - List of hyponyms. The file hyponyms.txt (and other smaller files with hypernym in the name) contains the hyponym relationships: The first field is a synset id; subsequent fields are the id numbers of the synset's direct hyponyms. For example, the following line
 
