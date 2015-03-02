@@ -56,8 +56,9 @@ public class TimeSeriesDemo {
 
         System.out.println(tQuotient.get(1991)); // should print 2.0
 
-        /* The following would cause an IllegalArgumentException since ts and ts2 
-         * do not have the same set of years().
+        /* The following would cause an IllegalArgumentException since ts2
+         * does not include all years from ts, which is tantamount to a
+         * divide by zero error. 
         
         TimeSeries<Double> quotient = ts.dividedBy(ts2);
         

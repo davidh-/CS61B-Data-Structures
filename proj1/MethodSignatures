@@ -8,7 +8,11 @@ public class WordNet {
     /* Returns the set of all nouns. */
     public Set<String> nouns()
 
-    /** Returns the set of all hyponyms of WORD including WORD itself. */
+    /** Returns the set of all hyponyms of WORD as well as all synonyms of
+      * WORD. If WORD belongs to multiple synsets, return all hyponyms of
+      * all of these synsets. See http://goo.gl/EGLoys for an example.
+      * Do not include hyponyms of synonyms.
+      */
     public Set<String> hyponyms(String word)
 }
 
@@ -18,10 +22,12 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     public TimeSeries()
 
     /** Returns the years in which this time series is valid. Doesn't really
-      * need to be a NavigableSet. */
+      * need to be a NavigableSet. This is a private method and you don't have 
+      * to implement it if you don't want to. */
     private NavigableSet<Integer> validYears(int startYear, int endYear)
 
-    /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. */
+    /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. 
+     * inclusive of both end points. */
     public TimeSeries(TimeSeries<T> ts, int startYear, int endYear)
 
     /** Creates a copy of TS. */
@@ -64,7 +70,10 @@ public class YearlyRecord {
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() 
 
-    /** Returns rank of WORD. Most common word is rank 1. */
+    /** Returns rank of WORD. Most common word is rank 1. 
+      * If two words have the same rank, break ties arbitrarily. 
+      * No two words should have the same rank.
+      */
     public int rank(String word) 
 } 
 
@@ -105,7 +114,8 @@ public class Plotter {
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
     public static void plotAllWords(NGramMap ngm, String[] words, int startYear, int endYear) 
 
-    /** Returns the numbers from max to 1, inclusive in decreasing order. */
+    /** Returns the numbers from max to 1, inclusive in decreasing order. 
+      * Private, so you don't have to implement if you don't want to. */
     private static Collection<Number> downRange(int max)
 
     /** Plots the normalized count of every word against the rank of every word on a
