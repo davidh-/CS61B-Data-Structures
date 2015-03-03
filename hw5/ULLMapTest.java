@@ -13,6 +13,20 @@ public class ULLMapTest {
         um.put("Gracias", "Dios Basado");
         assertEquals(um.get("Gracias"), "Dios Basado");
     }
+    @Test
+    public void testPutAndGet() {
+        ULLMap<String, Integer> numbers = new ULLMap<String, Integer>();
+        numbers.put("one", 1);
+        numbers.put("two", 2);
+        numbers.put("ten", 10);
+        assertEquals(2, numbers.get("two"), 0);
+        assertEquals(10, numbers.get("ten"), 0);
+        numbers.put("ten", 1);
+        assertEquals(1, numbers.get("ten"), 0);
+        numbers.put("two", 10);
+        assertEquals(1, numbers.get("ten"), 0);
+        assertEquals(10, numbers.get("two"), 0);
+    }
 
     
     @Test

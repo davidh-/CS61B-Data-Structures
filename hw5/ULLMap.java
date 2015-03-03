@@ -52,7 +52,7 @@ public class ULLMap<K, V> implements Map61B<K, V>, Iterable<K>{
                 this.front = new Entry(key, val, this.front);
             }
             else {
-                this.front.val = val;
+                currentEntry.val = val;
             }
         }
         else {
