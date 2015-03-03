@@ -133,7 +133,7 @@ public class ULLMap<K, V> implements Map61B<K, V>, Iterable<K>{
             Entry pointer = this;
             while (pointer != null) {
                 if (pointer.key.equals(k)) {
-                    return this;
+                    return pointer;
                 }
                 else {
                     pointer = pointer.next;
