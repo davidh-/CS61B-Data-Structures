@@ -1,5 +1,5 @@
 import java.util.Set; /* java.util.Set needed only for challenge problem. */
-
+import java.util.Iterator;
 /** A data structure that uses a linked list to store pairs of keys and values.
  *  Any key must appear at most once in the dictionary, but values may appear multiple
  *  times. Supports get(key), put(key, value), and contains(key) methods. The value
@@ -8,38 +8,110 @@ import java.util.Set; /* java.util.Set needed only for challenge problem. */
  *  For simplicity, you may assume that nobody ever inserts a null key or value
  *  into your map.
  */ 
-public class ULLMap<K, V> implements Map61B<K, V> { 
+public class ULLMap<K, V> implements Map61B<K, V>, Iterable<K>{ 
     /** Keys and values are stored in a linked list of Entry objects.
       * This variable stores the first pair in this linked list. You may
       * point this at a sentinel node, or use it as the actual front item
       * of the linked list. 
       */
     private Entry front;
+    private int size;
 
+
+    public static <K, V> ULLMap<V, K> invert(ULLMap<K, V> dict) {
+        ULLMap<V, K> inverseDict = new ULLMap<V, K>();
+        for (K curKey : dict) {
+            inverseDict.put(dict.get(curKey), curKey);
+        }
+        return inverseDict;
+    }
+
+    /* Returns the value to which the specified key is mapped, or null if this
+     * map contains no mapping for the key. 
+     */
     @Override
     public V get(K key) { 
-
+        if (this.front == null) {
+            return null;
+        }
+        Entry expectedEntryWithValue = this.front.get(key);
+        if (expectedEntryWithValue == null) {
+            return null;
+        }
+        else { 
+            return expectedEntryWithValue.val;
+        }
     }
 
+    /* Associates the specified value with the specified key in this map. */
     @Override
-    public void put(K key, V val) { //FIX ME
-    //FILL ME IN
+    public void put(K key, V val) { 
+        if (this.front != null) {
+            Entry currentEntry = this.front.get(key);
+            if (currentEntry == null) {
+                this.front = new Entry(key, val, this.front);
+            }
+            else {
+                this.front.val = val;
+            }
+        }
+        else {
+            this.front = new Entry(key, val, this.front);
+            this.size += 1;
+        }
     }
 
+    /* Returns true if this map contains a mapping for the specified key. */
     @Override
-    public boolean containsKey(K key) { //FIX ME
-    //FILL ME IN
-        return false; //FIX ME
+    public boolean containsKey(K key) { 
+        if (this.front == null) {
+            return false;
+        }
+        else {
+            if (this.front.get(key) != null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
+   /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        return 0; // FIX ME (you can add extra instance variables if you want)
+        return this.size; 
+    }
+
+    /** Removes all of the mappings from this map. */
+    @Override
+    public void clear() {
+        this.size = 0;
+        this.front = null;
     }
 
     @Override
-    public void clear() {
-    //FILL ME IN
+    public Iterator<K> iterator() {
+        return new ULLMapIter();
+    }
+
+    private class ULLMapIter implements Iterator<K>{
+        private Entry curEntry;
+
+        public ULLMapIter() {
+            this.curEntry = front;
+        }
+        public boolean hasNext() {
+            return this.curEntry != null;
+        }
+        public K next() {
+            K needToReturnKey = this.curEntry.key;
+            this.curEntry = this.curEntry.next;
+            return needToReturnKey;
+        }
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 
@@ -59,20 +131,15 @@ public class ULLMap<K, V> implements Map61B<K, V> {
          *  is equal to KEY, or null if no such Entry exists. */
         public Entry get(K k) { 
             Entry pointer = this;
-            while (!k.equals(null)) {
+            while (pointer != null) {
                 if (pointer.key.equals(k)) {
-                    return this.val;
+                    return this;
                 }
                 else {
                     pointer = pointer.next;
                 }
             }
-            if ((!pointer.equals(null)) && pointer.key.equals(k)) {
-                return pointer;
-            }
-            else {
-                return null;
-            }
+            return pointer;
         }
 
         /** Stores the key of the key-value pair of this node in the list. */
@@ -86,18 +153,29 @@ public class ULLMap<K, V> implements Map61B<K, V> {
 
     /* Methods below are all challenge problems. Will not be graded in any way. 
      * Autograder will not test these. */
+
+    /* Removes the mapping for the specified key from this map if present.
+     * Not required for HW5. */
     @Override
-    public remove(K key) { //FIX ME SO I COMPILE
+    public V remove(K key) { //FIX ME SO I COMPILE
         throw new UnsupportedOperationException();
     }
 
+    /* Removes the entry for the specified key only if it is currently mapped to
+     * the specified value. Not required for HW5. */
     @Override
-    public remove(K key, v value) { //FIX ME SO I COMPILE
+    public V remove(K key, V value) { //FIX ME SO I COMPILE
         throw new UnsupportedOperationException();
     }
 
+    /* Returns a Set view of the keys contained in this map. Not required for HW5. */
     @Override
-    public Set<> keySet() { //FIX ME SO I COMPILE
+    public Set<K> keySet() { //FIX ME SO I COMPILE
+        // TreeSet<K> keyCopy = new TreeSet<K>();
+        // for (K key : this) {
+        //     keyCopy.add(key);
+        // }
+        // return keyCopy;
         throw new UnsupportedOperationException();
     }
 
