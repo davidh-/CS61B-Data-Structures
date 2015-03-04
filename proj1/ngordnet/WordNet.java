@@ -31,9 +31,8 @@ public class WordNet {
             String nounOrNouns = curLineSplit[1];
             String[] possibleMultipleNouns = nounOrNouns.split(" ");
             if (possibleMultipleNouns.length > 1) {
-                for (String newWord : possibleMultipleNouns) {
+                for (String newWord : possibleMultipleNouns) 
                     curSet.add(newWord);
-                }
             }
             else {
                 curSet.add(nounOrNouns);
@@ -65,9 +64,8 @@ public class WordNet {
         TreeSet<String> setOfAllNouns = new TreeSet<String>();
         for (TreeSet<String> synset : synsets) {
             if (synset.size() > 1) {
-                for (String noun : synset) {
+                for (String noun : synset)
                     setOfAllNouns.add(noun);
-                }
             }
             else {
                 setOfAllNouns.add(synset.first());
