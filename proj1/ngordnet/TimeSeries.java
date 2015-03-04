@@ -30,7 +30,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     /** Returns the quotient of this time series divided by the relevant value in ts.
       * If ts is missing a key in this time series, return an IllegalArgumentException. */
     public TimeSeries<Double> dividedBy(TimeSeries<? extends Number> ts) {
-        return null;
+        throw new IllegalArgumentException();
     }
 
     /** Returns the sum of this time series with the given ts. The result is a 
