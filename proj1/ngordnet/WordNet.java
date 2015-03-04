@@ -19,12 +19,15 @@ public class WordNet {
     /** Creates a WordNet using files form SYNSETFILENAME and HYPONYMFILENAME */
     public WordNet(String synsetFilename, String hyponymFilename) {
         synsets = new ArrayList<TreeSet>();
-
+        int sizeSynsets = 0;
         In inSynset = new In(synsetFilename);
         while (inSynset.hasNextLine()) {
             TreeSet<String> curSet = new TreeSet<String>();
             String curLine = inSynset.readLine();
             String[] curLineSplit = curLine.split(",");
+            if(!inSynset.hasNextLine()) {
+                sizeSynsets = Integer.parseInt(curLineSplit[0]);
+            }
             String nounOrNouns = curLineSplit[1];
             String[] possibleMultipleNouns = nounOrNouns.split(" ");
             if (possibleMultipleNouns.length > 1) {
@@ -38,14 +41,7 @@ public class WordNet {
             synsets.add(curSet);
         }
 
-        In countNumRelations = new In(hyponymFilename);
-        int size = 0;
-        while (countNumRelations.hasNextLine()) {
-            countNumRelations.readLine();
-            size += 1;
-        }
-        relationships = new Digraph(size+1);
-
+        relationships = new Digraph(sizeSynsets+1);
         In inHyponym = new In(hyponymFilename);
         while (inHyponym.hasNextLine()) {
             String curLine = inHyponym.readLine();
@@ -85,10 +81,33 @@ public class WordNet {
       * Do not include hyponyms of synonyms.
       */
     public Set<String> hyponyms(String word) {
-        return null;
+        Set<String> allHyponyms = new <String>TreeSet();
+        int index = getIndex(word);
+
+        Set<Integer> curWord = new TreeSet<Integer>();
+        curWord.add(index);
+        Set<Integer> descendantIndexes = ngordnet.GraphHelper.descendants(relationships, curWord);
+        for (int descendantIndex : descendantIndexes) {
+            TreeSet<String> synset = synsets.get(index);
+                for (String noun : synset) {
+                    allHyponyms.add(noun);
+                }
+        }
+        return allHyponyms;
     }
 
+    private int getIndex(String word) {
+        for (int i = 0; i < synsets.size(); i++) {
+            TreeSet<String> synset = synsets.get(i);
+            if (synset.contains(word)) {
+                return i;
+            }
+        }
+        return -1;
+    }
     public static void main(String[] args) {
-        
+        WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms11.txt");
+        System.out.println(readInTest.relationships);
+
     }
 }
