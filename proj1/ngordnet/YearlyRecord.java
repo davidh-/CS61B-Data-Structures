@@ -45,4 +45,5 @@ public class YearlyRecord {
     public int rank(String word) {
         return 0;
     }
+
 }

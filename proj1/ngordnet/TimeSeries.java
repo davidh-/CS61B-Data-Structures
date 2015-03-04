@@ -48,4 +48,5 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
     public Collection<Number> data() {
         return null;
     }
+    
 }
