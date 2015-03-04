@@ -43,7 +43,7 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        return 0;
+        return 1;
     }
 
 }

@@ -66,8 +66,8 @@ public class WordNet {
         for (TreeSet<String> synset : synsets) {
             if (synset.size() > 1) {
                 for (String noun : synset) {
-                    setOfAllNouns.add(noun); 
-                }   
+                    setOfAllNouns.add(noun);
+                }
             }
             else {
                 setOfAllNouns.add(synset.first());
@@ -81,8 +81,8 @@ public class WordNet {
       * all of these synsets. See http://goo.gl/EGLoys for an example.
       * Do not include hyponyms of synonyms.
       */
-    public Set <String> hyponyms(String word) {
-        Set<String> allHyponyms = new <String> TreeSet();
+    public Set<String> hyponyms(String word) {
+        Set<String> allHyponyms = new TreeSet<String>();
         int index = getIndex(word);
 
         Set<Integer> curWord = new TreeSet<Integer>();
@@ -90,7 +90,7 @@ public class WordNet {
         Set<Integer> descendantIndexes = ngordnet.GraphHelper.descendants(relationships, curWord);
         for (int descendantIndex : descendantIndexes) {
             TreeSet<String> synset = synsets.get(index);
-            for (String noun : synset){
+            for (String noun : synset) {
                 allHyponyms.add(noun);
             }
         }
