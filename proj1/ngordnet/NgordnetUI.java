@@ -1,12 +1,9 @@
-/* Starter code for NgordnetUI (part 7 of the project). Rename this file and 
-   remove this comment. */
-
 package ngordnet;
 import edu.princeton.cs.introcs.StdIn;
 import edu.princeton.cs.introcs.In;
 
 /** Provides a simple user interface for exploring WordNet and NGram data.
- *  @author [yournamehere mcjones]
+ *  @author David Dominguez Hooper
  */
 public class NgordnetUI {
     public static void main(String[] args) {
@@ -25,3 +22,4 @@ public class NgordnetUI {
 
     }
 } 
+
