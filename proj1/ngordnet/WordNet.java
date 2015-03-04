@@ -14,59 +14,69 @@ import edu.princeton.cs.introcs.In;
 
 public class WordNet {
 
-    private ArrayList nouns;
-
+    private ArrayList<TreeSet> synsets;
+    private Digraph relationships;
     /** Creates a WordNet using files form SYNSETFILENAME and HYPONYMFILENAME */
     public WordNet(String synsetFilename, String hyponymFilename) {
+        synsets = new ArrayList<TreeSet>();
+
         In inSynset = new In(synsetFilename);
-        In inHyponym = new In(hyponymFilename);
         while (inSynset.hasNextLine()) {
-            Set curSet = new Set();
+            TreeSet<String> curSet = new TreeSet<String>();
             String curLine = inSynset.readLine();
             String[] curLineSplit = curLine.split(",");
             String nounOrNouns = curLineSplit[1];
             String[] possibleMultipleNouns = nounOrNouns.split(" ");
             if (possibleMultipleNouns.length > 1) {
-                for (String newWord : newWordsSpace) {
+                for (String newWord : possibleMultipleNouns) {
                     curSet.add(newWord);
                 }
             }
             else {
                 curSet.add(nounOrNouns);
             }
-            nouns.add(curSet);
-            // //Get rid of everything up to the first "," :
-            // while(curLine.substring(1, 2) != ",") {
-            //     curLine = curLine.substring(1, curLine.length());
-            // }
-            // curLine = curLine.substring(1, curLine.length());
-
-            // //Reached noun(s), now get noun(s) :
-            // Set curSet = new Set();
-            // String curWord = "";
-            // while(curLine.substring(1, 2) != ",") {
-            //     if (curLine.substring(0, 1) == " ") {
-            //         curSet.add(curWord);
-            //         curWord = "";
-            //     }
-            //     curWord += curLine.substring(0, 1);
-            //     curLine = curLine.substring(1, curLine.length());
-            // }
-            // testInSynset.add("curLine");
+            synsets.add(curSet);
         }
 
-        
-        System.out.println(testInSynset);
+        In countNumRelations = new In(hyponymFilename);
+        int size = 0;
+        while (countNumRelations.hasNextLine()) {
+            countNumRelations.readLine();
+            size += 1;
+        }
+        relationships = new Digraph(size+1);
+
+        In inHyponym = new In(hyponymFilename);
+        while (inHyponym.hasNextLine()) {
+            String curLine = inHyponym.readLine();
+            String[] curLineSplit = curLine.split(",");
+            int i = 1;
+            while (i < curLineSplit.length) {
+                relationships.addEdge(Integer.parseInt(curLineSplit[0]), Integer.parseInt(curLineSplit[i]));
+                i += 1;
+            }
+        }
     }
     
     /* Returns true if NOUN is a word in some synset. */
     public boolean isNoun(String noun) {
-        return false;
+        return this.nouns().contains(noun);
     }
 
     /* Returns the set of all nouns. */
     public Set<String> nouns() {
-        return null;
+        TreeSet<String> setOfAllNouns = new TreeSet<String>();
+        for (TreeSet<String> synset : synsets) {
+            if (synset.size() > 1) {
+                for (String noun : synset) {
+                    setOfAllNouns.add(noun);
+                }
+            }
+            else {
+                setOfAllNouns.add(synset.first());
+            }
+        }
+        return setOfAllNouns;
     }
 
     /** Returns the set of all hyponyms of WORD as well as all synonyms of
@@ -79,20 +89,6 @@ public class WordNet {
     }
 
     public static void main(String[] args) {
-        String test = "wordnet/synsets11.txt";
-        In inSynset = new In(test);
-        while(!inSynset.isEmpty()) {
-            String curLine = inSynset.readLine();
-            String[] words = curLine.split(",");
-            for (String word : words) {
-                String[] newWordsSpace = word.split(" ");
-                if (newWordsSpace.length > 1) {
-                    for (String newWord : newWordsSpace) {
-                        System.out.println("\nNEW  WORDDDD: " + newWord);
-                    }
-                }
-                System.out.println(word);
-            }
-        }
+        
     }
 }

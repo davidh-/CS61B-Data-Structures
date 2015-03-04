@@ -1,3 +1,4 @@
+package demos;
 import ngordnet.WordNet;
 
 /** Class that demonstrates basic WordNet functionality.

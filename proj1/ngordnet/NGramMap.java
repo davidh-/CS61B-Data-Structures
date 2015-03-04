@@ -1,42 +1,67 @@
+
 public class NGramMap {
     /** Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME. */
-    public NGramMap(String wordsFilename, String countsFilename)
+    public NGramMap(String wordsFilename, String countsFilename) {
+
+    }
     
     /** Returns the absolute count of WORD in the given YEAR. If the word
       * did not appear in the given year, return 0. */
-    public int countInYear(String word, int year)
+    public int countInYear(String word, int year) {
+        return 0;
+    }
 
     /** Returns a defensive copy of the YearlyRecord of WORD. */
-    public YearlyRecord getRecord(int year)
+    public YearlyRecord getRecord(int year) {
+        return null;
+    }
 
     /** Returns the total number of words recorded in all volumes. */
-    public TimeSeries<Long> totalCountHistory()
+    public TimeSeries<Long> totalCountHistory() {
+        return null;
+    }
 
     /** Provides the history of WORD between STARTYEAR and ENDYEAR. */
-    public TimeSeries<Integer> countHistory(String word, int startYear, int endYear)
+    public TimeSeries<Integer> countHistory(String word, int startYear, int endYear) {
+        return null;
+    }
 
     /** Provides a defensive copy of the history of WORD. */
-    public TimeSeries<Integer> countHistory(String word)
+    public TimeSeries<Integer> countHistory(String word) {
+        return null;
+    }
 
     /** Provides the relative frequency of WORD between STARTYEAR and ENDYEAR. */
-    public TimeSeries<Double> weightHistory(String word, int startYear, int endYear)
+    public TimeSeries<Double> weightHistory(String word, int startYear, int endYear) {
+        return null;
+    }
 
     /** Provides the relative frequency of WORD. */
-    public TimeSeries<Double> weightHistory(String word)
+    public TimeSeries<Double> weightHistory(String word) {
+        return null;
+    }
 
     /** Provides the summed relative frequency of all WORDS between
       * STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
-                              int startYear, int endYear)
+                              int startYear, int endYear) {
+        return null;
+    }
 
     /** Returns the summed relative frequency of all WORDS. */
-    public TimeSeries<Double> summedWeightHistory(Collection<String> words)
+    public TimeSeries<Double> summedWeightHistory(Collection<String> words) {
+        return null;
+    }
 
     /** Provides processed history of all words between STARTYEAR and ENDYEAR as processed
       * by YRP. */
     public TimeSeries<Double> processedHistory(int startYear, int endYear,
-                                               YearlyRecordProcessor yrp)
+                                               YearlyRecordProcessor yrp) {
+        return null;
+    }
 
     /** Provides processed history of all words ever as processed by YRP. */
-    public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) 
+    public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
+        return null;
+    }
 }

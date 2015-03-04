@@ -1,3 +1,5 @@
+package demos;
+
 import ngordnet.GraphHelper;
 import edu.princeton.cs.algs4.Digraph;
 import java.util.Set;
