@@ -1,3 +1,5 @@
+package ngordnet;
+import java.util.Collection;
 
 public class NGramMap {
     /** Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME. */

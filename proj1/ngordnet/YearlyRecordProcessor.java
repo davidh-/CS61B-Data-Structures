@@ -1,5 +1,4 @@
 /* Simply rename this file to YearlyRecordProcessor.java and it's done. */
-
 package ngordnet;
 
 public interface YearlyRecordProcessor {

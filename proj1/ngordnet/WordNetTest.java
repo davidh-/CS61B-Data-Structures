@@ -11,7 +11,6 @@ public class WordNetTest {
 	@Test
 	public void testReadIn() {
 		WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms.txt");
-		assertEquals("0,action,dummy", readInTest.testInSynset);
 	}
 	
 	/** Calls tests for WordNet. */
