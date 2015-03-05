@@ -44,7 +44,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
         }
         return divide;
     }
-
+    
     /** Returns the sum of this time series with the given ts. The result is a 
       * a Double time series (for simplicity). */
     public TimeSeries<Double> plus(TimeSeries<? extends Number> ts) {
@@ -54,14 +54,11 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
             Number tsVal = ts.get(year);
             if (thisVal == null) {
                 sum.put(year, tsVal.doubleValue());
-            }
-            else if (tsVal == null) {
+            } else if (tsVal == null) {
                 sum.put(year, thisVal.doubleValue());
-            }
-            else {
+            } else {
                 sum.put(year, thisVal.doubleValue() + tsVal.doubleValue());
-            }
-            
+            } 
         }
         return sum;
     }
