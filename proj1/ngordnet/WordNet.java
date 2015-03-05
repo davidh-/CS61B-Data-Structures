@@ -81,28 +81,25 @@ public class WordNet {
       */
     public Set<String> hyponyms(String word) {
         Set<String> allHyponyms = new TreeSet<String>();
-        int index = getIndex(word);
-
-        Set<Integer> curWord = new TreeSet<Integer>();
-        curWord.add(index);
-        Set<Integer> descendantIndexes = ngordnet.GraphHelper.descendants(relationships, curWord);
+        Set<Integer> allIndexes = getIndex(word);
+        Set<Integer> descendantIndexes = ngordnet.GraphHelper.descendants(relationships, allIndexes);
         for (int descendantIndex : descendantIndexes) {
-            TreeSet<String> synset = synsets.get(index);
+            TreeSet<String> synset = synsets.get(descendantIndex);
             for (String noun : synset) {
                 allHyponyms.add(noun);
             }
         }
         return allHyponyms;
     }
-
-    private int getIndex(String word) {
+    private Set<Integer> getIndex(String word) {
+        Set<Integer> allIndexes = new TreeSet<Integer>();
         for (int i = 0; i < synsets.size(); i++) {
             TreeSet<String> synset = synsets.get(i);
             if (synset.contains(word)) {
-                return i;
+                allIndexes.add(i);
             }
         }
-        return -1;
+        return allIndexes;
     }
     private static void main(String[] args) {
         WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms11.txt");
