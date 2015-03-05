@@ -39,6 +39,13 @@ public class TimeSeriesDemo {
             System.out.println("In the year " + year + " the value was " + value);
         }
 
+        for (Number dataNumber : data) {
+             /* Your dataNumber values must print out in the same order as the
+              * they did in the previous for loop. */
+            double datum = dataNumber.doubleValue();
+            System.out.println("In some year, the value was " + datum);
+        }        
+
         TimeSeries<Integer> ts2 = new TimeSeries<Integer>();
         ts2.put(1991, 10);
         ts2.put(1992, -5);
