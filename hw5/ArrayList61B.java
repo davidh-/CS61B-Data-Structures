@@ -19,6 +19,7 @@ public class ArrayList61B<E> extends AbstractList<E>{
 		else {
 			this.size = initialCapacity;
 			this.arrayList = (E[]) new Object[this.size];
+			this.numberOfElements = 0;
 		}
 	}
 	/* This constructor should initialize the size of 
