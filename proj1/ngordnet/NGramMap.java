@@ -4,7 +4,7 @@ import java.util.Collection;
 public class NGramMap {
     /** Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME. */
     public NGramMap(String wordsFilename, String countsFilename) {
-
+        
     }
     
     /** Returns the absolute count of WORD in the given YEAR. If the word
