@@ -14,11 +14,11 @@ import edu.princeton.cs.introcs.In;
 
 public class WordNet {
 
-    private ArrayList<TreeSet> synsets;
+    private ArrayList<TreeSet<String>> synsets;
     private Digraph relationships;
     /** Creates a WordNet using files form SYNSETFILENAME and HYPONYMFILENAME */
     public WordNet(String synsetFilename, String hyponymFilename) {
-        synsets = new ArrayList<TreeSet>();
+        synsets = new ArrayList<TreeSet<String>>();
         int sizeSynsets = 0;
         In inSynset = new In(synsetFilename);
         while (inSynset.hasNextLine()) {
