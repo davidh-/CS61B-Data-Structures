@@ -2,14 +2,13 @@ package ngordnet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.TreeMap;
 
 
 public class YearlyRecord {
 
-    TreeMap<String, Integer> countMap;
-    TreeMap<Integer, String> oppositeMap;
+    private TreeMap<String, Integer> countMap;
+    private TreeMap<Integer, String> oppositeMap;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
