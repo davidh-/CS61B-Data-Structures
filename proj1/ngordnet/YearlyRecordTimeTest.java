@@ -42,7 +42,7 @@ public class YearlyRecordTimeTest {
      * Pass this on submit/proj1 for 0.1 bonus points. */
     @Test(timeout = 1000)
     public void testPut100000() {
-        testPutHelper(1000000);
+        testPutHelper(100000);
     }
 
     /* Tests to see if you can insert 1000 strings in less than a second. */

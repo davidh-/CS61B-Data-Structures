@@ -21,8 +21,10 @@ public class NGramMapDemo {
         System.out.println(countHistory.get(1736)); // should print 139
 
         TimeSeries<Long> totalCountHistory = ngm.totalCountHistory();
+        /* In 1736, there were 8049773 recorded words. Note we are not counting
+         * distinct words, but rather the total number of words printed that year. */
         System.out.println(totalCountHistory.get(1736)); // should print 8049773
-        
+
         TimeSeries<Double> weightHistory = ngm.weightHistory("quantity");
         System.out.println(weightHistory.get(1736));  // should print roughly 1.7267E-5
     
