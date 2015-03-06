@@ -35,7 +35,7 @@ public class YearlyRecord {
     private void updateRank() {
         String[] needToRank = words().toArray(new String[words().size()]);
         for (int i = 0; i < needToRank.length; i++) {
-            rank.put(needToRank[needToRank.length-i-1], i + 1);
+            rank.put(needToRank[needToRank.length - i - 1], i + 1);
         }
     }
 
