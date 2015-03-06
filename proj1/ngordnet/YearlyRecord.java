@@ -7,21 +7,35 @@ import java.util.TreeMap;
 
 public class YearlyRecord {
 
-    private TreeMap<String, Integer> countMap;
+    private HashMap<String, Integer> countMap;
     private TreeMap<Integer, String> oppositeMap;
+
+    private HashMap<String, Integer> rank;
+    private boolean rankNeedsUpdate;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
-        countMap = new TreeMap<String, Integer>();
+        countMap = new HashMap<String, Integer>();
         oppositeMap = new TreeMap<Integer, String>();
+        rank = new HashMap<String, Integer>();
+        rankNeedsUpdate = true;
     }
 
     /** Creates a YearlyRecord using the given data. */
     public YearlyRecord(HashMap<String, Integer> otherCountMap) {
-        countMap = new TreeMap<String, Integer>(otherCountMap);
+        countMap = new HashMap<String, Integer>(otherCountMap);
         oppositeMap = new TreeMap<Integer, String>();
         for (String key : countMap.keySet()) {
             oppositeMap.put(countMap.get(key), key);
+        }
+        rank = new HashMap<String, Integer>();
+        rankNeedsUpdate = true;
+    }
+
+    private void updateRank() {
+        String[] needToRank = words().toArray(new String[words().size()]);
+        for (int i = 0; i < needToRank.length; i++) {
+            rank.put(needToRank[needToRank.length-i-1], i + 1);
         }
     }
 
@@ -34,6 +48,7 @@ public class YearlyRecord {
     public void put(String word, int count) {
         countMap.put(word, count);
         oppositeMap.put(count, word);
+        rankNeedsUpdate = true;
     }
 
     /** Returns the number of words recorded this year. */
@@ -56,8 +71,11 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        ArrayList<String> rank = new ArrayList<String>(words());
-        return size() - rank.indexOf(word);
+        if (rankNeedsUpdate) {
+            updateRank();
+            rankNeedsUpdate = false;
+        }
+        return rank.get(word);
     }
 
 }
