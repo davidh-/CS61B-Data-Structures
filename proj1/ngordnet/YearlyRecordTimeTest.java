@@ -90,8 +90,8 @@ public class YearlyRecordTimeTest {
         int numRankCallsLargerYR = countRankCalls(numWordsToPut, maxTimeInSeconds);
     
         double ratio = ((double) numRankCallsTinyYR / (double) numRankCallsLargerYR);
-        assertTrue("Expected ratio of number of rank calls to be no more than 10. "
-                   + "Actual ratio was: " + ratio, ratio < 10);
+        assertTrue("Expected ratio of number of rank calls to be no more than 2. "
+                   + "Actual ratio was: " + ratio, ratio < 2);
     }
 
     public static void main(String... args) {

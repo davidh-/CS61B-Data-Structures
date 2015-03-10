@@ -101,8 +101,8 @@ public class Plotter {
     public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear,
                                             YearlyRecordProcessor yrp)
 
-    /** Creates a plot of the total normalized count of every word that is a hyponym
-      * of CATEGORYLABEL from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
+    /** Creates a plot of the total normalized count of WN.hyponyms(CATEGORYLABEL)
+      * from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String categoryLabel,
                                             int startYear, int endYear)
 
@@ -119,7 +119,7 @@ public class Plotter {
       * Private, so you don't have to implement if you don't want to. */
     private static Collection<Number> downRange(int max)
 
-    /** Plots the normalized count of every word against the rank of every word on a
+    /** Plots the count (or weight) of every word against the rank of every word on a
       * log-log plot. Uses data from YEAR, using NGM as a data source. */
     public static void plotZipfsLaw(NGramMap ngm, int year)
 } 
@@ -138,7 +138,7 @@ public class NGramMap {
       * did not appear in the given year, return 0. */
     public int countInYear(String word, int year)
 
-    /** Returns a defensive copy of the YearlyRecord of WORD. */
+    /** Returns a defensive copy of the YearlyRecord of YEAR. */
     public YearlyRecord getRecord(int year)
 
     /** Returns the total number of words recorded in all volumes. */
@@ -157,7 +157,8 @@ public class NGramMap {
     public TimeSeries<Double> weightHistory(String word)
 
     /** Provides the summed relative frequency of all WORDS between
-      * STARTYEAR and ENDYEAR. */
+      * STARTYEAR and ENDYEAR. If a word does not exist, ignore it rather
+      * than throwing an exception. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
                               int startYear, int endYear)
 
