@@ -23,12 +23,13 @@ public class YearlyRecord {
     /** Creates a YearlyRecord using the given data. */
     public YearlyRecord(HashMap<String, Integer> otherCountMap) {
         countMap = new HashMap<String, Integer>(otherCountMap);
+        rank = new HashMap<String, Integer>(otherCountMap);
         oppositeMap = new TreeMap<Integer, String>();
         for (String key : countMap.keySet()) {
             oppositeMap.put(countMap.get(key), key);
         }
-        rank = new HashMap<String, Integer>();
-        rankNeedsUpdate = true;
+        updateRank();
+        rankNeedsUpdate = false;
     }
 
     private void updateRank() {
