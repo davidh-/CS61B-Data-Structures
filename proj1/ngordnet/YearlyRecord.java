@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-
 public class YearlyRecord {
 
     private HashMap<String, Integer> countMap;
