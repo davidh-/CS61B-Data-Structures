@@ -5,7 +5,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {   
-    // private TreeMap<Integer, T> Timeseries;
 
     /** Constructs a new empty TimeSeries. */
     public TimeSeries() {
