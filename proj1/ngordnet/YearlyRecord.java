@@ -12,7 +12,6 @@ public class YearlyRecord {
 
     private HashMap<String, Integer> rank;
     private boolean rankNeedsUpdate;
-    private
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
@@ -51,7 +50,9 @@ public class YearlyRecord {
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
+        System.out.println(word);
         if (rankNeedsUpdate) {
+            System.out.println("hittt11");
             updateRank();
             rankNeedsUpdate = false;
         }
@@ -80,6 +81,7 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
+        System.out.println(word);
         if (rankNeedsUpdate) {
             updateRank();
             rankNeedsUpdate = false;
