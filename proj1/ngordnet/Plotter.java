@@ -1,5 +1,10 @@
 package ngordnet;
-
+import com.xeiam.xchart.Chart;
+import com.xeiam.xchart.QuickChart;
+import com.xeiam.xchart.SwingWrapper;
+import com.xeiam.xchart.StyleManager.ChartTheme;
+import com.xeiam.xchart.ChartBuilder;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /** Utility class for generating plots. */
