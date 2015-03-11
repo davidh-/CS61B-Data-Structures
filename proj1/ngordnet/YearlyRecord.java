@@ -35,18 +35,13 @@ public class YearlyRecord {
 
     private void updateRank() {
         String[] needToRank = words().toArray(new String[words().size()]);
-        // System.out.println("words(): " + words());
-        // System.out.println("in update rank: " + oppositeMap);
-        // System.out.println("needToRank (before): " + needToRank);
         for (int i = 0; i < needToRank.length; i++) {
             rank.put(needToRank[needToRank.length - i - 1], i + 1);
         }
-        // System.out.println("needToRank (after): " + needToRank);
     }
 
     /** Returns the number of times WORD appeared in this year. */
     public int count(String word) {
-        // System.out.println(word + " " + countMap.get(word));
         if (countMap.get(word) == null) {
             return 0;
         } else {
@@ -63,7 +58,6 @@ public class YearlyRecord {
         //     rankNeedsUpdate = false;
         // }
         putOppositeMap(count, word);
-        // oppositeMap.put(count, word);
         rankNeedsUpdate = true;
 
     }
@@ -88,11 +82,9 @@ public class YearlyRecord {
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
         ArrayList<String> words = new ArrayList<String>();
-        // System.out.println("these are the hashsets of opposite values: " + oppositeMap.values());
         for (HashSet<String> curHashSet : oppositeMap.values()) {
             for (String word : curHashSet) {
                 words.add(word);
-                // System.out.println("these are the words(): " + words);
             }
         }
         return words;
@@ -109,11 +101,8 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        // System.out.println(word);
         if (rankNeedsUpdate) {
-            // System.out.println("about to update (before): " + rank);
             updateRank();
-            // System.out.println(oppositeMap + " after: " + rank);
             rankNeedsUpdate = false;
         }
         return rank.get(word);
