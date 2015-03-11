@@ -82,7 +82,7 @@ public class WordNet {
     public Set<String> hyponyms(String word) {
         Set<String> allHyponyms = new TreeSet<String>();
         Set<Integer> allIndexes = getIndex(word);
-        Set<Integer> descendantIndexes = ngordnet.GraphHelper.descendants(
+        Set<Integer> descendantIndexes = GraphHelper.descendants(
             relationships, allIndexes);
         for (int descendantIndex : descendantIndexes) {
             TreeSet<String> synset = synsets.get(descendantIndex);

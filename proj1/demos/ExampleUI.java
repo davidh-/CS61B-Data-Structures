@@ -31,7 +31,7 @@ public class ExampleUI {
                 case "quit": 
                     return;
                 case "help":
-                    In in = new In("help.txt");
+                    In in = new In("/demos/help.txt");
                     String helpStr = in.readAll();
                     System.out.println(helpStr);
                     break;  
