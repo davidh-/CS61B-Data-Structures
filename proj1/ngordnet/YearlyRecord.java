@@ -50,12 +50,12 @@ public class YearlyRecord {
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
-        System.out.println(word);
-        if (rankNeedsUpdate) {
-            System.out.println("hittt11");
-            updateRank();
-            rankNeedsUpdate = false;
-        }
+        // System.out.println(word);
+        // if (rankNeedsUpdate) {
+        //     // System.out.println("hittt11");
+        //     updateRank();
+        //     rankNeedsUpdate = false;
+        // }
         countMap.put(word, count);
         oppositeMap.put(count, word);
         rankNeedsUpdate = true;
@@ -81,7 +81,7 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        System.out.println(word);
+        // System.out.println(word);
         if (rankNeedsUpdate) {
             updateRank();
             rankNeedsUpdate = false;

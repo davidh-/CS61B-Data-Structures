@@ -19,10 +19,13 @@ public class NgordnetUI {
         System.out.println("\nBased on ngordnetui.config, using the following: "
                            + wordFile + ", " + countFile + ", " + synsetFile +
                            ", and " + hyponymFile + ".");
-
-        System.out.println("\nFor tips on implementing NgordnetUI, see ExampleUI.java.");
-
+        NGramMap nGramMap = new NGramMap(wordFile, countFile);
+        WordNet wordNet = new WordNet(synsetFile, hyponymFile);
+        Plotter plot = new Plotter();
+        int startYear = 0;
+        int endYear = 0;
         while (true) {
+
             System.out.print("> ");
             String line = StdIn.readLine();
             String[] rawTokens = line.split(" ");
@@ -30,12 +33,6 @@ public class NgordnetUI {
             String[] tokens = new String[rawTokens.length - 1];
             System.arraycopy(rawTokens, 1, tokens, 0, rawTokens.length - 1);
 
-
-            NGramMap nGramMap = new NGramMap(wordFile, countFile);
-            WordNet wordNet = new WordNet(synsetFile, hyponymFile);
-            Plotter plot = new Plotter();
-            int startYear = 0;
-            int endYear = 0;
             switch (command) {
                 case "quit": 
                     return;

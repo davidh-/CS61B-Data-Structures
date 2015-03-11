@@ -102,11 +102,6 @@ public class WordNet {
         }
         return allIndexes;
     }
-    private static void main(String[] args) {
-        WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms11.txt");
-        System.out.println(readInTest.relationships);
-
-    }
 
 }
 

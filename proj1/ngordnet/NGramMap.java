@@ -34,12 +34,13 @@ public class NGramMap {
             YearlyRecord curYearlyRecord;
             if (allYearlyRecords.containsKey(curYear)) {
                 curYearlyRecord = allYearlyRecords.get(curYear);
-                curYearlyRecord.put(curWord, curCount);
-            } else {
+            } 
+            else {
                 curYearlyRecord = new YearlyRecord();
-                curYearlyRecord.put(curWord, curCount);
-                allYearlyRecords.put(curYear, curYearlyRecord);
             }
+            curYearlyRecord.put(curWord, curCount);
+            allYearlyRecords.put(curYear, curYearlyRecord);
+
         }
 
         timeSeries = new TimeSeries<Long>();
