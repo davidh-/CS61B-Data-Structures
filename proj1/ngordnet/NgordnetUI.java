@@ -22,7 +22,6 @@ public class NgordnetUI {
 
         NGramMap nGramMap = new NGramMap(wordFile, countFile);
         WordNet wordNet = new WordNet(synsetFile, hyponymFile);
-        Plotter plot = new Plotter();
         int startYear = 0;
         int endYear = 0;
 
@@ -57,10 +56,10 @@ public class NgordnetUI {
                     System.out.println(wordNet.hyponyms(curWord)); 
                     break;  
                 case "history": 
-                    plot.plotAllWords(nGramMap, tokens, startYear, endYear);
+                    Plotter.plotAllWords(nGramMap, tokens, startYear, endYear);
                     break;
                 case "hypohist": 
-                    plot.plotCategoryWeights(nGramMap, wordNet, tokens, startYear, endYear);
+                    Plotter.plotCategoryWeights(nGramMap, wordNet, tokens, startYear, endYear);
                     break;
                 default:
                     System.out.println("Invalid command.");  

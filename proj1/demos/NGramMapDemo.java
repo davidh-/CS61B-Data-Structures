@@ -12,7 +12,7 @@ public class NGramMapDemo {
         NGramMap ngm = new NGramMap("./ngrams/all_words.csv", 
                                     "./ngrams/total_counts.csv");
 
-
+        
         System.out.println(ngm.countInYear("quantity", 1736)); // should print 139
         YearlyRecord yr = ngm.getRecord(1736);
         System.out.println(yr.count("quantity")); // should print 139

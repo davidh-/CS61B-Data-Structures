@@ -16,7 +16,6 @@ public class YearlyRecordDemo {
         System.out.println(yr.rank("quayside")); // should print 3
         System.out.println(yr.size()); // should print 3
 
-        // System.out.println(yr.words() + " " + yr.counts());
 
         Collection<String> words = yr.words();
 
