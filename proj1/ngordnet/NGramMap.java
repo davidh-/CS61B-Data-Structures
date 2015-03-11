@@ -71,6 +71,7 @@ public class NGramMap {
 
     /** Provides the history of WORD between STARTYEAR and ENDYEAR. */
     public TimeSeries<Integer> countHistory(String word, int startYear, int endYear) {
+        // System.out.println(word + " " + startYear + " " + endYear + " " + " " + wordAndYear.keySet());
         HashSet<Integer> yearsOfWord = wordAndYear.get(word);
         TimeSeries<Integer> historyOfWord= new TimeSeries<Integer>();
         for(int year : yearsOfWord) {

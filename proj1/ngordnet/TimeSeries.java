@@ -26,13 +26,13 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
       * If ts is missing a key in this time series, return an IllegalArgumentException. */
     public TimeSeries<Double> dividedBy(TimeSeries<? extends Number> ts) {
         TimeSeries<Double> divide = new TimeSeries<Double>();
-        for (int year : this.keySet()) {
+        for (Number year : ts.years()) {
             Number thisVal = this.get(year);
             Number tsVal = ts.get(year);
-            if (thisVal == null || tsVal == null || tsVal == 0) {
+            if (tsVal == null) {
                 throw new IllegalArgumentException();
             }
-            divide.put(year, thisVal.doubleValue() / tsVal.doubleValue());
+            divide.put(year.intValue(), thisVal.doubleValue() / tsVal.doubleValue());
         }
         return divide;
     }

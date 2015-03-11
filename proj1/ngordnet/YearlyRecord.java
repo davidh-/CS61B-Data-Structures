@@ -41,6 +41,7 @@ public class YearlyRecord {
 
     /** Returns the number of times WORD appeared in this year. */
     public int count(String word) {
+        System.out.println(word + " " + countMap.get(word));
         if (countMap.get(word) == null) {
             return 0;
         } else {

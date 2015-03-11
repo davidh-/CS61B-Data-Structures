@@ -19,11 +19,13 @@ public class NgordnetUI {
         System.out.println("\nBased on ngordnetui.config, using the following: "
                            + wordFile + ", " + countFile + ", " + synsetFile +
                            ", and " + hyponymFile + ".");
+
         NGramMap nGramMap = new NGramMap(wordFile, countFile);
         WordNet wordNet = new WordNet(synsetFile, hyponymFile);
         Plotter plot = new Plotter();
         int startYear = 0;
         int endYear = 0;
+
         while (true) {
 
             System.out.print("> ");
@@ -58,11 +60,7 @@ public class NgordnetUI {
                     plot.plotAllWords(nGramMap, tokens, startYear, endYear);
                     break;
                 case "hypohist": 
-                    TreeSet<String> hyponymsOfWords = new TreeSet<String>();
-                    for (String token : tokens) {
-                        hyponymsOfWords.addAll(wordNet.hyponyms(token));
-                    }
-                    plot.plotAllWords(nGramMap, hyponymsOfWords.toArray(new String[hyponymsOfWords.size()]), startYear, endYear);
+                    plot.plotCategoryWeights(nGramMap, wordNet, tokens, startYear, endYear);
                     break;
                 default:
                     System.out.println("Invalid command.");  
