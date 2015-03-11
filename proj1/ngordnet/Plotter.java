@@ -5,7 +5,7 @@ import com.xeiam.xchart.SwingWrapper;
 import com.xeiam.xchart.StyleManager.ChartTheme;
 import com.xeiam.xchart.ChartBuilder;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Set;
 
 /** Utility class for generating plots. */
@@ -86,7 +86,7 @@ public class Plotter {
     /** Returns the numbers from max to 1, inclusive in decreasing order. 
       * Private, so you don't have to implement if you don't want to. */
     private static Collection<Number> downRange(int max) {
-        HashSet<Number> numbers = new HashSet<Number>();
+        ArrayList<Number> numbers = new ArrayList<Number>();
         for (int i = max; i > 0 ; i--) {
             numbers.add(i);
         }
