@@ -236,7 +236,7 @@ As with our other classes, see the [NGramMap (javadocs)](javadocs/index.html?ngo
 
 Revision (3/3/2015): Your code should be fast enough that you can create an NGramMap using all_words.csv. Loading should take less than 60 seconds (maybe a bit longer on an older computer).
 
-Hint (3/6/2015): Avoid using using a HashMap or TreeMap as an actual type parameter for your maps. This gets messy, and I'd recommend using the TimeSeries and YearlyRecord classes instead. In other words, if your code involves nested mapping that looks like `HashMap<blah, HashMap<blah, blah>>`, then a YearlyRecord or TimeSeries might be useful to keep in mind instead.
+Hint (3/6/2015): Avoid using using a HashMap or TreeMap as an [actual type argument](https://docs.google.com/presentation/d/1j2vivowiaZWepIjUoWj6Cx3CdJiyuYslxkg8GsT8kxM/pub?start=false&loop=false&delayms=3000&slide=id.g631db3c57_38) for your maps. This gets messy, and I'd recommend using the TimeSeries and YearlyRecord classes instead. In other words, if your code involves nested mapping that looks like `HashMap<blah, HashMap<blah, blah>>`, then a YearlyRecord or TimeSeries might be useful to keep in mind instead.
 
 The NGram Input File Formats
 ------

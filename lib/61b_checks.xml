@@ -172,7 +172,11 @@
         <module name="SimplifyBooleanReturn"/>
 
         <module name="StringLiteralEquality"/>
-        <module name="IllegalCatch"/>
+        <module name="IllegalCatch">
+          <property name="illegalClassNames"
+                    value="java.lang.Exception, java.lang.Throwable,
+                             java.lang.Error"/>
+        </module>
         <module name="FallThrough"/>
 
         <!-- Checks for class design                         -->
