@@ -51,11 +51,11 @@ public class YearlyRecord {
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
-        // if (rankNeedsUpdate) {
-        //     // System.out.println("hittt11");
-        //     updateRank();
-        //     rankNeedsUpdate = false;
-        // }
+        if (!rankNeedsUpdate) {
+            System.out.println("this means that rank is in order before this call: " + word + " " + count);
+            // updateRank();
+            // rankNeedsUpdate = false;
+        }
         putOppositeMap(count, word);
         rankNeedsUpdate = true;
 
@@ -102,13 +102,12 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        System.out.println("to get rank: " + word);
         if (rankNeedsUpdate) {
-            System.out.println("----------> rank needs an update: will update");
             updateRank();
             rankNeedsUpdate = false;
+            System.out.println("--------> rank of: " + word + ": " + rank.get(word));
         }
-        System.out.println("rank of " + word + ": " + rank.get(word));
+        // System.out.println("rank of " + word + ": " + rank.get(word));
         return rank.get(word);
     }
 

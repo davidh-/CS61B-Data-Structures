@@ -33,7 +33,10 @@ public class YearlyRecordTest {
         yr.put("jumbo", NUM_1000);
         yr.put("rhino", NUM_200); 
 
-
+        int j = yr.rank("jumbo");
+        System.out.println("jumbo rank: " + j + "\n");
+        int r = yr.rank("rhino");
+        System.out.println("rhino rank: " + r + "\n");
 
 
 
