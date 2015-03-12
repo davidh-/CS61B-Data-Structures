@@ -61,13 +61,13 @@ public class NGramMap {
     /** Returns a defensive copy of the YearlyRecord of YEAR. */
     public YearlyRecord getRecord(int year) {
         YearlyRecord record = allYearlyRecords.get(year);
-        HashMap<String, Integer> defensiveCopyMap = new HashMap<String, Integer>();
+        YearlyRecord defensiveCopy = new YearlyRecord();
         String[] words = record.words().toArray(new String[record.words().size()]);
         Integer[] counts = record.counts().toArray(new Integer[record.counts().size()]);
         for (int i = 0; i < words.length; i++) {
-            defensiveCopyMap.put(words[i], counts[i]);
+            defensiveCopy.put(words[i], counts[i]);
         }
-        return new YearlyRecord(defensiveCopyMap);
+        return defensiveCopy;
     }
 
     /** Returns the total number of words recorded in all volumes. */
