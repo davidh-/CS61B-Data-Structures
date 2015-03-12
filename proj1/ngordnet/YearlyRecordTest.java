@@ -17,8 +17,21 @@ public class YearlyRecordTest {
     @Test
     public void testBasic() {
         HashMap<String, Integer> data = new HashMap<String, Integer>();
+        data.put("surrogate", 340);
+        data.put("quayside", 95);
+        data.put("merchantman", 181);
+        YearlyRecord yr = new YearlyRecord(data);
+        yr.rank("surrogate");
 
-        YearlyRecord yr = new YearlyRecord();
+        yr.put("potato", 5000);
+        yr.rank("potato");
+
+        yr.put("quayside", 10000);
+        yr.rank("quayside");
+
+
+
+        System.out.println(yr.rank("quayside"));
         // yr.put("hello", NUM_1);
         yr.put("quayside", NUM_95);        
         yr.put("surrogate", NUM_95);

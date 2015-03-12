@@ -60,13 +60,17 @@ public class YearlyRecord {
             // updateRank();
             // rankNeedsUpdate = false;
         }
+        if (countMap.containsKey(word)) {
+            oppositeMap.remove(countMap.get(word));
+            putOppositeMap(count, word);
+        }
+        countMap.put(word, count);
         putOppositeMap(count, word);
         rankNeedsUpdate = true;
 
     }
 
     private void putOppositeMap(int count, String word) {
-        countMap.put(word, count);
         int curCount = countMap.get(word);
         if (oppositeMap.containsKey(curCount)) {
             oppositeMap.get(count).add(word);
