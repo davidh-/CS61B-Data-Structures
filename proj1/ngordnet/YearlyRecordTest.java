@@ -37,6 +37,19 @@ public class YearlyRecordTest {
         System.out.println("jumbo rank: " + j + "\n");
         int r = yr.rank("rhino");
         System.out.println("rhino rank: " + r + "\n");
+        
+// ==> PASSED
+
+// --------> rank of: quayside: 1
+// --------> rank of: surrogate: 1
+// --------> rank of: surrogate: 1
+
+
+// put:     this means that rank is in order before this call: potato 5000
+// --------> rank of: potato: 1
+// put:     this means that rank is in order before this call: quayside 10000
+// --------> rank of: quayside: 5
+
 
 
 

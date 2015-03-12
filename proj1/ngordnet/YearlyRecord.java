@@ -34,10 +34,13 @@ public class YearlyRecord {
     }
 
     private void updateRank() {
+        System.out.println("about to update rank: " + rank);
         String[] needToRank = words().toArray(new String[words().size()]);
         for (int i = 0; i < needToRank.length; i++) {
             rank.put(needToRank[needToRank.length - i - 1], i + 1);
         }
+        System.out.println("updated rank: " + rank);
+
     }
 
     /** Returns the number of times WORD appeared in this year. */
@@ -52,7 +55,7 @@ public class YearlyRecord {
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
         if (!rankNeedsUpdate) {
-            System.out.println("this means that rank is in order before this call: " + word + " " + count);
+            System.out.println("put:     " + word + " " + count + " rank is in order before this call: ");
             // updateRank();
             // rankNeedsUpdate = false;
         }
