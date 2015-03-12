@@ -96,10 +96,12 @@ public class NGramMap {
 
     /** Provides the relative frequency of WORD between STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> weightHistory(String word, int startYear, int endYear) {
-        HashSet<Integer> yearsOfWord = wordAndYear.get(word);
-        TimeSeries<Integer> countHistory = countHistory(word);
+        // HashSet<Integer> yearsOfWord = wordAndYear.get(word);
+        TimeSeries<Integer> countHistory = countHistory(word, startYear, endYear);
         TimeSeries<Long> totalNumWords = new TimeSeries<Long>();
-        for (int year : yearsOfWord) {
+        // System.out.println(yearsOfWord);
+        for (Number yearNum : countHistory.years()) {
+            int year = yearNum.intValue();
             if (year >= startYear && year <= endYear || (startYear == 0 && endYear == 0)) {
                 totalNumWords.put(year, timeSeries.get(year));
             }

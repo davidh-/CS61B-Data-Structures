@@ -26,14 +26,12 @@ public class NgordnetUI {
         int endYear = 0;
 
         while (true) {
-
             System.out.print("> ");
             String line = StdIn.readLine();
             String[] rawTokens = line.split(" ");
             String command = rawTokens[0];
             String[] tokens = new String[rawTokens.length - 1];
             System.arraycopy(rawTokens, 1, tokens, 0, rawTokens.length - 1);
-
             switch (command) {
                 case "quit": 
                     return;
@@ -43,66 +41,30 @@ public class NgordnetUI {
                     System.out.println(helpStr);
                     break;  
                 case "range":
-                    if (tokens.length == 2) {
-                        try {
-                            startYear = Integer.parseInt(tokens[0]); 
-                            endYear = Integer.parseInt(tokens[1]);
-                        } catch (Exception e){
-                            break;
-                        }
-                    }
+                    startYear = Integer.parseInt(tokens[0]); 
+                    endYear = Integer.parseInt(tokens[1]);  
                     break;
                 case "count":
-                    if (tokens.length == 2) {
-                        try {
-                            String word = tokens[0]; 
-                            int year = Integer.parseInt(tokens[1]);
-                            System.out.println(nGramMap.countInYear(word, year));
-                        } catch (Exception e){
-                            break;
-                        }
-                    }
+                    String word = tokens[0]; 
+                    int year = Integer.parseInt(tokens[1]);
+                    System.out.println(nGramMap.countInYear(word, year));
                     break; 
                 case "hyponyms": 
-                    if (tokens.length == 1) {
-                        try {
-                            String curWord = tokens[0];
-                            System.out.println(wordNet.hyponyms(curWord)); 
-                        } catch (Exception e){
-                            break;
-                        }
-                    }
+                    String curWord = tokens[0];
+                    System.out.println(wordNet.hyponyms(curWord)); 
                     break;  
                 case "history": 
-                    if (tokens.length > 0) {
-                        try {
-                            Plotter.plotAllWords(nGramMap, tokens, startYear, endYear);
-                        } catch (Exception e){
-                            break;
-                        }
-                    }
+                    Plotter.plotAllWords(nGramMap, tokens, startYear, endYear);
                     break;
                 case "hypohist":
-                    if (tokens.length > 0) {
-                        try {
-                            Plotter.plotCategoryWeights(nGramMap, wordNet, tokens, startYear, endYear);
-                        } catch (Exception e){
-                            break;
-                        }
-                    } 
+                    Plotter.plotCategoryWeights(nGramMap, wordNet, tokens, startYear, endYear);
                     break;
                 case "wordlength":
                     Plotter.plotProcessedHistory(nGramMap, startYear, endYear, new WordLengthProcessor());
                     break;
                 case "zipf":
-                    if (tokens.length == 1) {
-                        try {
-                            int year = Integer.parseInt(tokens[0]);
-                            Plotter.plotZipfsLaw(nGramMap, year);
-                        } catch(Exception e) {
-                            break;
-                        }
-                    }
+                    int yearZipf = Integer.parseInt(tokens[0]);
+                    Plotter.plotZipfsLaw(nGramMap, yearZipf);
                     break;
                 default:
                     System.out.println("Invalid command.");  
