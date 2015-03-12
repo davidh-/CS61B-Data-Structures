@@ -22,8 +22,9 @@ public class NgordnetUI {
         WordNet wordNet = new WordNet(synsetFile, hyponymFile);
         int startYear = 0;
         int endYear = 0;
-        try {
-            while (true) {
+
+        while (true) {
+            try {
                 System.out.print("> ");
                 String line = StdIn.readLine();
                 String[] rawTokens = line.split(" ");
@@ -69,11 +70,10 @@ public class NgordnetUI {
                         System.out.println("Invalid command.");  
                         break;
                 }
+            } catch (RuntimeException e) {
+                break;
             }
-        } catch (RuntimeException e) {
-            break;
         }
-        
     }
 } 
 
