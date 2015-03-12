@@ -34,6 +34,7 @@ public class YearlyRecord {
     }
 
     private void updateRank() {
+        System.out.println("this is our word-count map:" + countMap);
         System.out.println("about to update rank: " + rank);
         String[] needToRank = words().toArray(new String[words().size()]);
         for (int i = 0; i < needToRank.length; i++) {

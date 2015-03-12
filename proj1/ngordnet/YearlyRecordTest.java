@@ -1,5 +1,6 @@
 package ngordnet;
 
+import java.util.HashMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 /** 
@@ -15,29 +16,31 @@ public class YearlyRecordTest {
 
     @Test
     public void testBasic() {
+        HashMap<String, Integer> data = new HashMap<String, Integer>();
+
         YearlyRecord yr = new YearlyRecord();
-        yr.put("hello", NUM_1);
+        // yr.put("hello", NUM_1);
         yr.put("quayside", NUM_95);        
         yr.put("surrogate", NUM_95);
-        yr.put("merchantman", NUM_181);      
-        System.out.println(yr.words());
-        int q = yr.rank("quayside");
-        System.out.println("quayside rank: " + q + "\n");
-        int s = yr.rank("surrogate");
-        System.out.println("surrogate rank: " + s + "\n");
-        int m = yr.rank("merchantman");
-        System.out.println("merchantman rank: " + m + "\n");
-        int h = yr.rank("hello");
-        System.out.println("hello rank: " + h + "\n");
+        // yr.put("merchantman", NUM_181);      
+        // System.out.println(yr.words());
+        // int q = yr.rank("quayside");
+        // System.out.println("quayside rank: " + q + "\n");
+        // int s = yr.rank("surrogate");
+        // System.out.println("surrogate rank: " + s + "\n");
+        // int m = yr.rank("merchantman");
+        // System.out.println("merchantman rank: " + m + "\n");
+        // int h = yr.rank("hello");
+        // System.out.println("hello rank: " + h + "\n");
 
-        yr.put("jumbo", NUM_1000);
-        yr.put("rhino", NUM_200); 
+        // yr.put("jumbo", NUM_1000);
+        // yr.put("rhino", NUM_200); 
 
-        int j = yr.rank("jumbo");
-        System.out.println("jumbo rank: " + j + "\n");
-        int r = yr.rank("rhino");
-        System.out.println("rhino rank: " + r + "\n");
-        
+        // int j = yr.rank("jumbo");
+        // System.out.println("jumbo rank: " + j + "\n");
+        // int r = yr.rank("rhino");
+        // System.out.println("rhino rank: " + r + "\n");
+
 // ==> PASSED
 
 // --------> rank of: quayside: 1
