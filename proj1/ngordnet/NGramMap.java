@@ -34,8 +34,7 @@ public class NGramMap {
             YearlyRecord curYearlyRecord;
             if (allYearlyRecords.containsKey(curYear)) {
                 curYearlyRecord = allYearlyRecords.get(curYear);
-            } 
-            else {
+            } else {
                 curYearlyRecord = new YearlyRecord();
             }
             curYearlyRecord.put(curWord, curCount);
@@ -45,7 +44,7 @@ public class NGramMap {
 
         timeSeries = new TimeSeries<Long>();
         In inCounts = new In(countsFilename);
-        while(inCounts.hasNextLine()) {
+        while (inCounts.hasNextLine()) {
             String[] curLineSplit = inCounts.readLine().split(",");
             Integer curYear = Integer.parseInt(curLineSplit[0]);
             Long curTotalNumWords = Long.parseLong(curLineSplit[1]);
@@ -72,8 +71,8 @@ public class NGramMap {
     /** Provides the history of WORD between STARTYEAR and ENDYEAR. */
     public TimeSeries<Integer> countHistory(String word, int startYear, int endYear) {
         HashSet<Integer> yearsOfWord = wordAndYear.get(word);
-        TimeSeries<Integer> historyOfWord= new TimeSeries<Integer>();
-        for(int year : yearsOfWord) {
+        TimeSeries<Integer> historyOfWord = new TimeSeries<Integer>();
+        for (int year : yearsOfWord) {
             if (year >= startYear && year <= endYear || (startYear == 0 && endYear == 0)) {
                 YearlyRecord curYearlyRecord = allYearlyRecords.get(year);
                 int curCount = curYearlyRecord.count(word);
@@ -130,7 +129,7 @@ public class NGramMap {
                                                YearlyRecordProcessor yrp) {
         TimeSeries<Double> processedHistory = new TimeSeries<Double>();
         for (int year : allYearlyRecords.keySet()) {
-                if (year >= startYear && year <= endYear || (startYear == 0 && endYear == 0)) {
+            if (year >= startYear && year <= endYear || (startYear == 0 && endYear == 0)) {
                 processedHistory.put(year, yrp.process(allYearlyRecords.get(year)));
             }
         }

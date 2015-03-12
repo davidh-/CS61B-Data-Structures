@@ -88,7 +88,9 @@ public class YearlyRecord {
             }
         }
         return words;
-        // return oppositeMap.values(); //if this is too slow, make a data structure of words and update it whenever you put or create and update it when you need to
+        // return oppositeMap.values(); 
+        //if this is too slow, make a data structure of words and update 
+        // it whenever you put or create and update it when you need to
     }
 
     /** Returns all counts in ascending order of count. */
