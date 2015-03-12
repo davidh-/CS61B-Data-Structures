@@ -34,12 +34,9 @@ public class YearlyRecord {
     }
 
     private void updateRank() {
-        ArrayList<HashSet<String>> needToRank; 
-        needToRank =  new ArrayList<HashSet<String>>(oppositeMap.values());
-        for (int i = 0; i < needToRank.size(); i++) {
-            for (String word : needToRank.get(needToRank.size() - i - 1)) {
-                rank.put(word, i + 1);
-            }
+        String[] needToRank = words().toArray(new String[words().size()]);
+        for (int i = 0; i < needToRank.length; i++) {
+            rank.put(needToRank[needToRank.length - i - 1], i + 1);
         }
     }
 
@@ -105,13 +102,13 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        // System.out.println("to get rank: " + word);
+        System.out.println("to get rank: " + word);
         if (rankNeedsUpdate) {
-            // System.out.println("----------> rank needs an update: will update");
+            System.out.println("----------> rank needs an update: will update");
             updateRank();
             rankNeedsUpdate = false;
         }
-        // System.out.println("rank of " + word + ": " + rank.get(word));
+        System.out.println("rank of " + word + ": " + rank.get(word));
         return rank.get(word);
     }
 

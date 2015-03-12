@@ -8,21 +8,14 @@ import edu.princeton.cs.introcs.In;
 public class NgordnetUI {
     public static void main(String[] args) {
         In in = new In("./ngordnet/ngordnetui.config");
-        // System.out.println("Reading ngordnetui.config...");
-
         String wordFile = in.readString();
         String countFile = in.readString();
         String synsetFile = in.readString();
         String hyponymFile = in.readString();
-        // System.out.println("\nBased on ngordnetui.config, using the following: "
-        //                    + wordFile + ", " + countFile + ", " + synsetFile +
-        //                    ", and " + hyponymFile + ".");
-
         NGramMap nGramMap = new NGramMap(wordFile, countFile);
         WordNet wordNet = new WordNet(synsetFile, hyponymFile);
         int startYear = 0;
         int endYear = 0;
-
         while (true) {
             try {
                 System.out.print("> ");

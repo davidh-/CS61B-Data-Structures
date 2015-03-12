@@ -10,6 +10,9 @@ public class YearlyRecordTest {
     private static final int NUM_95 = 95;
     private static final int NUM_181 = 181;
     private static final int NUM_1 = 1;
+    private static final int NUM_1000 = 1000;
+    private static final int NUM_200 = 200;
+
     @Test
     public void testBasic() {
         YearlyRecord yr = new YearlyRecord();
@@ -26,6 +29,14 @@ public class YearlyRecordTest {
         System.out.println("merchantman rank: " + m + "\n");
         int h = yr.rank("hello");
         System.out.println("hello rank: " + h + "\n");
+
+        yr.put("jumbo", NUM_1000);
+        yr.put("rhino", NUM_200); 
+
+
+
+
+
     }
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(YearlyRecordTest.class);
