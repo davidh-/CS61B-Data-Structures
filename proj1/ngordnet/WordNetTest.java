@@ -7,12 +7,11 @@ import static org.junit.Assert.*;
  */
 
 public class WordNetTest {
-
 	@Test
-	public void testReadIn() {
-		WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms.txt");
+    public void testReadIn() {
+    	WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms.txt");
 	}
-	
+
 	/** Calls tests for WordNet. */
 	public static void main(String[] args) {
 		jh61b.junit.textui.runClasses(WordNetTest.class);

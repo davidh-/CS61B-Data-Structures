@@ -51,7 +51,7 @@ public class YearlyRecord {
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
-        // System.out.println(word);
+        System.out.println(word, count);
         // if (rankNeedsUpdate) {
         //     // System.out.println("hittt11");
         //     updateRank();

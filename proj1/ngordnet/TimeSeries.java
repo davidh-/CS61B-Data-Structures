@@ -29,8 +29,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
         for (Number year : this.years()) {
             if (!ts.containsKey(year)) {
                 throw new IllegalArgumentException();
-            }
-            else {
+            } else {
                 Number thisVal = this.get(year);
                 Number tsVal = ts.get(year);
                 divide.put(year.intValue(), thisVal.doubleValue() / tsVal.doubleValue());
