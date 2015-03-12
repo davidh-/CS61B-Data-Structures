@@ -5,23 +5,19 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {   
-
     /** Constructs a new empty TimeSeries. */
     public TimeSeries() {
         super();
     }
-
     /** Creates a copy of TS, but only between STARTYEAR and ENDYEAR. 
      * inclusive of both end points. */
     public TimeSeries(TimeSeries<T> ts, int startYear, int endYear) {
         super(ts.subMap(startYear, true, endYear, true));
     }
-
     /** Creates a copy of TS. */
     public TimeSeries(TimeSeries<T> ts) {
         super(ts);
     }
-
     /** Returns the quotient of this time series divided by the relevant value in ts.
       * If ts is missing a key in this time series, return an IllegalArgumentException. */
     public TimeSeries<Double> dividedBy(TimeSeries<? extends Number> ts) {
@@ -37,7 +33,6 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
         }
         return divide;
     }
-
     /** Returns the sum of this time series with the given ts. The result is a 
       * a Double time series (for simplicity). */
     public TimeSeries<Double> plus(TimeSeries<? extends Number> ts) {
@@ -58,16 +53,13 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
         }
         return sum;
     }
-
     /** Returns all years for this time series (in any order). */
     public Collection<Number> years() {
         return new ArrayList<Number>(keySet());
     }
-
     /** Returns all data for this time series (in any order). */
     public Collection<Number> data() {
         return new ArrayList<Number>(values());
     }
-    
 }
 

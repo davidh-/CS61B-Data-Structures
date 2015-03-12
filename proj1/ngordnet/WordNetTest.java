@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class WordNetTest {
 	@Test
     public void testReadIn() {
-    	WordNet readInTest = new WordNet("wordnet/synsets11.txt", "wordnet/hyponyms.txt");
+    	WordNet readInTest = new WordNet("wordnet/synsets.txt", "wordnet/hyponyms.txt");
 	}
 
 	/** Calls tests for WordNet. */

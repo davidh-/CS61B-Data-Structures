@@ -29,45 +29,9 @@ public class YearlyRecordTest {
         yr.put("quayside", 10000);
         yr.rank("quayside");
 
-
-
         System.out.println(yr.rank("quayside"));
-        // yr.put("hello", NUM_1);
         yr.put("quayside", NUM_95);        
         yr.put("surrogate", NUM_95);
-        // yr.put("merchantman", NUM_181);      
-        // System.out.println(yr.words());
-        // int q = yr.rank("quayside");
-        // System.out.println("quayside rank: " + q + "\n");
-        // int s = yr.rank("surrogate");
-        // System.out.println("surrogate rank: " + s + "\n");
-        // int m = yr.rank("merchantman");
-        // System.out.println("merchantman rank: " + m + "\n");
-        // int h = yr.rank("hello");
-        // System.out.println("hello rank: " + h + "\n");
-
-        // yr.put("jumbo", NUM_1000);
-        // yr.put("rhino", NUM_200); 
-
-        // int j = yr.rank("jumbo");
-        // System.out.println("jumbo rank: " + j + "\n");
-        // int r = yr.rank("rhino");
-        // System.out.println("rhino rank: " + r + "\n");
-
-// ==> PASSED
-
-// --------> rank of: quayside: 1
-// --------> rank of: surrogate: 1
-// --------> rank of: surrogate: 1
-
-
-// put:     this means that rank is in order before this call: potato 5000
-// --------> rank of: potato: 1
-// put:     this means that rank is in order before this call: quayside 10000
-// --------> rank of: quayside: 5
-
-
-
 
     }
     public static void main(String[] args) {

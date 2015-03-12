@@ -51,13 +51,11 @@ public class NGramMap {
             timeSeries.put(curYear, curTotalNumWords);
         }
     }
-    
     /** Returns the absolute count of WORD in the given YEAR. If the word
       * did not appear in the given year, return 0. */
     public int countInYear(String word, int year) {
         return allYearlyRecords.get(year).count(word);
     }
-
     /** Returns a defensive copy of the YearlyRecord of YEAR. */
     public YearlyRecord getRecord(int year) {
         YearlyRecord record = allYearlyRecords.get(year);
@@ -65,16 +63,14 @@ public class NGramMap {
         String[] words = record.words().toArray(new String[record.words().size()]);
         Integer[] counts = record.counts().toArray(new Integer[record.counts().size()]);
         for (int i = 0; i < words.length; i++) {
-            defensiveCopy.put(words[i], counts[i]);
+            defensiveCopy.put(words[i], record.count(words[i]));
         }
         return defensiveCopy;
     }
-
     /** Returns the total number of words recorded in all volumes. */
     public TimeSeries<Long> totalCountHistory() {
         return timeSeries;
     }
-
     /** Provides the history of WORD between STARTYEAR and ENDYEAR. */
     public TimeSeries<Integer> countHistory(String word, int startYear, int endYear) {
         HashSet<Integer> yearsOfWord = wordAndYear.get(word);
@@ -88,18 +84,14 @@ public class NGramMap {
         }
         return historyOfWord;
     }
-
     /** Provides a defensive copy of the history of WORD. */
     public TimeSeries<Integer> countHistory(String word) {
         return countHistory(word, 0, 0);
     }
-
     /** Provides the relative frequency of WORD between STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> weightHistory(String word, int startYear, int endYear) {
-        // HashSet<Integer> yearsOfWord = wordAndYear.get(word);
         TimeSeries<Integer> countHistory = countHistory(word, startYear, endYear);
         TimeSeries<Long> totalNumWords = new TimeSeries<Long>();
-        // System.out.println(yearsOfWord);
         for (Number yearNum : countHistory.years()) {
             int year = yearNum.intValue();
             if (year >= startYear && year <= endYear || (startYear == 0 && endYear == 0)) {
@@ -108,12 +100,10 @@ public class NGramMap {
         }
         return countHistory.dividedBy(totalNumWords);
     }
-
     /** Provides the relative frequency of WORD. */
     public TimeSeries<Double> weightHistory(String word) {
         return weightHistory(word, 0, 0);
     }
-
     /** Provides the summed relative frequency of all WORDS between
       * STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
@@ -126,12 +116,10 @@ public class NGramMap {
         }
         return sum;
     }
-
     /** Returns the summed relative frequency of all WORDS. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words) {
         return summedWeightHistory(words, 0, 0);
     }
-
     /** Provides processed history of all words between STARTYEAR and ENDYEAR as processed
       * by YRP. */
     public TimeSeries<Double> processedHistory(int startYear, int endYear,
@@ -144,11 +132,8 @@ public class NGramMap {
         }
         return processedHistory;
     }
-
     /** Provides processed history of all words ever as processed by YRP. */
     public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
         return processedHistory(0, 0, yrp);
     }
-
-
 }

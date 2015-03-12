@@ -16,7 +16,6 @@ public class GraphHelper {
     public static Set<Integer> descendants(Digraph G, Set<Integer> synsetIDs) {
         DirectedDFS dfdp = new DirectedDFS(G, synsetIDs);
         TreeSet<Integer> reachable = new TreeSet<Integer>();
-
         for (int i = 0; i < G.V(); i += 1) {
             if (dfdp.marked(i)) {
                 reachable.add(i);

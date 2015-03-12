@@ -9,7 +9,6 @@ public class YearlyRecord {
 
     private HashMap<String, Integer> countMap;
     private TreeMap<Integer, HashSet<String>> oppositeMap;
-
     private HashMap<String, Integer> rank;
     private boolean rankNeedsUpdate;
 
@@ -20,7 +19,6 @@ public class YearlyRecord {
         rank = new HashMap<String, Integer>();
         rankNeedsUpdate = true;
     }
-
     /** Creates a YearlyRecord using the given data. */
     public YearlyRecord(HashMap<String, Integer> otherCountMap) {
         countMap = new HashMap<String, Integer>(otherCountMap);
@@ -32,18 +30,12 @@ public class YearlyRecord {
         updateRank();
         rankNeedsUpdate = false;
     }
-
     private void updateRank() {
-        System.out.println("this is our word-count map:" + countMap);
-        System.out.println("about to update rank: " + rank);
         String[] needToRank = words().toArray(new String[words().size()]);
         for (int i = 0; i < needToRank.length; i++) {
             rank.put(needToRank[needToRank.length - i - 1], i + 1);
         }
-        System.out.println("updated rank: " + rank);
-
     }
-
     /** Returns the number of times WORD appeared in this year. */
     public int count(String word) {
         if (countMap.get(word) == null) {
@@ -52,14 +44,8 @@ public class YearlyRecord {
             return countMap.get(word);
         }
     }
-
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
-        if (!rankNeedsUpdate) {
-            System.out.println("put:     " + word + " " + count + " rank is in order before this call: ");
-            // updateRank();
-            // rankNeedsUpdate = false;
-        }
         if (countMap.containsKey(word)) {
             oppositeMap.remove(countMap.get(word));
             putOppositeMap(count, word);
@@ -67,9 +53,7 @@ public class YearlyRecord {
         countMap.put(word, count);
         putOppositeMap(count, word);
         rankNeedsUpdate = true;
-
     }
-
     private void putOppositeMap(int count, String word) {
         int curCount = countMap.get(word);
         if (oppositeMap.containsKey(curCount)) {
@@ -80,12 +64,10 @@ public class YearlyRecord {
             oppositeMap.put(count, curHashSet);
         }
     }
-
     /** Returns the number of words recorded this year. */
     public int size() {
         return countMap.size();
     }
-
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
         ArrayList<String> words = new ArrayList<String>();
@@ -95,16 +77,11 @@ public class YearlyRecord {
             }
         }
         return words;
-        // return oppositeMap.values(); 
-        //if this is too slow, make a data structure of words and update 
-        // it whenever you put or create and update it when you need to
     }
-
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
         return new ArrayList<Number>(oppositeMap.keySet());
     }
-
     /** Returns rank of WORD. Most common word is rank 1. 
       * If two words have the same rank, break ties arbitrarily. 
       * No two words should have the same rank.
@@ -113,10 +90,7 @@ public class YearlyRecord {
         if (rankNeedsUpdate) {
             updateRank();
             rankNeedsUpdate = false;
-            System.out.println("--------> rank of: " + word + ": " + rank.get(word));
         }
-        // System.out.println("rank of " + word + ": " + rank.get(word));
         return rank.get(word);
     }
-
 }

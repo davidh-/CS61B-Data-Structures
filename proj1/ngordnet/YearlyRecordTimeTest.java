@@ -37,22 +37,18 @@ public class YearlyRecordTimeTest {
         }        
     }
 
-
     /* Tests to see if you can insert 100000 strings in less than a second. 
      * Pass this on submit/proj1 for 0.1 bonus points. */
     @Test(timeout = 1000)
     public void testPut100000() {
         testPutHelper(100000);
     }
-
     /* Tests to see if you can insert 1000 strings in less than a second. */
     @Test(timeout = 1000)
     public void testPut1000() {
 
         testPutHelper(1000);
     }
-
-
     /** Returns the number of rank calls that can be made in MAXTIME on a
       * YearlyRecord with N entries. Prints result in addition to returning.*/
     private int countRankCalls(int N, int maxTime) {

@@ -53,12 +53,10 @@ public class WordNet {
             }
         }
     }
-    
     /* Returns true if NOUN is a word in some synset. */
     public boolean isNoun(String noun) {
         return this.nouns().contains(noun);
     }
-
     /* Returns the set of all nouns. */
     public Set<String> nouns() {
         TreeSet<String> setOfAllNouns = new TreeSet<String>();
@@ -73,7 +71,6 @@ public class WordNet {
         }
         return setOfAllNouns;
     }
-
     /** Returns the set of all hyponyms of WORD as well as all synonyms of
       * WORD. If WORD belongs to multiple synsets, return all hyponyms of
       * all of these synsets. See http://goo.gl/EGLoys for an example.
@@ -102,6 +99,4 @@ public class WordNet {
         }
         return allIndexes;
     }
-
 }
-
