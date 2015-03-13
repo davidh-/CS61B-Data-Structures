@@ -76,20 +76,24 @@ HashSet: ~(8.72^-9)N^(1.4185589355)
 4. Data:
                                        n         time
 Insertion sort with array list:
-
-
-
+										100 	0.002
+										1000 	0.014
+										10000 	0.052
+										100000 	5.772
 
 Insertion sort with linked list:
-
+										1 		0.0
+										10 		0.001
+										100 	0.004
+										1000 	0.326
 
 
 
 
 Experimentally determined running time:
 
-Insertion sort with array:        O(___)
-Insertion sort with linked list:  O(___)
+Insertion sort with array:        O(N^(2.0453229788))
+Insertion sort with linked list:  O(N^(1.9111576087))
 
 5. Initial guess: O(___)
 
