@@ -76,13 +76,23 @@ public class Asymptotics {
     /** Fill in the body of this function so that its running time is
      *  n^(1/2) and so that it returns true if and only if n is prime. */
     public static boolean function4(long n) {
-	return false; //FIX ME
+        boolean prime = true;
+        for (int i = 0; i < Math.pow(n, .5); i++){
+            if (i != 1 || i != n && n % i == 0) {
+                prime = false;
+            }
+        }
+        return prime;
     }
 
     /** Fill in the body of this function so that its best case running
      *  time is log(n) and its worst case running time is n. */
     public static void function5(long n) {
-        //FILL ME IN
+        for (int i = 0; i < n; i++){
+            if (n % 2 == 0) {
+                n = n / 2;
+            }
+        }
     }
 
     public static void usage() {
