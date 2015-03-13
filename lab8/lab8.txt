@@ -51,20 +51,27 @@ function5 (worst case):
 3. Data:
                               n         time
 ArrayList:
-
-
-
+							100  		0.001
+							1000 		0.011
+							10000 		0.066
+							100000 		4.423
 
 HashSet:
 
-
-
-
+							10000 		0.022
+							100000 		0.051
+							1000000 	0.283
+							10000000  	7.419
 
 Experimentally determined running time:
 
-ArrayList:
-HashSet:
+ArrayList: O(N^(1.8261730037))
+
+HashSet: O(N^(1.4185589355))
+
+ArrayList: ~(3.27^-9)N^(1.8261730037)
+HashSet: ~(8.72^-9)N^(1.4185589355)
+
 
 4. Data:
                                        n         time
