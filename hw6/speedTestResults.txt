@@ -1,0 +1,108 @@
+
+
+
+
+InsertRandomSpeedTest Results:
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 100
+class ULLMap: 0.00 sec
+
+Enter # strings to insert into your BSTMap: 100
+class BSTMap: 0.00 sec
+
+Enter # strings to insert into Java's TreeMap: 100
+Java's Built-in TreeMap: 0.00 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 1000
+class ULLMap: 0.01 sec
+
+Enter # strings to insert into your BSTMap: 1000
+class BSTMap: 0.01 sec
+
+Enter # strings to insert into Java's TreeMap: 1000
+Java's Built-in TreeMap: 0.00 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 10000
+class ULLMap: 0.35 sec
+
+Enter # strings to insert into your BSTMap: 10000
+class BSTMap: 0.01 sec
+
+Enter # strings to insert into Java's TreeMap: 10000
+Java's Built-in TreeMap: 0.02 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 100000     
+--Stack Overflow -- couldn't add 100000 strings of length 10.
+
+Enter # strings to insert into your BSTMap: 100000
+class BSTMap: 0.09 sec
+
+Enter # strings to insert into Java's TreeMap: 100000
+Java's Built-in TreeMap: 0.08 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 1000000
+--Stack Overflow -- couldn't add 1000000 strings of length 10.
+
+Enter # strings to insert into your BSTMap: 1000000
+class BSTMap: 1.31 sec
+
+Enter # strings to insert into Java's TreeMap: 1000000
+Java's Built-in TreeMap: 1.16 sec
+--------------------------------------------------------------
+
+
+
+
+
+InsertInOrderSpeedTest Results:
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 10
+class ULLMap: 0.00 sec
+
+Enter # strings to insert into BSTMap: 10
+class BSTMap: 0.00 sec
+
+Enter # strings to insert into Java's TreeMap: 10
+Java's Built-in TreeMap: 0.00 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 100
+class ULLMap: 0.01 sec
+
+Enter # strings to insert into BSTMap: 100
+class BSTMap: 0.01 sec
+
+Enter # strings to insert into Java's TreeMap: 100
+Java's Built-in TreeMap: 0.00 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 1000              
+class ULLMap: 0.02 sec
+
+Enter # strings to insert into BSTMap: 1000
+class BSTMap: 0.03 sec
+
+Enter # strings to insert into Java's TreeMap: 1000
+Java's Built-in TreeMap: 0.01 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 10000
+class ULLMap: 0.71 sec
+
+Enter # strings to insert into BSTMap: 10000
+class BSTMap: 0.91 sec
+
+Enter # strings to insert into Java's TreeMap: 10000
+Java's Built-in TreeMap: 0.03 sec
+--------------------------------------------------------------
+Enter # strings to insert into ULLMap: 100000
+--Stack Overflow -- couldn't add 100000 strings.
+
+Enter # strings to insert into BSTMap: 100000
+--Stack Overflow -- couldn't add 100000 strings.
+
+Enter # strings to insert into Java's TreeMap: 100000
+Java's Built-in TreeMap: 0.06 sec
+--------------------------------------------------------------
+
+
+When we inserted things randomly, my BSTMap and Java's Treemap did pretty well compared to ULLMap.
+But when we inserted things using lexicographically-increasing order, Java's TreeMap was a clear winner and ULLMap and BSTMap both failed to add large amounts of exicographically-increasing order data.
+
