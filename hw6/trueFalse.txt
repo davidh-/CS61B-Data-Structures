@@ -1,8 +1,8 @@
-1 T This is saying that BSTMap's put method will never be slower than O(log(n)). This is true because BSTMap's put method can never run slower than O(log(N)) time.
-2 T We know Θ(log(N)) is definitely a possibility for the runtime for BSTMap's put method, so it is within Θ(log(N)).
-3 F Since we know that the worst runtime is O(log(N)), we can be sure to say that BSTMap's put method will never run in Θ(N).
-4 T Since we know that the worst runtime is O(log(N)), we can be sure to say that BSTMap's put method will never run slower than O(N).
-5 T In the worst case scenario, B.put(K, V) is definitely within O(N^2) because it can't possibly do worse than this since BSTMap's put method can never run slower than O(log(N)) time.
-6 T If we wanted to complete N random calls to B.put(K, V) we have at worst run time O(log(N)). In my implementation, I call B.get(Node, key) which runs at worst run time O(log(N)). So if we divide the two runtime and take the lim as n->infinity of these two, we get 1 because they are the same worst runtime as n gets large.
-7 T This is true because if C!=K that means we have to run through the entire BST and we know that the worst case if we run through the entire thing is O(log(N)). So that means that the best case will in turn be Ω(log(N)).
+1 F This is saying that BSTMap's put method will never be slower than O(log(n)). This is false because BSTMap's put method can run slower than O(log(N)) time. It can run in O(N) time when the BSTMap is heavily one-sided.
+2 T We know Θ(log(N)) is definitely a possibility for a bushy BSTMap and the runtime for BSTMap's put method, so it is within Θ(log(N)).
+3 T Since we know that the worst runtime is O(N), we can be sure to say that BSTMap's put method can possibly run in Θ(N).
+4 T Since we know that the worst runtime is O(N), we can be sure to say that BSTMap's put method will never run slower than O(N).
+5 T In the worst case scenario, B.put(K, V) is definitely within O(N^2) because it can't possibly do worse than this since BSTMap's put method can never run slower than O(log(N)) time. This is not a specific bound though, O(N) is more specific.
+6 T If we wanted to complete N random calls to B.put(K, V) we have run time Θ(log(N)) because random calls will usually result in a bushy tree. In my implementation, I call B.get(Node, key) which runs at run time Θ(log(N)). So if we divide the two runtime and take the lim as n->infinity of these two, we get 1 because they are the same runtime as n gets large for random data.
+7 F This is false because if C!=K that means we have to run through the entire BST and we know that the worst case if we run through the entire thing is O(N). So that means that the best case will in turn be Ω(N).
 8 O(2N) The worst run time for the mystery function is O(2N) because it can't run worse than this run time since we know numberOfNodes(Node p) will be called and there might be a BSTMap that takes the entire tree to look for one less than the size it's asking for as z (it may not even find it). O(2N) because it had to do one N for the left and one N for the right.
