@@ -61,8 +61,10 @@ public class Nana {
         return 17;
     }
 
-    /* Static, so there's only one universal MY_CONST... right? */
-    public static final double MY_CONST = Math.random();
+    /* final, so once created it can't be changed. The problem was changed
+     * to have the keyword static removed. The AG is always backwards
+     * compatible, if applicable. */
+    public final double MY_CONST = Math.random();
 
     public int hashCodeE() {
         return (int) (MY_CONST * 100);
