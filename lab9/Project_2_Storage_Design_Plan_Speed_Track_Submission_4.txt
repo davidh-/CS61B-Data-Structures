@@ -1,0 +1,87 @@
+﻿Basic Storage Design Plan for Gitlet
+
+
+Overview
+-------
+
+•  .gitlet/HEAD :contains the path of the current head
+•  .gitlet/heads/XXX.ser :contains the head whose branch name is XXX
+•  .gitlet/commits/XXX.ser :contains the commit whose id is XXX
+•  /gitlet/.temp. :contains the changes of files since the last commit
+
+
+
+Sequential Example
+-------
+
+For each of the commands below, describe in detail what files on your computer change after the command is executed. Only list changes made to files. Do not list details regarding the reading of files.
+
+$ java Gitlet init
+
+ • If it does not already exist, a new folder called .gitlet is created in the current directory.
+ • If it already exists, abort now and print "A gitlet version control system already exists in the current directory."
+ • An empty commit with commit message "intial commit" is created, and a head called "master" is created and points to the initial commit.
+
+$ java Gitlet add dog.txt
+ • If the file does not exist, abort now and print "dog.txt does not exist".
+ • Add the dog.txt to .temp
+
+$ java Gitlet commit “initial commit of dog.txt”
+ • A new commit named XXX(ensured to be unique) is created and record the difference of files listed in .temp from the last commit
+ • XXX is set to point to the last commit, and HEAD changes to XXX
+ • .temp is cleared
+
+
+$ java Gitlet add dog.txt
+ • Abort now and print the error message "dog.txt has not been modified since the last commit".
+
+
+
+$ cp manyDogs.txt dog.txt
+$ java Gitlet add dog.txt
+ • Add MODIFIED dog.txt to .temp
+
+
+
+$ java Gitlet commit “replaced dog.txt with manyDogs”
+ • A new commit named XXX(ensured to be unique) is created and record the difference of files listed in .temp from the last commit
+ • XXX is set to point to the last commit, and HEAD changes to XXX 
+ • .temp is cleared
+
+
+
+$ java Gitlet add manyDogs.txt
+ • Add NEW manyDogs.txt to .temp
+
+
+
+$ java Gitlet add ketchupFriend.txt
+ • Add NEW ketchupFriend.txt to .temp
+
+
+$ java Gitlet commit “added manyDogs and ketchupFriend”
+ • A new commit named XXX(ensured to be unique) is created and record the difference of files listed in .temp from the last commit
+ • XXX is set to point to the last commit, and HEAD changes to XXX 
+ • .temp is cleared
+
+
+$ java Gitlet commit YOLO
+ • abort and print "Invalid message"
+
+
+$ cp doge.txt manyDogs.txt
+$ java Gitlet add manyDogs.txt
+ • Add MODIFIED manyDogs.txt to .temp
+
+
+$ java Gitlet commit “replaced manyDogs with doge”
+ • A new commit named XXX(ensured to be unique) is created and record the difference of files listed in .temp from the last commit
+ • XXX is set to point to the last commit, and HEAD changes to XXX 
+
+$ java Gitlet add dog.txt
+ • Abort now and print the error message "dog.txt has not been modified since the last commit".
+
+
+$ java Gitlet commit “added dog yet again”
+ • Abort now and print the error message "No changes added to the commit".
+

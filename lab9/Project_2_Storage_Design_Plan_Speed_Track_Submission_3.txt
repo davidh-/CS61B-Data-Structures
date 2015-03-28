@@ -1,0 +1,120 @@
+Basic Storage Design Plan for Gitlet
+
+
+Overview
+-------
+Gitlet.java: The main class. Stores information (such as what needs has been added and is ready for commits, and a magic list/tree system for recording previous commits in .gitlet). As it is immediately called and killed, it will pass on its proud legacy of information through a .ser file held in .gitlet. 
+
+.gitlet/GitSave.ser: The .ser file which will allow Gitlet.java to retain information across it's short-lived lives
+
+.gitlet/XXXXX.XXX: Any of the commited old/backup/not-using-right-now files. Variable composition/number. 
+
+Files in the working directory. Unknown composition/number when actually using Gitlet, but for this sequential example they will be:
+ dog.txt
+ manyDogs.txt
+ ketchupFriend.txt
+ doge.txt
+ Gitlet's commands will not actually affect these files in this sequential example.
+
+
+
+
+
+
+Sequential Example
+-------
+
+For each of the commands below, describe in detail what files on your computer change after the command is executed. Only list changes made to files. Do not list details regarding the reading of files.
+
+$ java Gitlet init
+ . If it does not already exist, a new folder called .gitlet is created in the current directory. It will autostart with one commit, with no files in it. 
+ . If it does already exist, it will abort and print a failure message. 
+
+
+
+$ java Gitlet add dog.txt
+ . Gitlet.java will change, as it's internal list of to-be commits will be changed to include "dog.txt." It'll "save" itself for next time as .gitlet/GitSave.ser. 
+ . .gitlet/GitSave.ser will be added.  
+
+
+
+$ java Gitlet commit “initial commit of dog.txt”
+ . .gitlet will have the current version of "dog.txt" added to it as a file named something special for later retrival (.gitlet/XXXXX.txt, in this case). 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+ . Gitlet.java's list of to-be commits will clear. It will also change its magic list/tree system so it can retrieve the Commit_1 version of dog.txt. And attach the "initial commit of dog.txt" string somehow for logging. 
+
+
+
+
+$ java Gitlet add dog.txt
+. Nothing will change. Gitlet will need to check the most recent version of dog.txt that .gitlet contains and print error message "File has not been modified since the last commit.".
+
+
+
+
+$ cp manyDogs.txt dog.txt
+$ java Gitlet add dog.txt
+ . Gitlet.java will change, as it's internal list of to-be commits will be changed to include "dog.txt." It'll "save" itself for next time as .gitlet/GitSave.ser. 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+
+
+
+
+$ java Gitlet commit “replaced dog.txt with manyDogs”
+ . .gitlet will have the current version of "dog.txt" added to it as a file named something special for later retrival (.gitlet/XXXXX.txt, in this case). 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+ . Gitlet.java's list of to-be commits will clear. It will also change its magic list/tree system so it can retrieve the Commit_2 version of dog.txt. And attach the “replaced dog.txt with manyDogs”string somehow for logging. It'll "save" itself for next time as .gitlet/GitSave.ser. 
+
+
+
+
+
+$ java Gitlet add manyDogs.txt
+. Gitlet.java will change, as it's internal list of to-be commits will be changed to include "manyDogs.txt." It'll "save" itself for next time as .gitlet/GitSave.ser. 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+
+
+
+$ java Gitlet add ketchupFriend.txt
+. Gitlet.java will change, as it's internal list of to-be commits will be changed to include "ketchupFriend.txt." It'll "save" itself for next time as .gitlet/GitSave.ser. 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+ 
+
+
+
+$ java Gitlet commit “added manyDogs and ketchupFriend”
+ . .gitlet will have the current versions of "manyDogs.txt" and "ketchupFriend.txt" added to it as a files named something special for later retrival (.gitlet/XXXXX.txt and .gitlet/XXXXX.txt, in this case). 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+ . Gitlet.java's list of to-be commits will clear. It will also change its magic list/tree system so it can retrieve the Commit_3 versions of manyDogs.txt and ketchupFriend.txt. And attach the “added manyDogs and ketchupFriend” string somehow for logging. It'll "save" itself for next time as .gitlet/GitSave.ser. 
+
+
+
+
+$ java Gitlet commit YOLO
+. Nothing will change. Gitlet.java will print a failure message ("No changes added to the commit.") because no files have been staged. 
+
+
+
+$ cp doge.txt manyDogs.txt
+$ java Gitlet add manyDogs.txt
+. Gitlet.java will change, as it's internal list of to-be commits will be changed to include "manyDogs.txt." It'll "save" itself for next time as .gitlet/GitSave.ser. 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one.  
+
+
+
+
+$ java Gitlet commit “replaced manyDogs with doge”
+ . .gitlet will have the current version of "manyDogs.txt" added to it as a file named something special for later retrival (.gitlet/XXXXX.txt, in this case). 
+ . An updated .gitlet/GitSave.ser will be added, replacing the old one. 
+ . Gitlet.java's list of to-be commits will clear. It will also change its magic list/tree system so it can retrieve the Commit_4 version of manyDog.txt. And attach the “replaced manyDogs with doge” string somehow for logging. 
+
+
+
+
+$ java Gitlet add dog.txt
+. Nothing will change. Gitlet will need to check the most recent version of dog.txt that .gitlet contains and print error message "File has not been modified since the last commit.".
+
+
+
+$ java Gitlet commit “added dog yet again”
+. Nothing will change. Gitlet will see that nothing has been staged and print error message "File has not been modified since the last commit.". Though I'm not exactly sure why it says that, I feel like it should say "No changed added to the commit" according to the spec. That's what the staff solution for the lab said though. 
