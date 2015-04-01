@@ -51,7 +51,7 @@ public class Bin15 {
     in the method followUpAnswer(). 
     */
     public static final int followUpAnswer() {
-        return 62; // YOUR CODE HERE. THIS MAY OR MAY NOT BE CORRECT.
+        return 63; // YOUR CODE HERE. THIS MAY OR MAY NOT BE CORRECT.
     }
     
     public static void main(String[] args) {
@@ -60,7 +60,7 @@ public class Bin15 {
         // 0x9 means 9 in hexadecimal
         // 1 means 1 in decimal
         // 0b01 means 01 or 1 in binary
-        System.out.println("Note to self: Answer follow-up question!");
+        System.out.println(Integer.parseInt("000010000000000", 2));
     }
 }
 
