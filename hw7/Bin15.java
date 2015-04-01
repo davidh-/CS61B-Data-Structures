@@ -51,7 +51,7 @@ public class Bin15 {
     in the method followUpAnswer(). 
     */
     public static final int followUpAnswer() {
-        return 2147483647; // YOUR CODE HERE. THIS MAY OR MAY NOT BE CORRECT.
+        return 16; // YOUR CODE HERE. THIS MAY OR MAY NOT BE CORRECT.
     }
     
     public static void main(String[] args) {
