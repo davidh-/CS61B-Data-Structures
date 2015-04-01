@@ -23,9 +23,21 @@ public class FibonacciMemo {
      * @param n
      * @return The nth fibonacci number
      */
+    private static HashMap<Integer, Integer> fibsCalculated = new HashMap<Integer, Integer>();
     public static int fibMemo(int n) {
-        // YOUR CODE HERE
-        return 0;
+        if (n <= 1) {
+            return n;
+        }
+        else if (fibsCalculated.containsKey(n)) {
+            return fibsCalculated.get(n);
+        }
+        else {
+            int first = fibMemo(n - 2);
+            fibsCalculated.put(n - 2, first);
+            int second = fibMemo(n - 1);
+            fibsCalculated.put(n - 1, second);
+            return first + second;
+        }
     }
 
     /**
@@ -45,10 +57,10 @@ public class FibonacciMemo {
         m += "\n" + "He was the son of a wealthy merchant.\n";
         System.out.println(m);
         System.out.println("0: " + FibonacciMemo.fibMemo(0));
-        System.out.println("1: " + FibonacciMemo.fibNoMemo(1));
-        System.out.println("2: " + FibonacciMemo.fibNoMemo(2));
-        System.out.println("3: " + FibonacciMemo.fibNoMemo(3));
-        System.out.println("4: " + FibonacciMemo.fibNoMemo(4));
+        System.out.println("1: " + FibonacciMemo.fibMemo(1));
+        System.out.println("2: " + FibonacciMemo.fibMemo(2));
+        System.out.println("3: " + FibonacciMemo.fibMemo(3));
+        System.out.println("47: " + FibonacciMemo.fibMemo(47));
 
         // 46th Fibonacci = 1,836,311,903
         // 47th Fibonacci = 2,971,215,073
