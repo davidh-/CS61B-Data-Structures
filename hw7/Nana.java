@@ -134,7 +134,7 @@ public class Nana {
 
     // Is hashCodeE() a valid hash for Nana? Return "yes" or "no"
     public static final String isValidHashE() {
-        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeF() a valid hash for Nana? Return "yes" or "no"
