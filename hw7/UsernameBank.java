@@ -60,7 +60,7 @@ public class UsernameBank {
 
     public String getUsername(String userEmail)  {
         if (userEmail == null) {
-            return null;
+            throw new NullPointerException();
         }
         else {
             for (String username : database.keySet()) {
@@ -82,13 +82,29 @@ public class UsernameBank {
     }
 
     public String suggestUsername() {
-        return null;
+        String username = "";
+        int i = 0;
+        int randomMax = (int) (Math.random() * (4 - 2)) + 2;
+        while (i < randomMax) {
+            int randomPick = (int) (Math.random() * (4 - 1)) + 1;
+            if (randomPick == 1) {
+                username += (char) ((int) (Math.random() * (58 - 48)) + 48);
+            }
+            else if (randomPick == 2) {
+                username += (char) ((int) (Math.random() * (91 - 65)) + 65);
+            }
+            else {
+                username += (char) ((int) (Math.random() * (123 - 97)) + 97);
+            }
+            i++;
+        }
+        return username;
     }
 
     // The answer is somewhere in between 3 and 1000.
     public static final int followUp() {
-        // YOUR CODE HERE
-        return 10;
+        // tried 10, 15
+        return 15;
     }
 
 }
