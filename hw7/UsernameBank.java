@@ -1,56 +1,94 @@
 import java.util.Map;
+import java.util.HashMap;
 
 public class UsernameBank {
 
     // Instance variables (remember, they should be private!)
-    // YOUR CODE HERE
+    private HashMap<String, String> database;
+    private HashMap<String, Integer> badEmails;
+    private HashMap<String, Integer> badUsernames;
 
     public UsernameBank() {
-        // YOUR CODE HERE
+        database = new HashMap<String, String>();
+        badEmails = new HashMap<String, Integer>();
+        badUsernames = new HashMap<String, Integer>();
     }
 
     public void generateUsername(String username, String email) {
-        // YOUR CODE HERE
+        Username test = new Username(username);
+        if (!email.contains("@") || database.containsValue(email)) {
+            return;
+        }
+        if (database.containsKey(username)) {
+            throw new IllegalArgumentException("Username already exists in database.");
+        }
+        else if (username == null || email == null) {
+            throw new NullPointerException("Username or email is null.");
+        }
+        else {
+            database.put(username, email);
+        } 
     }
-
     public String getEmail(String username) {
-        // YOUR CODE HERE
-        return null;
+        if (username == null) {
+            throw new NullPointerException();
+        }
+        else {
+            try {
+                Username test = new Username(username);
+                if (!database.containsKey(username)) {
+                    putBadInfoAway(username, badUsernames);
+                    return null;
+                }
+                else {
+                    return database.get(username);
+                }
+
+            } catch (Exception e) {
+                putBadInfoAway(username, badUsernames);
+                return null;
+            }
+        }
+    }
+    private void putBadInfoAway (String info, HashMap<String, Integer> badInfoDatabase) {
+        if (badInfoDatabase.containsKey(info)) {
+            badInfoDatabase.put(info, badInfoDatabase.get(info) + 1);
+        } else {
+            badInfoDatabase.put(info, 1);
+        }
     }
 
     public String getUsername(String userEmail)  {
-        // YOUR CODE HERE
-        return null;
+        if (userEmail == null) {
+            return null;
+        }
+        else {
+            for (String username : database.keySet()) {
+                if (database.get(username).equals(userEmail)) {
+                    return username;
+                }
+            }
+            putBadInfoAway(userEmail, badEmails);
+            return null;
+        }
     }
 
     public Map<String, Integer> getBadEmails() {
-        // YOUR CODE HERE
-        return null;
+        return badEmails;
     }
 
     public Map<String, Integer> getBadUsernames() {
-        // YOUR CODE HERE
-        return null;
+        return badUsernames;
     }
 
     public String suggestUsername() {
-        // YOUR CODE HERE
         return null;
     }
 
     // The answer is somewhere in between 3 and 1000.
     public static final int followUp() {
         // YOUR CODE HERE
-        return 0;
+        return 10;
     }
 
-    // Optional, suggested method. Use or delete as you prefer.
-    private void recordBadUsername(String username) {
-        // YOUR CODE HERE
-    }
-
-    // Optional, suggested method. Use or delete as you prefer.
-    private void recordBadEmail(String email) {
-        // YOUR CODE HERE
-    }
 }
