@@ -1,6 +1,7 @@
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Arrays;
 /** 
  *  @author David Dominguez Hooper
  */
@@ -19,7 +20,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             this.key = key;
             this.value = value;
         }
-
     }
 
     private ArrayList<Entry>[] buckets;
@@ -96,6 +96,16 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. 
      * Should run on average constant time when called on a HashMap. */
     public void put(K key, V value) {
+        if (size / initialSize > loadFactor) {
+            ArrayList<Entry>[] oldData = Arrays.copyOf(buckets, buckets.length);
+            buckets = (ArrayList<Entry>[]) new ArrayList[initialSize * 2];
+            for (ArrayList<Entry> curArrayList : oldData) {
+                for (Entry e : curArrayList) {
+                    put(e.key, e.value);
+                }
+            }
+        }
+
         int index = getIndexFromHashCode(key.hashCode()); 
         if (containsKey(key)) {
             ArrayList<Entry> curBucket = buckets[index];
@@ -108,7 +118,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
         else {
             ArrayList<Entry> curBucket = buckets[index];
+            if (curBucket == null) {
+                curBucket = new ArrayList<Entry>();
+            }
             curBucket.add(new Entry(key, value));
+            size += 1;
+            keys.add(key);
         }
     }
 
