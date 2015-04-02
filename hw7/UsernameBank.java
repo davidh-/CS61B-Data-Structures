@@ -103,8 +103,8 @@ public class UsernameBank {
 
     // The answer is somewhere in between 3 and 1000.
     public static final int followUp() {
-        // tried 10, 15
-        return 15;
+        // tried 10, 15, 5
+        return 6;
     }
 
 }
