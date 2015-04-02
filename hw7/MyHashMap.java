@@ -71,9 +71,11 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             return null;
         }
         ArrayList<Entry> curBucket = buckets[getIndexFromHashCode(key.hashCode())];
-        for (Entry entry : curBucket) {
-            if (entry.key.equals(key)) {
-                return entry.value;
+        if (curBucket != null) {
+            for (Entry entry : curBucket) {
+                if (entry.key.equals(key)) {
+                    return entry.value;
+                }
             }
         }
         return null;
@@ -109,10 +111,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         int index = getIndexFromHashCode(key.hashCode()); 
         if (containsKey(key)) {
             ArrayList<Entry> curBucket = buckets[index];
-            for (Entry entry : curBucket) {
-                if (entry.key.equals(key)) {
-                    entry.value = value;
-                    return;
+            if (curBucket != null) {
+                for (Entry entry : curBucket) {
+                    if (entry.key.equals(key)) {
+                        entry.value = value;
+                        return;
+                    }
                 }
             }
         }
