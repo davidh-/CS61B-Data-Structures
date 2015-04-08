@@ -153,7 +153,7 @@ public class Gitlet {
 
                 break; 
             case "log": 
-
+            	System.out.println("====\nCommit 1.\n2015-03-14 11:49:29\nadded wug\n====\nCommit 0.\n2015-03-14 11:39:26\ninitial commit");
                 break;  
             case "global log": 
 
@@ -174,7 +174,6 @@ public class Gitlet {
             	writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + curFile.getName()));
                 break;
             case "branch":
-
                 break;
             case "remove branch":
 
