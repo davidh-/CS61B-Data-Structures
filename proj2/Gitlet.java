@@ -140,6 +140,7 @@ public class Gitlet {
  					}
  					newCommit.addFile(curFile, lastMod);
  					File f = new File(curFile);
+ 					System.out.println(GITLET_DIR + curFile + "/" + Long.toString(lastMod) + f.getName());
  					createFile(GITLET_DIR + curFile + "/" + Long.toString(lastMod) + f.getName(), getText(curFile));
  				}
  				commits.put(lastCommit.getId(), newCommit);
@@ -169,8 +170,8 @@ public class Gitlet {
             	File lastCommitFile = new File(GITLET_DIR + "lastCommit.ser");
             	lastCommit = readObject(lastCommitFile);
             	Long fileIDFromLastCommit = lastCommit.getFileLastModified(checkoutFileName);
-            	System.out.println(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + checkoutFileName);
-            	writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + checkoutFileName));
+            	System.out.println(GITLET_DIR + checkoutFileName + "/" + fileIDFromLastCommit + curFile.getName());
+            	writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + curFile.getName()));
                 break;
             case "branch":
 

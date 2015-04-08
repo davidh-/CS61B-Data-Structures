@@ -32,6 +32,7 @@ public class Commit implements Serializable{
 		return id;
 	}
 	public Long getFileLastModified(String fileName) {
+		System.out.println(commitedFiles);
 		if (commitedFiles.containsKey(fileName)) {
 			return commitedFiles.get(fileName);
 		} else {
