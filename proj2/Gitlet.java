@@ -139,7 +139,8 @@ public class Gitlet {
  						trackedFiles.put(curFile, newHistory);
  					}
  					newCommit.addFile(curFile, lastMod);
- 					createFile(GITLET_DIR + curFile + "/" + Long.toString(lastMod) + curFile, getText(curFile));
+ 					File f = new File(curFile);
+ 					createFile(GITLET_DIR + curFile + "/" + Long.toString(lastMod) + f.getName(), getText(curFile));
  				}
  				commits.put(lastCommit.getId(), newCommit);
  				lastCommit = newCommit;
