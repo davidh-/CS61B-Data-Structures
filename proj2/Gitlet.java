@@ -15,13 +15,11 @@ public class Gitlet {
     private static TreeMap<Integer, Commit> commits;
     private static Commit lastCommit;
 	public static void main(String[] args) {
-
-		String line = StdIn.readLine();
-		String[] rawTokens = line.split(" ");
-        String command = rawTokens[0];
-        String[] tokens = new String[rawTokens.length - 1];
-        System.arraycopy(rawTokens, 1, tokens, 0, rawTokens.length - 1);
-
+		trackedFiles = new HashMap<String, History>();
+		addedFiles = new HashSet<String>();
+		commits = new TreeMap<Integer, Commit>();
+		
+        String command = args[0];
         switch (command) {
             case "init":
             	File dir = new File(GITLET_DIR);
@@ -36,7 +34,7 @@ public class Gitlet {
 		        }
                 return;
             case "add":
-            	String fileName = tokens[0];
+            	String fileName = args[1];
             	File fileToAdd = new File(fileName);
             	if (!fileToAdd.exists()) {
             		System.out.println("File does not exist.");
@@ -49,7 +47,7 @@ public class Gitlet {
             	}
                 break;  
             case "commit":
-            	String commitMessage = tokens[0];
+            	String commitMessage = args[1];
             	Commit newCommit = new Commit(commitMessage, lastCommit, lastCommit.getId() + 1);
  				for (String curFile : addedFiles) {
  					File direct = new File(curFile);
