@@ -21,4 +21,5 @@ public class History {
 	public long lastModified() {
 		return lastModified;
 	}
+	
 }

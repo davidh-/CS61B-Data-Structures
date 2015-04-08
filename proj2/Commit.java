@@ -30,4 +30,11 @@ public class Commit {
 	public int getId() {
 		return id;
 	}
+	public Long getFileLastModified(String fileName) {
+		if (commitedFiles.containsKey(fileName)) {
+			return commitedFiles.get(fileName);
+		} else {
+			return (long)-1;
+		}
+	}
 }
