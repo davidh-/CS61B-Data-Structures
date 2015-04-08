@@ -1,9 +1,10 @@
 import java.util.HashMap;
+import java.io.*;
 /** 
  *  @author David Dominguez Hooper
  */
 
-public class Commit {
+public class Commit implements Serializable{
 	private String message;
 	private HashMap<String, Long> commitedFiles;
 	private int id;
@@ -35,6 +36,18 @@ public class Commit {
 			return commitedFiles.get(fileName);
 		} else {
 			return (long)-1;
+		}
+	}
+
+	public void writeObject(File fileName) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	        out.writeObject(this);
+	        out.close();
+	        fileOut.close();
+		} catch(IOException i) {
+			i.printStackTrace();
 		}
 	}
 }

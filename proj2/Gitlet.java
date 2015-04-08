@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.io.*;
 
 /** 
  *  @author David Dominguez Hooper
@@ -20,6 +21,18 @@ public class Gitlet {
     private static HashSet<String> addedFiles;
     private static TreeMap<Integer, Commit> commits;
     private static Commit lastCommit;
+
+	public static <K> void writeObject(File fileName, K object) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	        out.writeObject(object);
+	        out.close();
+	        fileOut.close();
+		} catch(IOException i) {
+			i.printStackTrace();
+		}
+	}
 
     /**
      * Returns the text from a standard text file (won't work with special
@@ -79,14 +92,16 @@ public class Gitlet {
             	File dir = new File(GITLET_DIR);
 		        if (dir.exists()) {
 		            System.out.println("A gitlet version control system already exists in the current directory.");
-		            return;
 		        } else {
 		        	dir.mkdirs();
-		        	Commit firstCommit = new Commit();
-		        	commits.put(0, firstCommit);
-		        	lastCommit = firstCommit;
 		        }
-                return;
+	        	Commit firstCommit = new Commit();
+	        	System.out.println(firstCommit);
+	        	commits.put(0, firstCommit);
+	        	lastCommit = firstCommit;
+            	File lastCommitFileee = new File(GITLET_DIR + "lastCommit.ser");
+            	lastCommit.writeObject(lastCommitFileee);
+                break;
             case "add":
             	String fileName = args[1];
             	File fileToAdd = new File(fileName);
@@ -99,12 +114,17 @@ public class Gitlet {
             	} else {
             		addedFiles.add(fileName);
             	}
+            	writeObject(new File(GITLET_DIR + "addedFiles.ser"), addedFiles);
                 break;  
             case "commit":
             	String commitMessage = args[1];
+            	File lastCommitFilee = new File(GITLET_DIR + "lastCommit.ser");
+            	lastCommit = readObject(lastCommitFilee);
+            	System.out.println(commitMessage + " " + lastCommit + " " + 1);
             	Commit newCommit = new Commit(commitMessage, lastCommit, lastCommit.getId() + 1);
+            	addedFiles = readObject(new File(GITLET_DIR + "addedFiles.ser"));
  				for (String curFile : addedFiles) {
- 					File direct = new File(curFile);
+ 					File direct = new File(GITLET_DIR + "/" + curFile);
  					if (!direct.exists()) {
  						direct.mkdirs();
  					}
@@ -123,6 +143,8 @@ public class Gitlet {
  				}
  				commits.put(lastCommit.getId(), newCommit);
  				lastCommit = newCommit;
+ 				File fileF = new File(GITLET_DIR + "lastCommit.ser");
+ 				lastCommit.writeObject(fileF);
  				addedFiles.clear();
                 break;
             case "remove":
@@ -143,6 +165,8 @@ public class Gitlet {
             case "checkout":
             	String checkoutFileName = args[1];
             	File curFile = new File(checkoutFileName);
+            	File lastCommitFile = new File(GITLET_DIR + "lastCommit.ser");
+            	lastCommit = readObject(lastCommitFile);
             	Long fileIDFromLastCommit = lastCommit.getFileLastModified(checkoutFileName);
             	System.out.println(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + checkoutFileName);
             	writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" + Long.toString(fileIDFromLastCommit) + checkoutFileName));
@@ -169,5 +193,24 @@ public class Gitlet {
                 System.out.println("Invalid command.");  
                 break;
             }
+	}
+	private static <K> K readObject(File f) {
+		try {
+			FileInputStream fileIn = new FileInputStream(f);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			K e = (K) in.readObject();
+			in.close();
+			fileIn.close();
+			return e;
+      } catch(IOException i)
+      {
+         i.printStackTrace();
+         return null;
+      }catch(ClassNotFoundException c)
+      {
+         System.out.println("Employee class not found");
+         c.printStackTrace();
+         return null;
+      }
 	}
 }
