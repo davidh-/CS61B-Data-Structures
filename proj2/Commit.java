@@ -1,40 +1,62 @@
 import java.util.HashMap;
 import java.io.*;
+import java.sql.Timestamp;
+import java.util.Date;
 /** 
  *  @author David Dominguez Hooper
  */
 
 public class Commit implements Serializable{
 	private String message;
-	private HashMap<String, Long> commitedFiles;
+	private HashMap<String, Long> newCommitedFiles;
+	private HashMap<String, Long> oldCommitedFiles;
 	private int id;
+	private String timeStamp;
 
 	private Commit oldCommit;
 
 	public Commit() {
-		message = "initial commit.";
-		commitedFiles = new HashMap<String, Long>();
+		message = "initial commit";
+		newCommitedFiles = new HashMap<String, Long>();
+		oldCommitedFiles = new HashMap<String, Long>();
 		id = 0;
+		timeStamp = createTimeStamp();
+		oldCommit = null;
 	}
 	public Commit(String message, Commit oldCommit, int id){
-		this.oldCommit = oldCommit;
 		this.message = message;
-		commitedFiles = new HashMap<String, Long>();
+		newCommitedFiles = new HashMap<String, Long>();
+		oldCommitedFiles = oldCommit.getAllCommitedFiles();
 		this.id = id;
+		this.timeStamp = createTimeStamp();
+		this.oldCommit = oldCommit;
+	}
+	public HashMap<String, Long> getAllCommitedFiles() {
+		HashMap<String, Long> allCommitedFiles = new HashMap<String, Long>(this.oldCommitedFiles);
+		allCommitedFiles.putAll(this.newCommitedFiles);
+		return allCommitedFiles;
+	}
+	public void removeFileFromInheritedCommits(String word) {
+		oldCommitedFiles.remove(word);
+	}
+	private String createTimeStamp() {
+        Date date = new Date();
+    	Timestamp timeStamp = new Timestamp(date.getTime());
+    	return timeStamp.toString();
 	}
 	public String getMessage() {
 		return message;
 	}
 	public void addFile(String fileName, Long lastModified) {
-		commitedFiles.put(fileName, lastModified);
+		newCommitedFiles.put(fileName, lastModified);
 	}
 	public int getId() {
 		return id;
 	}
 	public Long getFileLastModified(String fileName) {
-		System.out.println(commitedFiles);
-		if (commitedFiles.containsKey(fileName)) {
-			return commitedFiles.get(fileName);
+		System.out.println(newCommitedFiles);
+		if (newCommitedFiles.containsKey(fileName)) {
+			return newCommitedFiles.get(fileName);
 		} else {
 			return (long)-1;
 		}
@@ -50,5 +72,24 @@ public class Commit implements Serializable{
 		} catch(IOException i) {
 			i.printStackTrace();
 		}
+	}
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+	public String getCommitHistory() {
+		String commitHistory = "";
+		Commit pointer = this;
+		boolean needsEmptyLine = false;
+		while (pointer != null) {
+			if (!needsEmptyLine) {
+				needsEmptyLine = true;
+			}
+			else {
+				commitHistory += "\n\n";
+			}
+			commitHistory += "====\n" + "Commit " + pointer.getId() + ".\n" +pointer.getTimeStamp() + "\n" + pointer.getMessage();
+			pointer = pointer.oldCommit;
+		}
+		return commitHistory;
 	}
 }
