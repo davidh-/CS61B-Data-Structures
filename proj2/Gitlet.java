@@ -1,7 +1,6 @@
 import java.io.File;
 import java.util.HashSet;
-import java.util.TreeMap;
-
+import java.util.HashMap;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,12 +19,21 @@ public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
     private static HashSet<String> addedFiles;
     private static HashSet<String> filesToRemove;
-    private static TreeMap<Integer, Commit> commits;
-    private static Commit lastCommit;
-    // If static, then you have to remove the static thing and 
-    // reference it from an instantiated reference.
-    private static void init(File lastCommitFile, 
-                                File lastAddedFiles, File lastFilesToRemove, File lastCommits) {
+
+    private static HashMap<Integer, Commit> commits;
+    // private static Commit lastCommit;
+
+    private static HashMap<String, Branch> branches;
+    private static Branch currentBranch;
+
+
+    private File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
+    private File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
+    private File lastCommits = new File(GITLET_DIR + "commits.ser");
+    private File lastBranches = new File(GITLET_DIR + "branches.ser");
+    private File lastCurrentBranch = new File(GITLET_DIR + "currentBranch.ser");
+
+    private void init() {
         File dir = new File(GITLET_DIR);
         if (dir.exists()) {
             String firstHalf = "A gitlet version control system already ";
@@ -35,20 +43,24 @@ public class Gitlet {
             dir.mkdirs();
         }
         Commit firstCommit = new Commit();
-        // System.out.println(firstCommit);
         commits.put(firstCommit.getId(), firstCommit);
-        lastCommit = firstCommit;
 
-        lastCommit.writeObject(lastCommitFile);
+        Branch master = new Branch();
+        branches.put(master.getBranchName(), master);
+        currentBranch = master;
+        currentBranch.writeObject(lastCurrentBranch);
+
         writeObject(lastAddedFiles, addedFiles);
         writeObject(lastFilesToRemove, filesToRemove);
         writeObject(lastCommits, commits);
+        writeObject(lastBranches, branches);
     }
-    private static void add(String[] args, File lastCommitFile, 
-                                File lastAddedFiles, File lastFilesToRemove) {
+    private void add(String[] args) {
+        commits = readObject(lastCommits);
+        currentBranch = readObject(lastCurrentBranch);
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
         filesToRemove = readObject(lastFilesToRemove);
         addedFiles = readObject(lastAddedFiles);
-        lastCommit = readObject(lastCommitFile);
         String fileName = args[1];
         File fileToAdd = new File(fileName);
         if (filesToRemove.contains(fileName)) {
@@ -68,12 +80,12 @@ public class Gitlet {
             writeObject(lastAddedFiles, addedFiles);
         }
     }
-    private static void commit(String[] args, File lastCommitFile, 
-                                File lastAddedFiles, File lastFilesToRemove, File lastCommits) {
+    private void commit(String[] args) {
         addedFiles = readObject(lastAddedFiles);
         filesToRemove = readObject(lastFilesToRemove);
         commits = readObject(lastCommits);
-        lastCommit = readObject(lastCommitFile);
+        currentBranch = readObject(lastCurrentBranch);
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
 
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
             System.out.println("No changes added to the commit.");
@@ -83,7 +95,6 @@ public class Gitlet {
             return;
         }
         String commitMessage = args[1];
-        // System.out.println(commitMessage + " " + lastCommit + " " + 1);
         Commit newCommit = new Commit(commitMessage, lastCommit, lastCommit.getId() + 1);
         for (String file : filesToRemove) {
             newCommit.removeFileFromInheritedCommits(file); 
@@ -108,15 +119,18 @@ public class Gitlet {
         commits.put(newCommit.getId(), newCommit);
         writeObject(lastCommits, commits);
 
-        lastCommit = newCommit;
-        lastCommit.writeObject(lastCommitFile);
+        currentBranch.updateLastCommit(newCommit.getId());
+        currentBranch.writeObject(lastCurrentBranch);
+        writeObject(lastBranches, branches);
 
         addedFiles.clear();
         writeObject(lastAddedFiles, addedFiles);
     }
-    private static void remove(String[] args, File lastCommitFile, 
-                                File lastAddedFiles, File lastFilesToRemove) {
-        lastCommit = readObject(lastCommitFile);
+    private void remove(String[] args) {
+        commits = readObject(lastCommits);
+        currentBranch = readObject(lastCurrentBranch);
+
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
         addedFiles = readObject(lastAddedFiles);
         filesToRemove = readObject(lastFilesToRemove);
 
@@ -135,11 +149,14 @@ public class Gitlet {
             }
         }
     }
-    private static void log(File lastCommitFile) {
-        lastCommit = readObject(lastCommitFile);
+    private void log() {
+        commits = readObject(lastCommits);
+        currentBranch = readObject(lastCurrentBranch);
+
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
         System.out.println(lastCommit.getCommitHistory());
     }
-    private static void globalLog(File lastCommits) {
+    private void globalLog() {
         commits = readObject(lastCommits);
         String globalLog = "";
         boolean firstRun = true;
@@ -154,14 +171,36 @@ public class Gitlet {
         }
         System.out.println(globalLog);
     }
-    private static void find() {
+    private void find(String[] args) {
+        String foundCommitIDs = "";
+        boolean firstRun = true;
+        commits = readObject(lastCommits);
+        String findMessage = args[1];
+        for (Commit commit : commits.values()) {
+            if (findMessage.equals(commit.getMessage())) {
+                if (firstRun) {
+                    foundCommitIDs += commit.getId();
+                    firstRun = false;
+                } else {
+                    foundCommitIDs += "\n" + commit.getId();
+                }
+            }   
+        }
+        if (firstRun) {
+            System.out.println("Found no commit with that message.");
+        } else {
+            System.out.println(foundCommitIDs);
+        }
 
     }
-    private static void status() {
+    private void status() {
         
     }
-    private static void checkout(String[] args, File lastCommitFile) {
-        lastCommit = readObject(lastCommitFile);
+    private void checkout(String[] args) {
+        commits = readObject(lastCommits);
+        currentBranch = readObject(lastCurrentBranch);
+
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
 
         String checkoutFileName = args[1];
         File curFile = new File(checkoutFileName);
@@ -171,80 +210,77 @@ public class Gitlet {
         writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" 
                             + Long.toString(fileIDFromLastCommit) + curFile.getName()));
     }
-    private static void branch() {
+    private void branch() {
         
     }
-    private static void removeBranch() {
+    private void removeBranch() {
         
     }
-    private static void reset() {
+    private void reset() {
         
     }
-    private static void merge() {
+    private void merge() {
         
     }
-    private static void rebase() {
+    private void rebase() {
         
     }
-    private static void interactiveRebase() {
+    private void interactiveRebase() {
         
     }
     public static void main(String[] args) {
         addedFiles = new HashSet<String>();
         filesToRemove = new HashSet<String>();
-        commits = new TreeMap<Integer, Commit>();
-
-        File lastCommitFile = new File(GITLET_DIR + "lastCommit.ser");
-        File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
-        File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
-        File lastCommits = new File(GITLET_DIR + "commits.ser");
+        commits = new HashMap<Integer, Commit>();
+        branches = new HashMap<String, Branch>();
+        Gitlet gitlet = new Gitlet();
 
         String command = args[0];
         switch (command) {
             case "init":
-                init(lastCommitFile, lastAddedFiles, lastFilesToRemove, lastCommits);
+                gitlet.init();
                 break;
             case "add":
-                add(args, lastCommitFile, lastAddedFiles, lastFilesToRemove);
+                gitlet.add(args);
                 break;  
             case "commit":
-                commit(args, lastCommitFile, lastAddedFiles, lastFilesToRemove, lastCommits);
+                gitlet.commit(args);
                 break;
             case "rm":
-                remove(args, lastCommitFile, lastAddedFiles, lastFilesToRemove);
+                gitlet.remove(args);
                 break; 
             case "log":
-                log(lastCommitFile);
+                gitlet.log();
                 break;  
             case "global-log": 
-                globalLog(lastCommits);
+                gitlet.globalLog();
                 break;
             case "find":
-                find();
+                gitlet.find(args);
                 break;
             case "status":
-                status();
+                gitlet.status();
                 break;
             case "checkout":
-                checkout(args, lastCommitFile);
+                gitlet.checkout(args);
                 break;
             case "branch":
-                branch();
+                gitlet.branch();
                 break;
             case "rm-branch":
-                removeBranch();
+                gitlet.removeBranch();
                 break;
             case "reset":
-                reset();
+                gitlet.reset();
                 break;
             case "merge":
-                merge();
+                gitlet.merge();
                 break;
             case "rebase":
-                rebase();
+                gitlet.rebase();
                 break;
             case "i-rebase":
-                interactiveRebase();
+                gitlet.interactiveRebase();
                 break;
             default:
                 System.out.println("Invalid command.");  

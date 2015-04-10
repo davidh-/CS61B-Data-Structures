@@ -1,7 +1,12 @@
 import java.util.HashMap;
-import java.io.*;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
+import java.io.File;
 /** 
  *  @author David Dominguez Hooper
  */
@@ -63,18 +68,6 @@ public class Commit implements Serializable{
 			return (long)-1;
 		}
 	}
-
-	public void writeObject(File fileName) {
-		try {
-			FileOutputStream fileOut = new FileOutputStream(fileName);
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-	        out.writeObject(this);
-	        out.close();
-	        fileOut.close();
-		} catch(IOException i) {
-			i.printStackTrace();
-		}
-	}
 	public String getTimeStamp() {
 		return timeStamp;
 	}
@@ -96,5 +89,16 @@ public class Commit implements Serializable{
 	}
 	public String getLog() {
 		return "====\n" + "Commit " + getId() + ".\n" + getTimeStamp() + "\n" + getMessage();
+	}
+	public void writeObject(File fileName) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	        out.writeObject(this);
+	        out.close();
+	        fileOut.close();
+		} catch(IOException i) {
+			i.printStackTrace();
+		}
 	}
 }
