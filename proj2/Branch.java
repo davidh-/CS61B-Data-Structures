@@ -8,7 +8,7 @@ import java.io.File;
  *  @author David Dominguez Hooper
  */
 
-public class Branch  implements Serializable{
+public class Branch implements Serializable{
 	private String branchName;
 	private int lastCommit;
 	public Branch() {
