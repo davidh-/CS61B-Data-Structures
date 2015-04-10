@@ -62,8 +62,9 @@ public class Commit implements Serializable{
 		return id;
 	}
 	public Long getFileLastModified(String fileName) {
-		if (newCommitedFiles.containsKey(fileName)) {
-			return newCommitedFiles.get(fileName);
+		HashMap<String, Long> allCommitedFiles = getAllCommitedFiles();
+		if (allCommitedFiles.containsKey(fileName)) {
+			return allCommitedFiles.get(fileName);
 		} else {
 			return (long)-1;
 		}

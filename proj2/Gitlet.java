@@ -96,8 +96,8 @@ public class Gitlet {
             Long lastMod = cur.lastModified();
             newCommit.addFile(curFile, lastMod);
             File f = new File(curFile);
-            System.out.println(GITLET_DIR + curFile + "/" 
-                                + Long.toString(lastMod) + f.getName());
+            // System.out.println(GITLET_DIR + curFile + "/" 
+            //                     + Long.toString(lastMod) + f.getName());
             createFile(GITLET_DIR + curFile + "/" 
                                 + Long.toString(lastMod) + f.getName(), getText(curFile));
         }
@@ -133,7 +133,6 @@ public class Gitlet {
             } else {
                 globalLog += "\n\n" + commit.getLog();
             }
-
         }
         System.out.println(globalLog);
     }
@@ -159,17 +158,60 @@ public class Gitlet {
 
     }
     private void status() {
-        
+        String status = "=== Branches ===\n";
+        for (String branch : branches.keySet()) {
+            if (branch.equals(currentBranch.getBranchName())) {
+                status += "*";
+            }
+            status += branch + "\n";
+        }
+        status += "\n=== Staged Files ===\n";
+        for (String added : addedFiles) {
+            status += added + "\n";
+        }
+        status += "\n=== Files Marked for Removal ===\n";
+        for (String markedRemove : filesToRemove) {
+            status += markedRemove + "\n";
+        }
+        System.out.print(status);
     }
     private void checkout(String[] args) {
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
-        String checkoutFileName = args[1];
-        File curFile = new File(checkoutFileName);
-        Long fileIDFromLastCommit = lastCommit.getFileLastModified(checkoutFileName);
-        System.out.println(GITLET_DIR + checkoutFileName + "/" 
-                            + fileIDFromLastCommit + curFile.getName());
-        writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" 
-                            + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+        if (args.length == 2) {
+            if (branches.containsKey(args[1])) {
+                if (currentBranch.getBranchName().equals(args[1])) {
+                    System.out.println("No need to checkout the current branch.");
+                } else {
+                    currentBranch = branches.get(args[1]);
+                    lastCommit = commits.get(currentBranch.getLastCommit());
+                    for (String file : lastCommit.getAllCommitedFiles().keySet()) {
+                        restoreFile(file, lastCommit);
+                    }
+                }
+            } else if (lastCommit.containsFile(args[1])) {
+                restoreFile(args[1], lastCommit);
+            } else {
+                String first = "File does not exist in the most recent commit, ";
+                String second = "or no such branch exists.";
+                System.out.println(first + second);
+            }
+        } else if (args.length == 3) {
+            int commitId = Integer.parseInt(args[1]);
+            String fileName = args[2];
+            if (!commits.containsKey(commitId)) {
+                System.out.println("No commit with that id exists.");
+            } else {
+                Commit curCommit = commits.get(commitId);
+                HashMap<String, Long> allCommitedFiles = curCommit.getAllCommitedFiles();
+                if (!allCommitedFiles.containsKey(fileName)) {
+                    System.out.println("File does not exist in that commit.");
+                } else  {
+                    restoreFile(fileName, curCommit);
+                }
+            } 
+        } 
+        // System.out.println(GITLET_DIR + checkoutFileName + "/" 
+        //                     + fileIDFromLastCommit + curFile.getName());
     }
     private void branch(String[] args) {
         String branchName = args[1];
@@ -191,13 +233,36 @@ public class Gitlet {
         }
     }
     private void reset(String[] args) {
-
+        int commitId = Integer.parseInt(args[1]);
+        if (!commits.containsKey(commitId)) {
+            System.out.println("No commit with that id exists.");
+        } else {
+            Commit lastCommit = commits.get(commitId);
+            for (String file : lastCommit.getAllCommitedFiles().keySet()) {
+                restoreFile(file, lastCommit);
+            }
+            currentBranch.updateLastCommit(commitId);
+        }
     }
     private void merge(String[] args) {
-        
+        String branchName = args[1];
+        if (!branches.containsKey(branchName)) {
+            System.out.println("A branch with that name does not exist.");
+        } else if (currentBranch.getBranchName().equals(branchName)) {
+            System.out.println("Cannot merge a branch with itself.");
+        } else  {
+
+        }
     }
     private void rebase(String[] args) {
-        
+        String branchName = args[1];
+        if (!branches.containsKey(branchName)) {
+            System.out.println("A branch with that name does not exist.");
+        } else if (currentBranch.getBranchName().equals(branchName)) {
+            System.out.println("Cannot merge a branch with itself.");
+        } else if (1==1) {
+            //fixx meeee
+        }
     }
     private void interactiveRebase(String[] args) {
         
@@ -260,6 +325,17 @@ public class Gitlet {
                 break;
         }
         gitlet.serialize();
+    }
+    private void restoreFile(String fileName, Commit curCommit) {
+        File curFile = new File(fileName);
+        Long fileIDFromLastCommit = curCommit.getFileLastModified(fileName);
+        if (curFile.exists()) {
+            writeFile(fileName, getText(GITLET_DIR + fileName + "/" 
+                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+        } else {
+            createFile(fileName, getText(GITLET_DIR + fileName + "/" 
+                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+        }
     }
     private <K> K readObject(File f) {
         try {
