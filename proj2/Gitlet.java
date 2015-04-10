@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
@@ -19,14 +18,14 @@ import java.io.FileOutputStream;
 
 public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
-    private static HashMap<String, History> trackedFiles;
     private static HashSet<String> addedFiles;
     private static HashSet<String> filesToRemove;
     private static TreeMap<Integer, Commit> commits;
     private static Commit lastCommit;
     // If static, then you have to remove the static thing and 
     // reference it from an instantiated reference.
-    private static void init(File lastCommitFile) {
+    private static void init(File lastCommitFile, 
+                                File lastAddedFiles, File lastFilesToRemove, File lastCommits) {
         File dir = new File(GITLET_DIR);
         if (dir.exists()) {
             String firstHalf = "A gitlet version control system already ";
@@ -39,7 +38,11 @@ public class Gitlet {
         // System.out.println(firstCommit);
         commits.put(firstCommit.getId(), firstCommit);
         lastCommit = firstCommit;
+
         lastCommit.writeObject(lastCommitFile);
+        writeObject(lastAddedFiles, addedFiles);
+        writeObject(lastFilesToRemove, filesToRemove);
+        writeObject(lastCommits, commits);
     }
     private static void add(String[] args, File lastCommitFile, 
                                 File lastAddedFiles, File lastFilesToRemove) {
@@ -55,19 +58,21 @@ public class Gitlet {
         } else if (!fileToAdd.exists()) {
             System.out.println("File does not exist.");
             return;
-        } else if (lastCommit.getFileLastModified(fileName) != (long) -1 
-                        && lastCommit.getFileLastModified(fileName) == fileToAdd.lastModified()) {
+        } else if (lastCommit.containsFile(fileName)
+                    && lastCommit.getFileLastModified(fileName) == fileToAdd.lastModified()) {
             System.out.println("File has not been modified since the last commit.");
             return;
         } else {
+            System.out.println("test");
             addedFiles.add(fileName);
             writeObject(lastAddedFiles, addedFiles);
         }
     }
     private static void commit(String[] args, File lastCommitFile, 
-                                File lastAddedFiles, File lastFilesToRemove) {
+                                File lastAddedFiles, File lastFilesToRemove, File lastCommits) {
         addedFiles = readObject(lastAddedFiles);
         filesToRemove = readObject(lastFilesToRemove);
+        commits = readObject(lastCommits);
         lastCommit = readObject(lastCommitFile);
 
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
@@ -93,13 +98,6 @@ public class Gitlet {
             }
             File cur = new File(curFile);
             Long lastMod = cur.lastModified();
-            // if (trackedFiles.containsKey(curFile)) {
-            //     History curHistory = trackedFiles.get(curFile);
-            //     curHistory.addChange(lastMod);
-            // } else {
-            //     History newHistory = new History(curFile, lastMod);
-            //     trackedFiles.put(curFile, newHistory);
-            // }
             newCommit.addFile(curFile, lastMod);
             File f = new File(curFile);
             System.out.println(GITLET_DIR + curFile + "/" 
@@ -107,13 +105,67 @@ public class Gitlet {
             createFile(GITLET_DIR + curFile + "/" 
                                 + Long.toString(lastMod) + f.getName(), getText(curFile));
         }
-        commits.put(lastCommit.getId(), newCommit);
+        commits.put(newCommit.getId(), newCommit);
+        writeObject(lastCommits, commits);
+
         lastCommit = newCommit;
         lastCommit.writeObject(lastCommitFile);
+
         addedFiles.clear();
+        writeObject(lastAddedFiles, addedFiles);
+    }
+    private static void remove(String[] args, File lastCommitFile, 
+                                File lastAddedFiles, File lastFilesToRemove) {
+        lastCommit = readObject(lastCommitFile);
+        addedFiles = readObject(lastAddedFiles);
+        filesToRemove = readObject(lastFilesToRemove);
+
+        String removeMessage = args[1];
+        // !addedFiles.contains(removeMessage)|| 
+        if (!lastCommit.getAllCommitedFiles().containsKey(removeMessage)) {
+            System.out.println("No reason to remove the file.");
+            return;
+        } else {
+            if (addedFiles.contains(removeMessage)) {
+                addedFiles.remove(removeMessage);
+                writeObject(lastAddedFiles, addedFiles);
+            } else {
+                filesToRemove.add(removeMessage);
+                writeObject(lastFilesToRemove, filesToRemove);
+            }
+        }
+    }
+    private static void log(File lastCommitFile) {
+        lastCommit = readObject(lastCommitFile);
+        System.out.println(lastCommit.getCommitHistory());
+    }
+    private static void globalLog(File lastCommits) {
+        commits = readObject(lastCommits);
+        String globalLog = "";
+        boolean firstRun = true;
+        for (Commit commit : commits.values()) {
+            if (firstRun) {
+                globalLog += commit.getLog();
+                firstRun = false;
+            } else {
+                globalLog += "\n\n" + commit.getLog();
+            }
+
+        }
+        System.out.println(globalLog);
+    }
+    private static void checkout(String[] args, File lastCommitFile) {
+        lastCommit = readObject(lastCommitFile);
+
+        String checkoutFileName = args[1];
+        File curFile = new File(checkoutFileName);
+        Long fileIDFromLastCommit = lastCommit.getFileLastModified(checkoutFileName);
+        System.out.println(GITLET_DIR + checkoutFileName + "/" 
+                            + fileIDFromLastCommit + curFile.getName());
+        writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" 
+                            + Long.toString(fileIDFromLastCommit) + curFile.getName()));
     }
     public static void main(String[] args) {
-        trackedFiles = new HashMap<String, History>();
         addedFiles = new HashSet<String>();
         filesToRemove = new HashSet<String>();
         commits = new TreeMap<Integer, Commit>();
@@ -121,38 +173,27 @@ public class Gitlet {
         File lastCommitFile = new File(GITLET_DIR + "lastCommit.ser");
         File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
         File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
+        File lastCommits = new File(GITLET_DIR + "commits.ser");
+
         String command = args[0];
         switch (command) {
             case "init":
-                init(lastCommitFile);
+                init(lastCommitFile, lastAddedFiles, lastFilesToRemove, lastCommits);
                 break;
             case "add":
                 add(args, lastCommitFile, lastAddedFiles, lastFilesToRemove);
                 break;  
             case "commit":
-                commit(args, lastCommitFile, lastAddedFiles, lastFilesToRemove);
+                commit(args, lastCommitFile, lastAddedFiles, lastFilesToRemove, lastCommits);
                 break;
-            case "remove":
-                lastCommit = readObject(lastCommitFile);
-                String removeMessage = args[1];
-                // !addedFiles.contains(removeMessage)|| 
-                if (!lastCommit.getAllCommitedFiles().containsKey(removeMessage)) {
-                    System.out.println("No reason to remove the file.");
-                    return;
-                } else {
-                    if (addedFiles.contains(removeMessage)) {
-                        addedFiles.remove(removeMessage);
-                    } else {
-                        filesToRemove.add(removeMessage);
-                    }
-                }
+            case "rm":
+                remove(args, lastCommitFile, lastAddedFiles, lastFilesToRemove);
                 break; 
             case "log":
-                lastCommit = readObject(lastCommitFile);
-                System.out.println(lastCommit.getCommitHistory());
+                log(lastCommitFile);
                 break;  
-            case "global log": 
-
+            case "global-log": 
+                globalLog(lastCommits);
                 break;
             case "find":
 
@@ -161,14 +202,7 @@ public class Gitlet {
 
                 break;
             case "checkout":
-                String checkoutFileName = args[1];
-                File curFile = new File(checkoutFileName);
-                lastCommit = readObject(lastCommitFile);
-                Long fileIDFromLastCommit = lastCommit.getFileLastModified(checkoutFileName);
-                System.out.println(GITLET_DIR + checkoutFileName + "/" 
-                                    + fileIDFromLastCommit + curFile.getName());
-                writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" 
-                                    + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+                checkout(args, lastCommitFile);
                 break;
             case "branch":
                 break;

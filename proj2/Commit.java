@@ -31,6 +31,9 @@ public class Commit implements Serializable{
 		this.timeStamp = createTimeStamp();
 		this.oldCommit = oldCommit;
 	}
+	public boolean containsFile(String word) {
+		return getAllCommitedFiles().containsKey(word);
+	}
 	public HashMap<String, Long> getAllCommitedFiles() {
 		HashMap<String, Long> allCommitedFiles = new HashMap<String, Long>(this.oldCommitedFiles);
 		allCommitedFiles.putAll(this.newCommitedFiles);
@@ -54,7 +57,6 @@ public class Commit implements Serializable{
 		return id;
 	}
 	public Long getFileLastModified(String fileName) {
-		System.out.println(newCommitedFiles);
 		if (newCommitedFiles.containsKey(fileName)) {
 			return newCommitedFiles.get(fileName);
 		} else {
@@ -87,9 +89,12 @@ public class Commit implements Serializable{
 			else {
 				commitHistory += "\n\n";
 			}
-			commitHistory += "====\n" + "Commit " + pointer.getId() + ".\n" +pointer.getTimeStamp() + "\n" + pointer.getMessage();
+			commitHistory += "====\n" + "Commit " + pointer.getId() + ".\n" + pointer.getTimeStamp() + "\n" + pointer.getMessage();
 			pointer = pointer.oldCommit;
 		}
 		return commitHistory;
+	}
+	public String getLog() {
+		return "====\n" + "Commit " + getId() + ".\n" + getTimeStamp() + "\n" + getMessage();
 	}
 }
