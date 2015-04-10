@@ -154,6 +154,12 @@ public class Gitlet {
         }
         System.out.println(globalLog);
     }
+    private static void find() {
+
+    }
+    private static void status() {
+        
+    }
     private static void checkout(String[] args, File lastCommitFile) {
         lastCommit = readObject(lastCommitFile);
 
@@ -164,6 +170,24 @@ public class Gitlet {
                             + fileIDFromLastCommit + curFile.getName());
         writeFile(checkoutFileName, getText(GITLET_DIR + checkoutFileName + "/" 
                             + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+    }
+    private static void branch() {
+        
+    }
+    private static void removeBranch() {
+        
+    }
+    private static void reset() {
+        
+    }
+    private static void merge() {
+        
+    }
+    private static void rebase() {
+        
+    }
+    private static void interactiveRebase() {
+        
     }
     public static void main(String[] args) {
         addedFiles = new HashSet<String>();
@@ -196,30 +220,31 @@ public class Gitlet {
                 globalLog(lastCommits);
                 break;
             case "find":
-
+                find();
                 break;
             case "status":
-
+                status();
                 break;
             case "checkout":
                 checkout(args, lastCommitFile);
                 break;
             case "branch":
+                branch();
                 break;
-            case "remove branch":
-
+            case "rm-branch":
+                removeBranch();
                 break;
             case "reset":
-
+                reset();
                 break;
             case "merge":
-
+                merge();
                 break;
             case "rebase":
-
+                rebase();
                 break;
-            case "interactive rebase":
-
+            case "i-rebase":
+                interactiveRebase();
                 break;
             default:
                 System.out.println("Invalid command.");  
