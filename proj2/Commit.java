@@ -36,6 +36,9 @@ public class Commit implements Serializable{
 		this.timeStamp = createTimeStamp();
 		this.oldCommit = oldCommit;
 	}
+	public Commit getOldCommit() {
+		return oldCommit;
+	}
 	public boolean containsFile(String word) {
 		return getAllCommitedFiles().containsKey(word);
 	}

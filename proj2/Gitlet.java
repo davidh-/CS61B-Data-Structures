@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
+import java.util.Scanner;
 
 /** 
  *  @author David Dominguez Hooper
@@ -22,14 +23,14 @@ public class Gitlet {
 
     private HashMap<Integer, Commit> commits;
     private HashMap<String, Branch> branches;
-    private Branch currentBranch;
+    private String currentBranchName;
 
 
     private File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
     private File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
     private File lastCommits = new File(GITLET_DIR + "commits.ser");
     private File lastBranches = new File(GITLET_DIR + "branches.ser");
-    private File lastCurrentBranch = new File(GITLET_DIR + "currentBranch.ser");
+    private File lastCurrentBranchName = new File(GITLET_DIR + "currentBranchName.ser");
 
     private void init() {
         File dir = new File(GITLET_DIR);
@@ -49,11 +50,11 @@ public class Gitlet {
 
             Branch master = new Branch();
             branches.put(master.getBranchName(), master);
-            currentBranch = master;
+            currentBranchName = master.getBranchName();
         }
     }
     private void add(String[] args) {
-        Commit lastCommit = commits.get(currentBranch.getLastCommit());
+        Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String fileName = args[1];
         File fileToAdd = new File(fileName);
         if (filesToRemove.contains(fileName)) {
@@ -67,11 +68,11 @@ public class Gitlet {
             System.out.println("File has not been modified since the last commit.");
             return;
         } else {
-            System.out.println("test");
             addedFiles.add(fileName);
         }
     }
     private void commit(String[] args) {
+        Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
             System.out.println("No changes added to the commit.");
@@ -81,7 +82,7 @@ public class Gitlet {
             return;
         }
         String commitMessage = args[1];
-        Commit newCommit = new Commit(commitMessage, lastCommit, lastCommit.getId() + 1);
+        Commit newCommit = new Commit(commitMessage, lastCommit, commits.size());
         for (String file : filesToRemove) {
             newCommit.removeFileFromInheritedCommits(file); 
         }
@@ -96,8 +97,6 @@ public class Gitlet {
             Long lastMod = cur.lastModified();
             newCommit.addFile(curFile, lastMod);
             File f = new File(curFile);
-            // System.out.println(GITLET_DIR + curFile + "/" 
-            //                     + Long.toString(lastMod) + f.getName());
             createFile(GITLET_DIR + curFile + "/" 
                                 + Long.toString(lastMod) + f.getName(), getText(curFile));
         }
@@ -106,7 +105,7 @@ public class Gitlet {
         addedFiles.clear();
     }
     private void remove(String[] args) {
-        Commit lastCommit = commits.get(currentBranch.getLastCommit());
+        Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String removeMessage = args[1];
         if (!lastCommit.getAllCommitedFiles().containsKey(removeMessage)) {
             System.out.println("No reason to remove the file.");
@@ -120,7 +119,7 @@ public class Gitlet {
         }
     }
     private void log() {
-        Commit lastCommit = commits.get(currentBranch.getLastCommit());
+        Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         System.out.println(lastCommit.getCommitHistory());
     }
     private void globalLog() {
@@ -160,7 +159,7 @@ public class Gitlet {
     private void status() {
         String status = "=== Branches ===\n";
         for (String branch : branches.keySet()) {
-            if (branch.equals(currentBranch.getBranchName())) {
+            if (branch.equals(currentBranchName)) {
                 status += "*";
             }
             status += branch + "\n";
@@ -176,15 +175,18 @@ public class Gitlet {
         System.out.print(status);
     }
     private void checkout(String[] args) {
+        Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
         if (args.length == 2) {
             if (branches.containsKey(args[1])) {
-                if (currentBranch.getBranchName().equals(args[1])) {
+                if (currentBranchName.equals(args[1])) {
                     System.out.println("No need to checkout the current branch.");
                 } else {
-                    currentBranch = branches.get(args[1]);
+                    currentBranchName = args[1];
+                    currentBranch = branches.get(currentBranchName);
                     lastCommit = commits.get(currentBranch.getLastCommit());
                     for (String file : lastCommit.getAllCommitedFiles().keySet()) {
+                        System.out.println("files checkout'ed: " + file);
                         restoreFile(file, lastCommit);
                     }
                 }
@@ -218,7 +220,7 @@ public class Gitlet {
         if (branches.containsKey(branchName)) {
             System.out.println("A branch with that name already exists.");
         } else {
-            Branch newBranch = new Branch(branchName, currentBranch.getLastCommit());
+            Branch newBranch = new Branch(branchName, branches.get(currentBranchName).getLastCommit());
             branches.put(branchName, newBranch);
         }
     }
@@ -226,7 +228,7 @@ public class Gitlet {
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (currentBranch.getBranchName().equals(branchName)) {
+        } else if (currentBranchName.equals(branchName)) {
             System.out.println("Cannot remove the current branch.");
         } else {
             branches.remove(branchName);
@@ -241,27 +243,61 @@ public class Gitlet {
             for (String file : lastCommit.getAllCommitedFiles().keySet()) {
                 restoreFile(file, lastCommit);
             }
-            currentBranch.updateLastCommit(commitId);
+            branches.get(currentBranchName).updateLastCommit(commitId);
         }
     }
     private void merge(String[] args) {
+        Branch currentBranch = branches.get(currentBranchName);
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (currentBranch.getBranchName().equals(branchName)) {
+        } else if (currentBranchName.equals(branchName)) {
             System.out.println("Cannot merge a branch with itself.");
-        } else  {
-
+        } else {
+            Branch givenBranch = branches.get(branchName);
+            Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
+            for (String file : gBranchCommit.getAllCommitedFiles().keySet()) {
+                if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
+                    HashSet<Integer> commitsOfFile = new HashSet<Integer>();
+                    Commit pointer = gBranchCommit;
+                    while (pointer != null && pointer.containsFile(file)) {
+                        commitsOfFile.add(pointer.getId());
+                        pointer = pointer.getOldCommit();
+                    }
+                    pointer = commits.get(currentBranch.getLastCommit());
+                    int splitPointCommit = -1;
+                    while (pointer != null) {
+                        if (commitsOfFile.contains(pointer.getId())) {
+                            splitPointCommit = pointer.getId();
+                            break;
+                        } else  {
+                            pointer = pointer.getOldCommit();
+                        }
+                    }
+                    Long splitLastModified = commits.get(splitPointCommit).getFileLastModified(file);
+                    Long givenLastModified = gBranchCommit.getFileLastModified(file);
+                    Long currentLastModified = commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
+                    if (givenLastModified != splitLastModified 
+                                && currentLastModified == splitLastModified) {
+                        restoreFile(file, gBranchCommit);
+                    } else if (givenLastModified != splitLastModified 
+                                && currentLastModified != splitLastModified) {
+                        File curFile = new File(file);
+                        createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
+                                    + Long.toString(givenLastModified) + curFile.getName()));
+                    } 
+                }
+            }
         }
     }
     private void rebase(String[] args) {
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (currentBranch.getBranchName().equals(branchName)) {
+        } else if (currentBranchName.equals(branchName)) {
             System.out.println("Cannot merge a branch with itself.");
-        } else if (1==1) {
-            //fixx meeee
+        } else if (1 == 1) {
+            System.out.println("test1");
         }
     }
     private void interactiveRebase(String[] args) {
@@ -309,15 +345,19 @@ public class Gitlet {
                 gitlet.removeBranch(args);
                 break;
             case "reset":
+                gitlet.dangerous();
                 gitlet.reset(args);
                 break;
             case "merge":
+                gitlet.dangerous();
                 gitlet.merge(args);
                 break;
             case "rebase":
+                gitlet.dangerous();
                 gitlet.rebase(args);
                 break;
             case "i-rebase":
+                gitlet.dangerous();
                 gitlet.interactiveRebase(args);
                 break;
             default:
@@ -326,16 +366,29 @@ public class Gitlet {
         }
         gitlet.serialize();
     }
+    private void dangerous() {
+        System.out.println("Warning: ");
+        System.out.print("The command you entered may alter the files in your working directory. ");
+        System.out.print("Uncommitted changes may be lost. ");
+        System.out.print("Are you sure you want to continue? (yes/no)");
+        Scanner in = new Scanner(System.in);
+        String answer = in.nextLine();
+        if (answer.equals("no")) {
+            System.exit(0);
+        }
+    }
     private void restoreFile(String fileName, Commit curCommit) {
         File curFile = new File(fileName);
         Long fileIDFromLastCommit = curCommit.getFileLastModified(fileName);
+        System.out.println(fileIDFromLastCommit + " " + curCommit.getId());
         if (curFile.exists()) {
             writeFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+                        + Long.toString(fileIDFromLastCommit) + fileName));
         } else {
             createFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+                        + Long.toString(fileIDFromLastCommit) + fileName));
         }
+        curFile.setLastModified(fileIDFromLastCommit);
     }
     private <K> K readObject(File f) {
         try {
@@ -366,7 +419,7 @@ public class Gitlet {
         }
     }
     private void serialize() {
-        currentBranch.writeObject(lastCurrentBranch);
+        writeObject(lastCurrentBranchName, currentBranchName);
         writeObject(lastAddedFiles, addedFiles);
         writeObject(lastFilesToRemove, filesToRemove);
         writeObject(lastCommits, commits);
@@ -377,7 +430,7 @@ public class Gitlet {
         filesToRemove = readObject(lastFilesToRemove);
         commits = readObject(lastCommits);
         branches = readObject(lastBranches);
-        currentBranch = readObject(lastCurrentBranch); 
+        currentBranchName = readObject(lastCurrentBranchName); 
     }
 
 /**
