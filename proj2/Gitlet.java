@@ -258,22 +258,7 @@ public class Gitlet {
             Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
             for (String file : gBranchCommit.getAllCommitedFiles().keySet()) {
                 if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    HashSet<Integer> commitsOfFile = new HashSet<Integer>();
-                    Commit pointer = gBranchCommit;
-                    while (pointer != null && pointer.containsFile(file)) {
-                        commitsOfFile.add(pointer.getId());
-                        pointer = pointer.getOldCommit();
-                    }
-                    pointer = commits.get(currentBranch.getLastCommit());
-                    int splitPointCommit = -1;
-                    while (pointer != null) {
-                        if (commitsOfFile.contains(pointer.getId())) {
-                            splitPointCommit = pointer.getId();
-                            break;
-                        } else  {
-                            pointer = pointer.getOldCommit();
-                        }
-                    }
+                    int splitPointCommit = findSplitPoint(file, gBranchCommit);
                     Long splitLastModified = commits.get(splitPointCommit).getFileLastModified(file);
                     Long givenLastModified = gBranchCommit.getFileLastModified(file);
                     Long currentLastModified = commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
@@ -366,6 +351,26 @@ public class Gitlet {
         }
         gitlet.serialize();
     }
+    private int findSplitPoint(String file, Commit gBranchCommit) {
+        Branch currentBranch = branches.get(currentBranchName);
+        HashSet<Integer> commitsOfFile = new HashSet<Integer>();
+        Commit pointer = gBranchCommit;
+        while (pointer != null && pointer.containsFile(file)) {
+            commitsOfFile.add(pointer.getId());
+            pointer = pointer.getOldCommit();
+        }
+        pointer = commits.get(currentBranch.getLastCommit());
+        int splitPointCommit = -1;
+        while (pointer != null) {
+            if (commitsOfFile.contains(pointer.getId())) {
+                splitPointCommit = pointer.getId();
+                break;
+            } else  {
+                pointer = pointer.getOldCommit();
+            }
+        }
+        return splitPointCommit;
+    }
     private void dangerous() {
         System.out.println("Warning: ");
         System.out.print("The command you entered may alter the files in your working directory. ");
@@ -390,6 +395,7 @@ public class Gitlet {
         }
         curFile.setLastModified(fileIDFromLastCommit);
     }
+
     private <K> K readObject(File f) {
         try {
             FileInputStream fileIn = new FileInputStream(f);
