@@ -299,6 +299,7 @@ public class Gitlet {
                     System.out.println("Already up-to-date.");
                     return;
                 }
+                lastCommitPointer = lastCommitPointer.getOldCommit();
             }
             TreeSet<Integer> commitsOfGBranch = new TreeSet<Integer>();
             Commit pointer = gBranchCommit;
@@ -311,51 +312,44 @@ public class Gitlet {
                 pointer = pointer.getOldCommit();
             }
             pointer = commits.get(currentBranch.getLastCommit());
+            TreeSet<Integer> commitsOfCBranch = new TreeSet<Integer>();
             int splitPointCommit = -1;
             while (pointer != null) {
                 if (commitsOfGBranch.contains(pointer.getId())) {
                     splitPointCommit = pointer.getId();
                     break;
-                } else  {
-                    pointer = pointer.getOldCommit();
                 }
+                commitsOfCBranch.add(pointer.getId());
+                pointer = pointer.getOldCommit();
             }
-            commitsOfGBranch = new TreeSet<Integer>(commitsOfGBranch.tailSet(splitPointCommit));
-            int[] firstLast = calcFirstLastCommit(commitsOfGBranch);
-
-            boolean splitPoint = true;
-            for (int commitID : commitsOfGBranch) {
-                if (splitPoint) {
-                    splitPoint = false;
-                } else  {
-                    Commit curCommit = commits.get(commitID);
-                    String newMessage = curCommit.getMessage();
-                    if (interactive) {
-                        String decision = 
-                            iRebaseUserInput(curCommit, commitID, firstLast[0], firstLast[1]);
-                        if (decision.equals("s")) {
-                            break;
-                        } else if ((decision.equals("m"))) {
-                            System.out.println("Please enter a new message for this commit.");
-                            Scanner in = new Scanner(System.in);
-                            newMessage = in.nextLine();
-                        }
+            int[] firstLast = {commitsOfCBranch.first(), commitsOfCBranch.last()};
+            currentBranch.updateLastCommit(gBranchCommit.getId());
+            for (int commitID : commitsOfCBranch) {
+                Commit curOldCommit = commits.get(commitID);
+                String newMessage = curOldCommit.getMessage();
+                if (interactive) {
+                    String decision = 
+                        iRebaseUserInput(curOldCommit, commitID, firstLast[0], firstLast[1]);
+                    if (decision.equals("s")) {
+                        break;
+                    } else if ((decision.equals("m"))) {
+                        System.out.println("Please enter a new message for this commit.");
+                        Scanner in = new Scanner(System.in);
+                        newMessage = in.nextLine();
                     }
-                    Commit lastNewCommit = commits.get(currentBranch.getLastCommit());
-                    HashMap<String, Long> newFiles = curCommit.getNewCommittedFiles();
-                    Commit newCommit = new Commit(newMessage, lastNewCommit, commits.size());
-                    for (String curFile : newFiles.keySet()) {
-                        if (!lastCommit.containsFile(curFile)) {
-                            newCommit.addFile(curFile, newFiles.get(curFile));
-                        }
-                    }
-                    commits.put(newCommit.getId(), newCommit);
-                    currentBranch.updateLastCommit(newCommit.getId());
                 }
+                HashMap<String, Long> newFiles = curOldCommit.getNewCommittedFiles();
+                lastCommit = commits.get(currentBranch.getLastCommit());
+                Commit newCommit = new Commit(newMessage, lastCommit, commits.size());
+                for (String curFile : newFiles.keySet()) {
+                    newCommit.addFile(curFile, newFiles.get(curFile));
+                }
+                commits.put(newCommit.getId(), newCommit);
+                currentBranch.updateLastCommit(newCommit.getId());
             }
-            Commit lastTrueCommit = commits.get(currentBranch.getLastCommit());
-            for (String file : lastTrueCommit.getAllCommittedFiles().keySet()) {
-                restoreFile(file, commits.get(currentBranch.getLastCommit()));
+            lastCommit = commits.get(currentBranch.getLastCommit());
+            for (String file : lastCommit.getAllCommittedFiles().keySet()) {
+                restoreFile(file, lastCommit);
             }
         }
     }
