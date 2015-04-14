@@ -276,6 +276,9 @@ public class Gitlet {
         }
     }
     private void rebase(String[] args) {
+        interactiveRebase(args, false);
+    }
+    private void interactiveRebase(String[] args, boolean interactive) {
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
             System.out.println("A branch with that name does not exist.");
@@ -315,15 +318,53 @@ public class Gitlet {
                 }
             }
             commitsOfGBranch = new TreeSet<Integer>(commitsOfGBranch.tailSet(splitPointCommit));
-            boolean firstCommit = true;
+            int i = 0;
+            int initialCommitOfG = 0;
+            for (int cID : commitsOfGBranch) {
+                if (i == 1) {
+                    initialCommitOfG = cID;
+                }
+                i += 1;
+            }
+            int lastCommitOfG = commitsOfGBranch.last();
+            boolean splitPoint = true;
             for (int commitID : commitsOfGBranch) {
-                if (firstCommit) {
-                    firstCommit = false;
+                if (splitPoint) {
+                    splitPoint = false;
                 } else  {
                     Commit curCommit = commits.get(commitID);
+                    String newMessage = curCommit.getMessage();
+                    if (interactive) {
+                        System.out.println("Currently replaying:");
+                        System.out.println(curCommit.getLog());
+                        System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
+                        Scanner in = new Scanner(System.in);
+                        String answer = in.nextLine();
+                        while (!answer.equals("c") && !answer.equals("s") && !answer.equals("m")) {
+                            System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
+                            answer = in.nextLine();
+                        }
+                        if (answer.equals("s")) {
+                            if (commitID != initialCommitOfG || commitID != lastCommitOfG) {
+                                break;
+                            } else {
+                                    while (!answer.equals("c") && !answer.equals("m")) {
+                                        System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
+                                        answer = in.nextLine();
+                                    }
+                                    if ((answer.equals("m"))) {
+                                        System.out.println("Please enter a new message for this commit.");
+                                        newMessage = in.nextLine();
+                                    }
+                            }
+                        } else if ((answer.equals("m"))) {
+                            System.out.println("Please enter a new message for this commit.");
+                            newMessage = in.nextLine();
+                        }
+                    }
                     Commit lastNewCommit = commits.get(currentBranch.getLastCommit());
                     HashMap<String, Long> newFiles = curCommit.getNewCommittedFiles();
-                    Commit newCommit = new Commit(curCommit.getMessage(), lastNewCommit, commits.size());
+                    Commit newCommit = new Commit(newMessage, lastNewCommit, commits.size());
                     for (String curFile : newFiles.keySet()) {
                         if (!lastCommit.containsFile(curFile)) {
                             newCommit.addFile(curFile, newFiles.get(curFile));
@@ -337,9 +378,6 @@ public class Gitlet {
                 restoreFile(file, commits.get(currentBranch.getLastCommit()));
             }
         }
-    }
-    private void interactiveRebase(String[] args) {
-        
     }
     public static void main(String[] args) {
         Gitlet gitlet = new Gitlet();
@@ -395,7 +433,7 @@ public class Gitlet {
                 break;
             case "i-rebase":
                 gitlet.dangerous();
-                gitlet.interactiveRebase(args);
+                gitlet.interactiveRebase(args, true);
                 break;
             default:
                 System.out.println("Invalid command.");  
@@ -438,7 +476,6 @@ public class Gitlet {
     private void restoreFile(String fileName, Commit curCommit) {
         File curFile = new File(fileName);
         Long fileIDFromLastCommit = curCommit.getFileLastModified(fileName);
-        System.out.println(fileIDFromLastCommit + " " + curCommit.getId() + " " + curFile.getName());
         if (curFile.exists()) {
             writeFile(fileName, getText(GITLET_DIR + fileName + "/" 
                         + Long.toString(fileIDFromLastCommit) + curFile.getName()));
