@@ -14,6 +14,9 @@ import java.io.FileOutputStream;
 import java.util.Scanner;
 import java.util.Arrays;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /** 
  *  @author David Dominguez Hooper
  */
@@ -57,7 +60,7 @@ public class Gitlet {
             currentBranchName = master.getBranchName();
         }
     }
-    private void add(String[] args) {
+    private void add(String[] args) throws Exception {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String fileName = args[1];
         File fileToAdd = new File(fileName);
@@ -68,14 +71,14 @@ public class Gitlet {
             System.out.println("File does not exist.");
             return;
         } else if (lastCommit.containsFile(fileName)
-                    && lastCommit.getFileLastModified(fileName) == fileToAdd.lastModified()) {
+                    && lastCommit.getFileHash(fileName).equals(hashFile(fileToAdd, "SHA-256"))) {
             System.out.println("File has not been modified since the last commit.");
             return;
         } else {
             addedFiles.add(fileName);
         }
     }
-    private void commit(String[] args) {
+    private void commit(String[] args) throws Exception {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
@@ -98,11 +101,11 @@ public class Gitlet {
                 direct.mkdirs();
             }
             File cur = new File(curFile);
-            Long lastMod = cur.lastModified();
-            newCommit.addFile(curFile, lastMod);
+            String fileHash = hashFile(cur, "SHA-256");
+            newCommit.addFile(curFile, fileHash);
             File f = new File(curFile);
             createFile(GITLET_DIR + curFile + "/" 
-                                + Long.toString(lastMod) + f.getName(), getText(curFile));
+                                + fileHash + f.getName(), getText(curFile));
         }
         commits.put(newCommit.getId(), newCommit);
         currentBranch.updateLastCommit(newCommit.getId());
@@ -206,7 +209,7 @@ public class Gitlet {
                 System.out.println("No commit with that id exists.");
             } else {
                 Commit curCommit = commits.get(commitId);
-                HashMap<String, Long> allCommittedFiles = curCommit.getAllCommittedFiles();
+                HashMap<String, String> allCommittedFiles = curCommit.getAllCommittedFiles();
                 if (!allCommittedFiles.containsKey(fileName)) {
                     System.out.println("File does not exist in that commit.");
                 } else  {
@@ -260,20 +263,20 @@ public class Gitlet {
             int splitPointCommit = findSplitPoint(gBranchCommit);
             for (String file : gBranchCommit.getAllCommittedFiles().keySet()) {
                 if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    Long splitLastModified = 
-                        commits.get(splitPointCommit).getFileLastModified(file);
-                    Long givenLastModified = 
-                        gBranchCommit.getFileLastModified(file);
-                    Long currentLastModified = 
-                        commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
-                    if (givenLastModified != splitLastModified 
-                                && currentLastModified == splitLastModified) {
+                    String splitFileHash = 
+                        commits.get(splitPointCommit).getFileHash(file);
+                    String givenFileHash = 
+                        gBranchCommit.getFileHash(file);
+                    String currentFileHash = 
+                        commits.get(currentBranch.getLastCommit()).getFileHash(file);
+                    if (!givenFileHash.equals(splitFileHash) 
+                                && currentFileHash.equals(splitFileHash)) {
                         restoreFile(file, gBranchCommit);
-                    } else if (givenLastModified != splitLastModified 
-                                && currentLastModified != splitLastModified) {
+                    } else if (!givenFileHash.equals(splitFileHash) 
+                                && !currentFileHash.equals(splitFileHash)) {
                         File curFile = new File(file);
                         createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
-                                    + Long.toString(givenLastModified) + curFile.getName()));
+                                    + givenFileHash + curFile.getName()));
                     } 
                 }
             }
@@ -338,7 +341,7 @@ public class Gitlet {
                         newMessage = in.nextLine();
                     }
                 }
-                HashMap<String, Long> newFiles = curOldCommit.getNewCommittedFiles();
+                HashMap<String, String> newFiles = curOldCommit.getNewCommittedFiles();
                 lastCommit = commits.get(currentBranch.getLastCommit());
                 Commit newCommit = new Commit(newMessage, lastCommit, commits.size());
                 for (String curFile : newFiles.keySet()) {
@@ -359,59 +362,63 @@ public class Gitlet {
         if (COMMANDS.contains(command)) {
             gitlet.deserialize();
         }
-        switch (command) {
-            case "init":
-                gitlet.init();
-                break;
-            case "add":
-                gitlet.add(args);
-                break;  
-            case "commit":
-                gitlet.commit(args);
-                break;
-            case "rm":
-                gitlet.remove(args);
-                break; 
-            case "log":
-                gitlet.log();
-                break;  
-            case "global-log": 
-                gitlet.globalLog();
-                break;
-            case "find":
-                gitlet.find(args);
-                break;
-            case "status":
-                gitlet.status();
-                break;
-            case "checkout":
-                gitlet.checkout(args);
-                break;
-            case "branch":
-                gitlet.branch(args);
-                break;
-            case "rm-branch":
-                gitlet.removeBranch(args);
-                break;
-            case "reset":
-                gitlet.dangerous();
-                gitlet.reset(args);
-                break;
-            case "merge":
-                gitlet.dangerous();
-                gitlet.merge(args);
-                break;
-            case "rebase":
-                gitlet.dangerous();
-                gitlet.rebase(args);
-                break;
-            case "i-rebase":
-                gitlet.dangerous();
-                gitlet.interactiveRebase(args, true);
-                break;
-            default:
-                System.out.println("Invalid command.");  
-                break;
+        try {
+            switch (command) {
+                case "init":
+                    gitlet.init();
+                    break;
+                case "add":
+                    gitlet.add(args);
+                    break;  
+                case "commit":
+                    gitlet.commit(args);
+                    break;
+                case "rm":
+                    gitlet.remove(args);
+                    break; 
+                case "log":
+                    gitlet.log();
+                    break;  
+                case "global-log": 
+                    gitlet.globalLog();
+                    break;
+                case "find":
+                    gitlet.find(args);
+                    break;
+                case "status":
+                    gitlet.status();
+                    break;
+                case "checkout":
+                    gitlet.checkout(args);
+                    break;
+                case "branch":
+                    gitlet.branch(args);
+                    break;
+                case "rm-branch":
+                    gitlet.removeBranch(args);
+                    break;
+                case "reset":
+                    gitlet.dangerous();
+                    gitlet.reset(args);
+                    break;
+                case "merge":
+                    gitlet.dangerous();
+                    gitlet.merge(args);
+                    break;
+                case "rebase":
+                    gitlet.dangerous();
+                    gitlet.rebase(args);
+                    break;
+                case "i-rebase":
+                    gitlet.dangerous();
+                    gitlet.interactiveRebase(args, true);
+                    break;
+                default:
+                    System.out.println("Invalid command.");  
+                    break;
+            } 
+        } catch (Exception e) {
+            System.out.println("Error");
         }
         gitlet.serialize();
     }
@@ -495,15 +502,15 @@ public class Gitlet {
     }
     private void restoreFile(String fileName, Commit curCommit) {
         File curFile = new File(fileName);
-        Long fileIDFromLastCommit = curCommit.getFileLastModified(fileName);
+        String fileHashFromLastCommit = curCommit.getFileHash(fileName);
         if (curFile.exists()) {
             writeFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+                        + fileHashFromLastCommit + curFile.getName()));
         } else {
             createFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
+                        + fileHashFromLastCommit + curFile.getName()));
         }
-        curFile.setLastModified(fileIDFromLastCommit);
+        // curFile.setLastModified(fileHashFromLastCommit);
     }
 
     private <K> K readObject(File f) {
@@ -602,5 +609,38 @@ public class Gitlet {
                 e.printStackTrace();
             }
         }
+    }
+    /* Credit for hashFile function: 
+     * http://www.codejava.net/coding/
+     * how-to-calculate-md5-and-sha-hash-values-in-java
+     */
+    private static final int FIRST = 1024;
+    private static final int SECOND = 0xff;
+    private static final int THIRD = 0x100;
+    private static final int FOURTH = 16;
+
+    private static String hashFile(File file, String algorithm)
+            throws Exception {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            byte[] bytesBuffer = new byte[FIRST];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(bytesBuffer)) != -1) {
+                digest.update(bytesBuffer, 0, bytesRead);
+            }
+            byte[] hashedBytes = digest.digest();
+            return convertByteArrayToHexString(hashedBytes);
+        } catch (NoSuchAlgorithmException | IOException ex) {
+            throw new Exception(
+                    "Could not generate hash from file", ex);
+        }
+    }
+    private static String convertByteArrayToHexString(byte[] arrayBytes) {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < arrayBytes.length; i++) {
+            stringBuffer.append(Integer.toString((arrayBytes[i] & SECOND) + THIRD, FOURTH)
+                    .substring(1));
+        }
+        return stringBuffer.toString();
     }
 }

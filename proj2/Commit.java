@@ -13,8 +13,8 @@ import java.io.File;
 
 public class Commit implements Serializable{
 	private String message;
-	private HashMap<String, Long> newCommittedFiles;
-	private HashMap<String, Long> oldCommittedFiles;
+	private HashMap<String, String> newCommittedFiles;
+	private HashMap<String, String> oldCommittedFiles;
 	private int id;
 	private String timeStamp;
 
@@ -22,15 +22,15 @@ public class Commit implements Serializable{
 
 	public Commit() {
 		message = "initial commit";
-		newCommittedFiles = new HashMap<String, Long>();
-		oldCommittedFiles = new HashMap<String, Long>();
+		newCommittedFiles = new HashMap<String, String>();
+		oldCommittedFiles = new HashMap<String, String>();
 		id = 0;
 		timeStamp = createTimeStamp();
 		oldCommit = null;
 	}
 	public Commit(String message, Commit oldCommit, int id){
 		this.message = message;
-		newCommittedFiles = new HashMap<String, Long>();
+		newCommittedFiles = new HashMap<String, String>();
 		oldCommittedFiles = oldCommit.getAllCommittedFiles();
 		this.id = id;
 		this.timeStamp = createTimeStamp();
@@ -42,11 +42,11 @@ public class Commit implements Serializable{
 	public boolean containsFile(String word) {
 		return getAllCommittedFiles().containsKey(word);
 	}
-	public HashMap<String, Long> getNewCommittedFiles() {
+	public HashMap<String, String> getNewCommittedFiles() {
 		return newCommittedFiles;
 	}
-	public HashMap<String, Long> getAllCommittedFiles() {
-		HashMap<String, Long> allCommittedFiles = new HashMap<String, Long>(this.oldCommittedFiles);
+	public HashMap<String, String> getAllCommittedFiles() {
+		HashMap<String, String> allCommittedFiles = new HashMap<String, String>(this.oldCommittedFiles);
 		allCommittedFiles.putAll(this.newCommittedFiles);
 		return allCommittedFiles;
 	}
@@ -61,18 +61,18 @@ public class Commit implements Serializable{
 	public String getMessage() {
 		return message;
 	}
-	public void addFile(String fileName, Long lastModified) {
+	public void addFile(String fileName, String lastModified) {
 		newCommittedFiles.put(fileName, lastModified);
 	}
 	public int getId() {
 		return id;
 	}
-	public Long getFileLastModified(String fileName) {
-		HashMap<String, Long> allCommittedFiles = getAllCommittedFiles();
+	public String getFileHash(String fileName) {
+		HashMap<String, String> allCommittedFiles = getAllCommittedFiles();
 		if (allCommittedFiles.containsKey(fileName)) {
 			return allCommittedFiles.get(fileName);
 		} else {
-			return (long)-1;
+			return null;
 		}
 	}
 	public String getTimeStamp() {

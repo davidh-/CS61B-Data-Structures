@@ -109,7 +109,56 @@ public class GitletPublicTest {
         assertArrayEquals(new String[] { commitMessage2, commitMessage1 },
                 extractCommitMessages(logContent));
     }
+    /**
+     * Tests that basic rebase works as entended.
+     */
+    @Test
+    public void testBasicRebase() {
+        gitlet("init");
+        String wugFileName = TESTING_DIR + "wug.txt";
 
+        createFile(wugFileName, "This is a wg");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test1");
+
+        createFile(wugFileName, "This is a wug");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test2");
+
+        gitlet("branch", "branch1");
+
+        writeFile(wugFileName, "This is a wug.");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test3");
+
+        writeFile(wugFileName, "This is a wug...");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test4");
+
+        gitlet("checkout", "branch1");
+
+        writeFile(wugFileName, "This is a wug!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test5");
+
+        gitlet("branch", "branch2");
+
+        writeFile(wugFileName, "This is a wug!!!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test6"); 
+
+        gitlet("checkout", "branch2");
+
+        writeFile(wugFileName, "This is a wug??!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test7");
+
+        gitlet("checkout", "branch1");
+
+        gitlet("rebase", "master");
+
+        assertEquals("This is a wug!!!", getText(wugFileName));
+    }
     /**
      * Convenience method for calling Gitlet's main. Anything that is printed
      * out during this call to main will NOT actually be printed out, but will
@@ -153,6 +202,7 @@ public class GitletPublicTest {
             System.setOut(originalOut);
             System.setIn(originalIn);
         }
+        printingResults.toString();
         return printingResults.toString();
     }
 
