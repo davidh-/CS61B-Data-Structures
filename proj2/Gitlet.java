@@ -20,7 +20,10 @@ import java.util.Arrays;
 
 public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
-    private static final HashSet<String> COMMANDS = new HashSet<String>(Arrays.asList(new String[] {"add", "commit", "rm", "log", "global-log", "find", "status", "checkout", "branch", "rm-branch", "reset", "merge", "rebase", "i-rebase"}));
+    private static final HashSet<String> COMMANDS = 
+        new HashSet<String>(Arrays.asList(new String[] 
+            {"add", "commit", "rm", "log", "global-log", "find", "status", 
+                "checkout", "branch", "rm-branch", "reset", "merge", "rebase", "i-rebase"}));
     private HashSet<String> addedFiles;
     private HashSet<String> filesToRemove;
 
@@ -37,9 +40,8 @@ public class Gitlet {
     private void init() {
         File dir = new File(GITLET_DIR);
         if (dir.exists()) {
-            String firstHalf = "A gitlet version control system already ";
-            String secondHalf = "exists in the current directory.";
-            System.out.println(firstHalf + secondHalf);
+            System.out.println("A gitlet version control system already ");
+            System.out.print("exists in the current directory.");
         } else {
             dir.mkdirs();
             addedFiles = new HashSet<String>();
@@ -188,16 +190,14 @@ public class Gitlet {
                     currentBranch = branches.get(currentBranchName);
                     lastCommit = commits.get(currentBranch.getLastCommit());
                     for (String file : lastCommit.getAllCommittedFiles().keySet()) {
-                        System.out.println("files checkout'ed: " + file);
                         restoreFile(file, lastCommit);
                     }
                 }
             } else if (lastCommit.containsFile(args[1])) {
                 restoreFile(args[1], lastCommit);
             } else {
-                String first = "File does not exist in the most recent commit, ";
-                String second = "or no such branch exists.";
-                System.out.println(first + second);
+                System.out.println("File does not exist in the most recent commit, ");
+                System.out.print("or no such branch exists.");
             }
         } else if (args.length == 3) {
             int commitId = Integer.parseInt(args[1]);
@@ -220,7 +220,8 @@ public class Gitlet {
         if (branches.containsKey(branchName)) {
             System.out.println("A branch with that name already exists.");
         } else {
-            Branch newBranch = new Branch(branchName, branches.get(currentBranchName).getLastCommit());
+            Branch newBranch = 
+                new Branch(branchName, branches.get(currentBranchName).getLastCommit());
             branches.put(branchName, newBranch);
         }
     }
@@ -259,9 +260,12 @@ public class Gitlet {
             int splitPointCommit = findSplitPoint(gBranchCommit);
             for (String file : gBranchCommit.getAllCommittedFiles().keySet()) {
                 if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    Long splitLastModified = commits.get(splitPointCommit).getFileLastModified(file);
-                    Long givenLastModified = gBranchCommit.getFileLastModified(file);
-                    Long currentLastModified = commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
+                    Long splitLastModified = 
+                        commits.get(splitPointCommit).getFileLastModified(file);
+                    Long givenLastModified = 
+                        gBranchCommit.getFileLastModified(file);
+                    Long currentLastModified = 
+                        commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
                     if (givenLastModified != splitLastModified 
                                 && currentLastModified == splitLastModified) {
                         restoreFile(file, gBranchCommit);
@@ -289,7 +293,6 @@ public class Gitlet {
             Commit lastCommit = commits.get(currentBranch.getLastCommit());
             Branch givenBranch = branches.get(branchName);
             Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
-
             Commit lastCommitPointer = lastCommit;
             while (lastCommitPointer != null) {
                 if (lastCommitPointer.getId() == gBranchCommit.getId()) {
@@ -318,15 +321,8 @@ public class Gitlet {
                 }
             }
             commitsOfGBranch = new TreeSet<Integer>(commitsOfGBranch.tailSet(splitPointCommit));
-            int i = 0;
-            int initialCommitOfG = 0;
-            for (int cID : commitsOfGBranch) {
-                if (i == 1) {
-                    initialCommitOfG = cID;
-                }
-                i += 1;
-            }
-            int lastCommitOfG = commitsOfGBranch.last();
+            int[] firstLast = calcFirstLastCommit(commitsOfGBranch);
+
             boolean splitPoint = true;
             for (int commitID : commitsOfGBranch) {
                 if (splitPoint) {
@@ -335,30 +331,13 @@ public class Gitlet {
                     Commit curCommit = commits.get(commitID);
                     String newMessage = curCommit.getMessage();
                     if (interactive) {
-                        System.out.println("Currently replaying:");
-                        System.out.println(curCommit.getLog());
-                        System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
-                        Scanner in = new Scanner(System.in);
-                        String answer = in.nextLine();
-                        while (!answer.equals("c") && !answer.equals("s") && !answer.equals("m")) {
-                            System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
-                            answer = in.nextLine();
-                        }
-                        if (answer.equals("s")) {
-                            if (commitID != initialCommitOfG || commitID != lastCommitOfG) {
-                                break;
-                            } else {
-                                    while (!answer.equals("c") && !answer.equals("m")) {
-                                        System.out.println("Would you like to (c)ontinue, (s)kip this commit, or change this commit's (m)essage?");
-                                        answer = in.nextLine();
-                                    }
-                                    if ((answer.equals("m"))) {
-                                        System.out.println("Please enter a new message for this commit.");
-                                        newMessage = in.nextLine();
-                                    }
-                            }
-                        } else if ((answer.equals("m"))) {
+                        String decision = 
+                            iRebaseUserInput(curCommit, commitID, firstLast[0], firstLast[1]);
+                        if (decision.equals("s")) {
+                            break;
+                        } else if ((decision.equals("m"))) {
                             System.out.println("Please enter a new message for this commit.");
+                            Scanner in = new Scanner(System.in);
                             newMessage = in.nextLine();
                         }
                     }
@@ -374,7 +353,8 @@ public class Gitlet {
                     currentBranch.updateLastCommit(newCommit.getId());
                 }
             }
-            for (String file : commits.get(currentBranch.getLastCommit()).getAllCommittedFiles().keySet()) {
+            Commit lastTrueCommit = commits.get(currentBranch.getLastCommit());
+            for (String file : lastTrueCommit.getAllCommittedFiles().keySet()) {
                 restoreFile(file, commits.get(currentBranch.getLastCommit()));
             }
         }
@@ -440,6 +420,52 @@ public class Gitlet {
                 break;
         }
         gitlet.serialize();
+    }
+    private int[] calcFirstLastCommit(TreeSet<Integer> commitsOfGBranch) {
+        int i = 0;
+        int initialCommitOfG = 0;
+        for (int cID : commitsOfGBranch) {
+            if (i == 1) {
+                initialCommitOfG = cID;
+            }
+            i += 1;
+        }
+        int lastCommitOfG = commitsOfGBranch.last();
+        int[] firstLast = {initialCommitOfG, lastCommitOfG};
+        return firstLast;
+    }
+    private String iRebaseUserInput(Commit curCommit, 
+            int commitID, int initialCommitOfG, int lastCommitOfG) {
+        System.out.println("Currently replaying:");
+        System.out.println(curCommit.getLog());
+        String iMessage1 = "Would you like to (c)ontinue, ";
+        String iMessage2 = "(s)kip this commit, or change this commit's (m)essage?";
+        System.out.println(iMessage1 + iMessage2);
+        Scanner in = new Scanner(System.in);
+        String answer = in.nextLine();
+        while (!answer.equals("c") && !answer.equals("s") && !answer.equals("m")) {
+            System.out.println(iMessage1 + iMessage2);
+            answer = in.nextLine();
+        }
+        if (answer.equals("s")) {
+            if (commitID != initialCommitOfG || commitID != lastCommitOfG) {
+                return "s";
+            } else {
+                while (!answer.equals("c") && !answer.equals("m")) {
+                    System.out.println(iMessage1 + iMessage2);
+                    answer = in.nextLine();
+                }
+                if ((answer.equals("m"))) {
+                    return "m";
+                } else {
+                    return "c";
+                }
+            }
+        } else if ((answer.equals("m"))) {
+            return "m";
+        } else {
+            return "c";
+        }
     }
     private int findSplitPoint(Commit gBranchCommit) {
         Branch currentBranch = branches.get(currentBranchName);
