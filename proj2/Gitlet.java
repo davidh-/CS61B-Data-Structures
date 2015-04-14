@@ -60,7 +60,7 @@ public class Gitlet {
             currentBranchName = master.getBranchName();
         }
     }
-    private void add(String[] args) throws Exception {
+    private void add(String[] args) throws IOException {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String fileName = args[1];
         File fileToAdd = new File(fileName);
@@ -78,7 +78,7 @@ public class Gitlet {
             addedFiles.add(fileName);
         }
     }
-    private void commit(String[] args) throws Exception {
+    private void commit(String[] args) throws IOException {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
@@ -419,7 +419,7 @@ public class Gitlet {
                     System.out.println("Invalid command.");  
                     break;
             } 
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error");
         }
         gitlet.serialize();
@@ -621,7 +621,7 @@ public class Gitlet {
     private static final int FOURTH = 16;
 
     private static String hashFile(File file, String algorithm)
-            throws Exception {
+            throws IOException {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
             byte[] bytesBuffer = new byte[FIRST];
@@ -632,7 +632,7 @@ public class Gitlet {
             byte[] hashedBytes = digest.digest();
             return convertByteArrayToHexString(hashedBytes);
         } catch (NoSuchAlgorithmException | IOException ex) {
-            throw new Exception(
+            throw new IOException(
                     "Could not generate hash from file", ex);
         }
     }
