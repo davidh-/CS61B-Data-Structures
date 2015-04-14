@@ -438,13 +438,13 @@ public class Gitlet {
     private void restoreFile(String fileName, Commit curCommit) {
         File curFile = new File(fileName);
         Long fileIDFromLastCommit = curCommit.getFileLastModified(fileName);
-        System.out.println(fileIDFromLastCommit + " " + curCommit.getId());
+        System.out.println(fileIDFromLastCommit + " " + curCommit.getId() + " " + curFile.getName());
         if (curFile.exists()) {
             writeFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + fileName));
+                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
         } else {
             createFile(fileName, getText(GITLET_DIR + fileName + "/" 
-                        + Long.toString(fileIDFromLastCommit) + fileName));
+                        + Long.toString(fileIDFromLastCommit) + curFile.getName()));
         }
         curFile.setLastModified(fileIDFromLastCommit);
     }
