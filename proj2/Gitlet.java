@@ -278,6 +278,8 @@ public class Gitlet {
                         createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
                                     + givenFileHash + curFile.getName()));
                     } 
+                } else {
+                    restoreFile(file, gBranchCommit);
                 }
             }
         }
@@ -510,7 +512,6 @@ public class Gitlet {
             createFile(fileName, getText(GITLET_DIR + fileName + "/" 
                         + fileHashFromLastCommit + curFile.getName()));
         }
-        // curFile.setLastModified(fileHashFromLastCommit);
     }
 
     private <K> K readObject(File f) {

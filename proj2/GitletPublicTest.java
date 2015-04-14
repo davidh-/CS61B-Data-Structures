@@ -110,6 +110,51 @@ public class GitletPublicTest {
                 extractCommitMessages(logContent));
     }
     /**
+     * Tests that basic merge works as entended.
+     */
+    @Test
+    public void testBasicMerge() {
+        gitlet("init");
+        String wugFileName = TESTING_DIR + "wug.txt";
+
+        createFile(wugFileName, "This is a wg");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test1");
+
+        gitlet("branch", "branch1");
+
+        createFile(wugFileName, "This is a wug");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test2");
+
+        writeFile(wugFileName, "This is a wug.");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test3");
+
+        gitlet("remove", wugFileName);
+        gitlet("commit", "test4");
+
+        gitlet("checkout", "branch1");
+
+
+        writeFile(wugFileName, "This is a wug!!!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test5"); 
+
+        gitlet("remove", wugFileName);
+        gitlet("commit", "test6"); 
+
+
+        gitlet("add", wugFileName);
+        gitlet("commit", "test7");
+
+        gitlet("checkout", "master");
+
+        gitlet("merge", "branch1");
+
+        assertEquals("This is a wug!!!", getText(wugFileName));
+    }
+    /**
      * Tests that basic rebase works as entended.
      */
     @Test
