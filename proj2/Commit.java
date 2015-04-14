@@ -13,8 +13,8 @@ import java.io.File;
 
 public class Commit implements Serializable{
 	private String message;
-	private HashMap<String, Long> newCommitedFiles;
-	private HashMap<String, Long> oldCommitedFiles;
+	private HashMap<String, Long> newCommittedFiles;
+	private HashMap<String, Long> oldCommittedFiles;
 	private int id;
 	private String timeStamp;
 
@@ -22,16 +22,16 @@ public class Commit implements Serializable{
 
 	public Commit() {
 		message = "initial commit";
-		newCommitedFiles = new HashMap<String, Long>();
-		oldCommitedFiles = new HashMap<String, Long>();
+		newCommittedFiles = new HashMap<String, Long>();
+		oldCommittedFiles = new HashMap<String, Long>();
 		id = 0;
 		timeStamp = createTimeStamp();
 		oldCommit = null;
 	}
 	public Commit(String message, Commit oldCommit, int id){
 		this.message = message;
-		newCommitedFiles = new HashMap<String, Long>();
-		oldCommitedFiles = oldCommit.getAllCommitedFiles();
+		newCommittedFiles = new HashMap<String, Long>();
+		oldCommittedFiles = oldCommit.getAllCommittedFiles();
 		this.id = id;
 		this.timeStamp = createTimeStamp();
 		this.oldCommit = oldCommit;
@@ -40,15 +40,18 @@ public class Commit implements Serializable{
 		return oldCommit;
 	}
 	public boolean containsFile(String word) {
-		return getAllCommitedFiles().containsKey(word);
+		return getAllCommittedFiles().containsKey(word);
 	}
-	public HashMap<String, Long> getAllCommitedFiles() {
-		HashMap<String, Long> allCommitedFiles = new HashMap<String, Long>(this.oldCommitedFiles);
-		allCommitedFiles.putAll(this.newCommitedFiles);
-		return allCommitedFiles;
+	public HashMap<String, Long> getNewCommittedFiles() {
+		return newCommittedFiles;
+	}
+	public HashMap<String, Long> getAllCommittedFiles() {
+		HashMap<String, Long> allCommittedFiles = new HashMap<String, Long>(this.oldCommittedFiles);
+		allCommittedFiles.putAll(this.newCommittedFiles);
+		return allCommittedFiles;
 	}
 	public void removeFileFromInheritedCommits(String word) {
-		oldCommitedFiles.remove(word);
+		oldCommittedFiles.remove(word);
 	}
 	private String createTimeStamp() {
         Date date = new Date();
@@ -59,15 +62,15 @@ public class Commit implements Serializable{
 		return message;
 	}
 	public void addFile(String fileName, Long lastModified) {
-		newCommitedFiles.put(fileName, lastModified);
+		newCommittedFiles.put(fileName, lastModified);
 	}
 	public int getId() {
 		return id;
 	}
 	public Long getFileLastModified(String fileName) {
-		HashMap<String, Long> allCommitedFiles = getAllCommitedFiles();
-		if (allCommitedFiles.containsKey(fileName)) {
-			return allCommitedFiles.get(fileName);
+		HashMap<String, Long> allCommittedFiles = getAllCommittedFiles();
+		if (allCommittedFiles.containsKey(fileName)) {
+			return allCommittedFiles.get(fileName);
 		} else {
 			return (long)-1;
 		}

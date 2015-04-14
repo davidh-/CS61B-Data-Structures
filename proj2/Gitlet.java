@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.HashMap;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.util.Scanner;
+import java.util.Arrays;
 
 /** 
  *  @author David Dominguez Hooper
@@ -18,13 +20,13 @@ import java.util.Scanner;
 
 public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
+    private static final HashSet<String> COMMANDS = new HashSet<String>(Arrays.asList(new String[] {"add", "commit", "rm", "log", "global-log", "find", "status", "checkout", "branch", "rm-branch", "reset", "merge", "rebase", "i-rebase"}));
     private HashSet<String> addedFiles;
     private HashSet<String> filesToRemove;
 
     private HashMap<Integer, Commit> commits;
     private HashMap<String, Branch> branches;
     private String currentBranchName;
-
 
     private File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
     private File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
@@ -107,7 +109,7 @@ public class Gitlet {
     private void remove(String[] args) {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String removeMessage = args[1];
-        if (!lastCommit.getAllCommitedFiles().containsKey(removeMessage)) {
+        if (!lastCommit.getAllCommittedFiles().containsKey(removeMessage)) {
             System.out.println("No reason to remove the file.");
             return;
         } else {
@@ -185,7 +187,7 @@ public class Gitlet {
                     currentBranchName = args[1];
                     currentBranch = branches.get(currentBranchName);
                     lastCommit = commits.get(currentBranch.getLastCommit());
-                    for (String file : lastCommit.getAllCommitedFiles().keySet()) {
+                    for (String file : lastCommit.getAllCommittedFiles().keySet()) {
                         System.out.println("files checkout'ed: " + file);
                         restoreFile(file, lastCommit);
                     }
@@ -204,16 +206,14 @@ public class Gitlet {
                 System.out.println("No commit with that id exists.");
             } else {
                 Commit curCommit = commits.get(commitId);
-                HashMap<String, Long> allCommitedFiles = curCommit.getAllCommitedFiles();
-                if (!allCommitedFiles.containsKey(fileName)) {
+                HashMap<String, Long> allCommittedFiles = curCommit.getAllCommittedFiles();
+                if (!allCommittedFiles.containsKey(fileName)) {
                     System.out.println("File does not exist in that commit.");
                 } else  {
                     restoreFile(fileName, curCommit);
                 }
             } 
-        } 
-        // System.out.println(GITLET_DIR + checkoutFileName + "/" 
-        //                     + fileIDFromLastCommit + curFile.getName());
+        }
     }
     private void branch(String[] args) {
         String branchName = args[1];
@@ -240,7 +240,7 @@ public class Gitlet {
             System.out.println("No commit with that id exists.");
         } else {
             Commit lastCommit = commits.get(commitId);
-            for (String file : lastCommit.getAllCommitedFiles().keySet()) {
+            for (String file : lastCommit.getAllCommittedFiles().keySet()) {
                 restoreFile(file, lastCommit);
             }
             branches.get(currentBranchName).updateLastCommit(commitId);
@@ -256,9 +256,9 @@ public class Gitlet {
         } else {
             Branch givenBranch = branches.get(branchName);
             Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
-            for (String file : gBranchCommit.getAllCommitedFiles().keySet()) {
+            int splitPointCommit = findSplitPoint(gBranchCommit);
+            for (String file : gBranchCommit.getAllCommittedFiles().keySet()) {
                 if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    int splitPointCommit = findSplitPoint(file, gBranchCommit);
                     Long splitLastModified = commits.get(splitPointCommit).getFileLastModified(file);
                     Long givenLastModified = gBranchCommit.getFileLastModified(file);
                     Long currentLastModified = commits.get(currentBranch.getLastCommit()).getFileLastModified(file);
@@ -281,8 +281,61 @@ public class Gitlet {
             System.out.println("A branch with that name does not exist.");
         } else if (currentBranchName.equals(branchName)) {
             System.out.println("Cannot merge a branch with itself.");
-        } else if (1 == 1) {
-            System.out.println("test1");
+        } else {
+            Branch currentBranch = branches.get(currentBranchName);
+            Commit lastCommit = commits.get(currentBranch.getLastCommit());
+            Branch givenBranch = branches.get(branchName);
+            Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
+
+            Commit lastCommitPointer = lastCommit;
+            while (lastCommitPointer != null) {
+                if (lastCommitPointer.getId() == gBranchCommit.getId()) {
+                    System.out.println("Already up-to-date.");
+                    return;
+                }
+            }
+            TreeSet<Integer> commitsOfGBranch = new TreeSet<Integer>();
+            Commit pointer = gBranchCommit;
+            while (pointer != null) {
+                if (lastCommit.getId() == pointer.getId()) {
+                    currentBranch.updateLastCommit(pointer.getId());
+                    return;
+                }
+                commitsOfGBranch.add(pointer.getId());
+                pointer = pointer.getOldCommit();
+            }
+            pointer = commits.get(currentBranch.getLastCommit());
+            int splitPointCommit = -1;
+            while (pointer != null) {
+                if (commitsOfGBranch.contains(pointer.getId())) {
+                    splitPointCommit = pointer.getId();
+                    break;
+                } else  {
+                    pointer = pointer.getOldCommit();
+                }
+            }
+            commitsOfGBranch = new TreeSet<Integer>(commitsOfGBranch.tailSet(splitPointCommit));
+            boolean firstCommit = true;
+            for (int commitID : commitsOfGBranch) {
+                if (firstCommit) {
+                    firstCommit = false;
+                } else  {
+                    Commit curCommit = commits.get(commitID);
+                    Commit lastNewCommit = commits.get(currentBranch.getLastCommit());
+                    HashMap<String, Long> newFiles = curCommit.getNewCommittedFiles();
+                    Commit newCommit = new Commit(curCommit.getMessage(), lastNewCommit, commits.size());
+                    for (String curFile : newFiles.keySet()) {
+                        if (!lastCommit.containsFile(curFile)) {
+                            newCommit.addFile(curFile, newFiles.get(curFile));
+                        }
+                    }
+                    commits.put(newCommit.getId(), newCommit);
+                    currentBranch.updateLastCommit(newCommit.getId());
+                }
+            }
+            for (String file : commits.get(currentBranch.getLastCommit()).getAllCommittedFiles().keySet()) {
+                restoreFile(file, commits.get(currentBranch.getLastCommit()));
+            }
         }
     }
     private void interactiveRebase(String[] args) {
@@ -290,9 +343,8 @@ public class Gitlet {
     }
     public static void main(String[] args) {
         Gitlet gitlet = new Gitlet();
-
         String command = args[0];
-        if (!command.equals("init")) {
+        if (COMMANDS.contains(command)) {
             gitlet.deserialize();
         }
         switch (command) {
@@ -351,18 +403,18 @@ public class Gitlet {
         }
         gitlet.serialize();
     }
-    private int findSplitPoint(String file, Commit gBranchCommit) {
+    private int findSplitPoint(Commit gBranchCommit) {
         Branch currentBranch = branches.get(currentBranchName);
-        HashSet<Integer> commitsOfFile = new HashSet<Integer>();
+        HashSet<Integer> commitsOfGBranch = new HashSet<Integer>();
         Commit pointer = gBranchCommit;
-        while (pointer != null && pointer.containsFile(file)) {
-            commitsOfFile.add(pointer.getId());
+        while (pointer != null) {
+            commitsOfGBranch.add(pointer.getId());
             pointer = pointer.getOldCommit();
         }
         pointer = commits.get(currentBranch.getLastCommit());
         int splitPointCommit = -1;
         while (pointer != null) {
-            if (commitsOfFile.contains(pointer.getId())) {
+            if (commitsOfGBranch.contains(pointer.getId())) {
                 splitPointCommit = pointer.getId();
                 break;
             } else  {
@@ -371,6 +423,7 @@ public class Gitlet {
         }
         return splitPointCommit;
     }
+
     private void dangerous() {
         System.out.println("Warning: ");
         System.out.print("The command you entered may alter the files in your working directory. ");
