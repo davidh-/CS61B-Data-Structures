@@ -1,7 +1,6 @@
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,7 +11,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,7 +58,6 @@ public class GitletPublicTest {
         }
         f.mkdirs();
     }
-
     /**
      * Tests that init creates a .gitlet directory. Does NOT test that init
      * creates an initial commit, which is the other functionality of init.
@@ -71,7 +68,6 @@ public class GitletPublicTest {
         File f = new File(GITLET_DIR);
         assertTrue(f.exists());
     }
-
     /**
      * Tests that checking out a file name will restore the version of the file
      * from the previous commit. Involves init, add, commit, and checkout.
@@ -88,7 +84,6 @@ public class GitletPublicTest {
         gitlet("checkout", wugFileName);
         assertEquals(wugText, getText(wugFileName));
     }
-
     /**
      * Tests that log prints out commit messages in the right order. Involves
      * init, add, commit, and log.
@@ -97,14 +92,12 @@ public class GitletPublicTest {
     public void testBasicLog() {
         gitlet("init");
         String commitMessage1 = "initial commit";
-
         String wugFileName = TESTING_DIR + "wug.txt";
         String wugText = "This is a wug.";
         createFile(wugFileName, wugText);
         gitlet("add", wugFileName);
         String commitMessage2 = "added wug";
         gitlet("commit", commitMessage2);
-
         String logContent = gitlet("log");
         assertArrayEquals(new String[] { commitMessage2, commitMessage1 },
                 extractCommitMessages(logContent));
@@ -116,35 +109,26 @@ public class GitletPublicTest {
     public void testBasicMerge() {
         gitlet("init");
         String wugFileName = TESTING_DIR + "wug.txt";
-
         createFile(wugFileName, "This is a wg");
         gitlet("add", wugFileName);
         gitlet("commit", "test1");
-
         createFile(wugFileName, "This is a wug");
         gitlet("add", wugFileName);
         gitlet("commit", "test2");
-
         gitlet("branch", "branch");
-
         writeFile(wugFileName, "This is a wug.");
         gitlet("add", wugFileName);
         gitlet("commit", "test3");
-
         writeFile(wugFileName, "This is a wug...");
         gitlet("add", wugFileName);
         gitlet("commit", "test4"); 
-
         gitlet("checkout", "branch");
-
         writeFile(wugFileName, "This is a wug!");
         gitlet("add", wugFileName);
         gitlet("commit", "test5");
-
         writeFile(wugFileName, "This is a wug!!!");
         gitlet("add", wugFileName);
         gitlet("commit", "test6"); 
-
         gitlet("checkout", "master");
         gitlet("merge", "branch");
     }
@@ -155,47 +139,33 @@ public class GitletPublicTest {
     public void testBasicRebase() {
         gitlet("init");
         String wugFileName = TESTING_DIR + "wug.txt";
-
         createFile(wugFileName, "This is a wg");
         gitlet("add", wugFileName);
         gitlet("commit", "test1");
-
         createFile(wugFileName, "This is a wug");
         gitlet("add", wugFileName);
         gitlet("commit", "test2");
-
         gitlet("branch", "branch1");
-
         writeFile(wugFileName, "This is a wug.");
         gitlet("add", wugFileName);
         gitlet("commit", "test3");
-
         writeFile(wugFileName, "This is a wug...");
         gitlet("add", wugFileName);
         gitlet("commit", "test4");
-
         gitlet("checkout", "branch1");
-
         writeFile(wugFileName, "This is a wug!");
         gitlet("add", wugFileName);
         gitlet("commit", "test5");
-
         gitlet("branch", "branch2");
-
         writeFile(wugFileName, "This is a wug!!!");
         gitlet("add", wugFileName);
         gitlet("commit", "test6"); 
-
         gitlet("checkout", "branch2");
-
         writeFile(wugFileName, "This is a wug??!");
         gitlet("add", wugFileName);
         gitlet("commit", "test7");
-
         gitlet("checkout", "branch1");
-
         gitlet("rebase", "master");
-
         assertEquals("This is a wug!!!", getText(wugFileName));
     }
     /**
@@ -220,7 +190,6 @@ public class GitletPublicTest {
              * instead be added to the printingResults object.
              */
             System.setOut(new PrintStream(printingResults));
-
             /*
              * Prepares the answer "yes" on System.In, to pretend as if a user
              * will type "yes". You won't be able to take user input during this
@@ -229,10 +198,8 @@ public class GitletPublicTest {
             String answer = "yes";
             InputStream is = new ByteArrayInputStream(answer.getBytes());
             System.setIn(is);
-
             /* Calls the main method using the input arguments. */
             Gitlet.main(args);
-
         } finally {
             /*
              * Restores System.out and System.in (So you can print normally and
@@ -244,7 +211,6 @@ public class GitletPublicTest {
         // System.out.println(printingResults.toString());
         return printingResults.toString();
     }
-
     /**
      * Returns the text from a standard text file (won't work with special
      * characters).
@@ -257,7 +223,6 @@ public class GitletPublicTest {
             return "";
         }
     }
-
     /**
      * Creates a new file with the given fileName and gives it the text
      * fileText.
@@ -273,7 +238,6 @@ public class GitletPublicTest {
         }
         writeFile(fileName, fileText);
     }
-
     /**
      * Replaces all text in the existing file with the given text.
      */
@@ -293,7 +257,6 @@ public class GitletPublicTest {
             }
         }
     }
-
     /**
      * Deletes the file and all files inside it, if it is a directory.
      */
@@ -305,7 +268,6 @@ public class GitletPublicTest {
         }
         d.delete();
     }
-
     /**
      * Returns an array of commit messages associated with what log has printed
      * out.

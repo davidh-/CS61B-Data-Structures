@@ -26,11 +26,9 @@ public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
     private HashSet<String> addedFiles;
     private HashSet<String> filesToRemove;
-
     private HashMap<Integer, Commit> commits;
     private HashMap<String, Branch> branches;
     private String currentBranchName;
-
     private File lastAddedFiles = new File(GITLET_DIR + "addedFiles.ser");
     private File lastFilesToRemove = new File(GITLET_DIR + "filesToRemove.ser");
     private File lastCommits = new File(GITLET_DIR + "commits.ser");
