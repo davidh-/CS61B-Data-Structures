@@ -263,23 +263,13 @@ public class Gitlet {
             int splitPointCommit = findSplitPoint(gBranchCommit);
             for (String file : gBranchCommit.getAllCommittedFiles().keySet()) {
                 if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    String splitFileHash = 
-                        commits.get(splitPointCommit).getFileHash(file);
+                    restoreFile(file, gBranchCommit);
+                } else {
                     String givenFileHash = 
                         gBranchCommit.getFileHash(file);
-                    String currentFileHash = 
-                        commits.get(currentBranch.getLastCommit()).getFileHash(file);
-                    if (!givenFileHash.equals(splitFileHash) 
-                                && currentFileHash.equals(splitFileHash)) {
-                        restoreFile(file, gBranchCommit);
-                    } else if (!givenFileHash.equals(splitFileHash) 
-                                && !currentFileHash.equals(splitFileHash)) {
-                        File curFile = new File(file);
-                        createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
-                                    + givenFileHash + curFile.getName()));
-                    } 
-                } else {
-                    restoreFile(file, gBranchCommit);
+                    File curFile = new File(file);
+                    createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
+                                + givenFileHash + curFile.getName()));
                 }
             }
         }
