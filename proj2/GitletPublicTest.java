@@ -65,7 +65,7 @@ public class GitletPublicTest {
      * Tests that init creates a .gitlet directory. Does NOT test that init
      * creates an initial commit, which is the other functionality of init.
      */
-    @Test
+
     public void testBasicInitialize() {
         gitlet("init");
         File f = new File(GITLET_DIR);
@@ -76,7 +76,7 @@ public class GitletPublicTest {
      * Tests that checking out a file name will restore the version of the file
      * from the previous commit. Involves init, add, commit, and checkout.
      */
-    @Test
+
     public void testBasicCheckout() {
         String wugFileName = TESTING_DIR + "wug.txt";
         String wugText = "This is a wug.";
@@ -93,7 +93,7 @@ public class GitletPublicTest {
      * Tests that log prints out commit messages in the right order. Involves
      * init, add, commit, and log.
      */
-    @Test
+
     public void testBasicLog() {
         gitlet("init");
         String commitMessage1 = "initial commit";
@@ -121,43 +121,37 @@ public class GitletPublicTest {
         gitlet("add", wugFileName);
         gitlet("commit", "test1");
 
-        gitlet("branch", "branch1");
-
         createFile(wugFileName, "This is a wug");
         gitlet("add", wugFileName);
         gitlet("commit", "test2");
+
+        gitlet("branch", "branch");
 
         writeFile(wugFileName, "This is a wug.");
         gitlet("add", wugFileName);
         gitlet("commit", "test3");
 
-        gitlet("remove", wugFileName);
-        gitlet("commit", "test4");
+        writeFile(wugFileName, "This is a wug...");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test4"); 
 
-        gitlet("checkout", "branch1");
+        gitlet("checkout", "branch");
 
+        writeFile(wugFileName, "This is a wug!");
+        gitlet("add", wugFileName);
+        gitlet("commit", "test5");
 
         writeFile(wugFileName, "This is a wug!!!");
         gitlet("add", wugFileName);
-        gitlet("commit", "test5"); 
-
-        gitlet("remove", wugFileName);
         gitlet("commit", "test6"); 
 
-
-        gitlet("add", wugFileName);
-        gitlet("commit", "test7");
-
         gitlet("checkout", "master");
-
-        gitlet("merge", "branch1");
-
-        assertEquals("This is a wug!!!", getText(wugFileName));
+        gitlet("merge", "branch");
     }
     /**
      * Tests that basic rebase works as entended.
      */
-    @Test
+
     public void testBasicRebase() {
         gitlet("init");
         String wugFileName = TESTING_DIR + "wug.txt";
@@ -247,7 +241,7 @@ public class GitletPublicTest {
             System.setOut(originalOut);
             System.setIn(originalIn);
         }
-        printingResults.toString();
+        System.out.println(printingResults.toString());
         return printingResults.toString();
     }
 

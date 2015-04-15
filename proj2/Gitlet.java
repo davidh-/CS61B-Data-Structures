@@ -12,10 +12,8 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.util.Scanner;
-import java.util.Arrays;
-
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
 
 /** 
  *  @author David Dominguez Hooper
@@ -23,10 +21,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Gitlet {
     private static final String GITLET_DIR = ".gitlet/";
-    private static final HashSet<String> COMMANDS = 
-        new HashSet<String>(Arrays.asList(new String[] 
-            {"add", "commit", "rm", "log", "global-log", "find", "status", 
-                "checkout", "branch", "rm-branch", "reset", "merge", "rebase", "i-rebase"}));
     private HashSet<String> addedFiles;
     private HashSet<String> filesToRemove;
 
@@ -60,7 +54,7 @@ public class Gitlet {
             currentBranchName = master.getBranchName();
         }
     }
-    private void add(String[] args) throws IOException {
+    private void add(String[] args) {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String fileName = args[1];
         File fileToAdd = new File(fileName);
@@ -78,7 +72,7 @@ public class Gitlet {
             addedFiles.add(fileName);
         }
     }
-    private void commit(String[] args) throws IOException {
+    private void commit(String[] args) {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
         if (addedFiles.isEmpty() && filesToRemove.isEmpty()) {
@@ -252,6 +246,8 @@ public class Gitlet {
     }
     private void merge(String[] args) {
         Branch currentBranch = branches.get(currentBranchName);
+        Commit lastCommit = commits.get(currentBranch.getLastCommit());
+        HashMap<String, Integer> currentFilesLastMod = lastCommit.getAllLastModified();
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
             System.out.println("A branch with that name does not exist.");
@@ -260,17 +256,23 @@ public class Gitlet {
         } else {
             Branch givenBranch = branches.get(branchName);
             Commit gBranchCommit = commits.get(givenBranch.getLastCommit());
+            HashMap<String, Integer> givenFilesLastMod = gBranchCommit.getAllLastModified();
             int splitPointCommit = findSplitPoint(gBranchCommit);
             for (String file : gBranchCommit.getAllCommittedFiles().keySet()) {
-                if (commits.get(currentBranch.getLastCommit()).containsFile(file)) {
-                    restoreFile(file, gBranchCommit);
-                } else {
-                    String givenFileHash = 
-                        gBranchCommit.getFileHash(file);
-                    File curFile = new File(file);
-                    createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
-                                + givenFileHash + curFile.getName()));
-                }
+                if (givenFilesLastMod.get(file) > splitPointCommit) {
+                    if (!lastCommit.containsFile(file)) {
+                        restoreFile(file, gBranchCommit);
+                    } else {
+                        if (currentFilesLastMod.get(file) > splitPointCommit) {
+                            String givenFileHash = gBranchCommit.getFileHash(file);
+                            File curFile = new File(file);
+                            createFile(file + ".conflicted", getText(GITLET_DIR + file + "/" 
+                                        + givenFileHash + curFile.getName()));
+                        } else {
+                            restoreFile(file, gBranchCommit);
+                        }
+                    }
+                } 
             }
         }
     }
@@ -351,66 +353,62 @@ public class Gitlet {
     public static void main(String[] args) {
         Gitlet gitlet = new Gitlet();
         String command = args[0];
-        if (COMMANDS.contains(command)) {
+        if (!command.equals("init")) {
             gitlet.deserialize();
         }
-        try {
-            switch (command) {
-                case "init":
-                    gitlet.init();
-                    break;
-                case "add":
-                    gitlet.add(args);
-                    break;  
-                case "commit":
-                    gitlet.commit(args);
-                    break;
-                case "rm":
-                    gitlet.remove(args);
-                    break; 
-                case "log":
-                    gitlet.log();
-                    break;  
-                case "global-log": 
-                    gitlet.globalLog();
-                    break;
-                case "find":
-                    gitlet.find(args);
-                    break;
-                case "status":
-                    gitlet.status();
-                    break;
-                case "checkout":
-                    gitlet.checkout(args);
-                    break;
-                case "branch":
-                    gitlet.branch(args);
-                    break;
-                case "rm-branch":
-                    gitlet.removeBranch(args);
-                    break;
-                case "reset":
-                    gitlet.dangerous();
-                    gitlet.reset(args);
-                    break;
-                case "merge":
-                    gitlet.dangerous();
-                    gitlet.merge(args);
-                    break;
-                case "rebase":
-                    gitlet.dangerous();
-                    gitlet.rebase(args);
-                    break;
-                case "i-rebase":
-                    gitlet.dangerous();
-                    gitlet.interactiveRebase(args, true);
-                    break;
-                default:
-                    System.out.println("Invalid command.");  
-                    break;
-            } 
-        } catch (IOException e) {
-            System.out.println("Error");
+        switch (command) {
+            case "init":
+                gitlet.init();
+                break;
+            case "add":
+                gitlet.add(args);
+                break;  
+            case "commit":
+                gitlet.commit(args);
+                break;
+            case "rm":
+                gitlet.remove(args);
+                break; 
+            case "log":
+                gitlet.log();
+                break;  
+            case "global-log": 
+                gitlet.globalLog();
+                break;
+            case "find":
+                gitlet.find(args);
+                break;
+            case "status":
+                gitlet.status();
+                break;
+            case "checkout":
+                gitlet.checkout(args);
+                break;
+            case "branch":
+                gitlet.branch(args);
+                break;
+            case "rm-branch":
+                gitlet.removeBranch(args);
+                break;
+            case "reset":
+                gitlet.dangerous();
+                gitlet.reset(args);
+                break;
+            case "merge":
+                gitlet.dangerous();
+                gitlet.merge(args);
+                break;
+            case "rebase":
+                gitlet.dangerous();
+                gitlet.rebase(args);
+                break;
+            case "i-rebase":
+                gitlet.dangerous();
+                gitlet.interactiveRebase(args, true);
+                break;
+            default:
+                System.out.println("Invalid command.");  
+                break;
         }
         gitlet.serialize();
     }
@@ -610,8 +608,7 @@ public class Gitlet {
     private static final int THIRD = 0x100;
     private static final int FOURTH = 16;
 
-    private static String hashFile(File file, String algorithm)
-            throws IOException {
+    private static String hashFile(File file, String algorithm) {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
             byte[] bytesBuffer = new byte[FIRST];
@@ -622,8 +619,7 @@ public class Gitlet {
             byte[] hashedBytes = digest.digest();
             return convertByteArrayToHexString(hashedBytes);
         } catch (NoSuchAlgorithmException | IOException ex) {
-            throw new IOException(
-                    "Could not generate hash from file", ex);
+            return "null";
         }
     }
     private static String convertByteArrayToHexString(byte[] arrayBytes) {

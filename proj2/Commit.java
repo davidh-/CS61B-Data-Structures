@@ -11,10 +11,11 @@ import java.io.File;
  *  @author David Dominguez Hooper
  */
 
-public class Commit implements Serializable{
+public class Commit implements Serializable {
 	private String message;
 	private HashMap<String, String> newCommittedFiles;
 	private HashMap<String, String> oldCommittedFiles;
+	private HashMap<String, Integer> fileLastModified;
 	private int id;
 	private String timeStamp;
 
@@ -24,6 +25,7 @@ public class Commit implements Serializable{
 		message = "initial commit";
 		newCommittedFiles = new HashMap<String, String>();
 		oldCommittedFiles = new HashMap<String, String>();
+		fileLastModified = new HashMap<String, Integer>();
 		id = 0;
 		timeStamp = createTimeStamp();
 		oldCommit = null;
@@ -32,9 +34,13 @@ public class Commit implements Serializable{
 		this.message = message;
 		newCommittedFiles = new HashMap<String, String>();
 		oldCommittedFiles = oldCommit.getAllCommittedFiles();
+		fileLastModified = oldCommit.getAllLastModified();
 		this.id = id;
 		this.timeStamp = createTimeStamp();
 		this.oldCommit = oldCommit;
+	}
+	public HashMap<String, Integer> getAllLastModified() {
+		return new HashMap<String, Integer>(fileLastModified);
 	}
 	public Commit getOldCommit() {
 		return oldCommit;
@@ -61,8 +67,9 @@ public class Commit implements Serializable{
 	public String getMessage() {
 		return message;
 	}
-	public void addFile(String fileName, String lastModified) {
-		newCommittedFiles.put(fileName, lastModified);
+	public void addFile(String fileName, String hashFile) {
+		newCommittedFiles.put(fileName, hashFile);
+		fileLastModified.put(fileName, id);
 	}
 	public int getId() {
 		return id;
