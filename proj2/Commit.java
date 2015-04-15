@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.HashSet;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class Commit implements Serializable {
 	private HashMap<String, String> newCommittedFiles;
 	private HashMap<String, String> oldCommittedFiles;
 	private HashMap<String, Integer> fileLastModified;
+	private HashSet<String> filesRemoved;
 	private int id;
 	private String timeStamp;
 
@@ -26,6 +28,7 @@ public class Commit implements Serializable {
 		newCommittedFiles = new HashMap<String, String>();
 		oldCommittedFiles = new HashMap<String, String>();
 		fileLastModified = new HashMap<String, Integer>();
+		filesRemoved= new HashSet<String>();
 		id = 0;
 		timeStamp = createTimeStamp();
 		oldCommit = null;
@@ -35,6 +38,7 @@ public class Commit implements Serializable {
 		newCommittedFiles = new HashMap<String, String>();
 		oldCommittedFiles = oldCommit.getAllCommittedFiles();
 		fileLastModified = oldCommit.getAllLastModified();
+		filesRemoved= new HashSet<String>();
 		this.id = id;
 		this.timeStamp = createTimeStamp();
 		this.oldCommit = oldCommit;
@@ -56,7 +60,11 @@ public class Commit implements Serializable {
 		allCommittedFiles.putAll(this.newCommittedFiles);
 		return allCommittedFiles;
 	}
+	public HashSet<String> getRemovedFiles() {
+		return filesRemoved;
+	}
 	public void removeFileFromInheritedCommits(String word) {
+		filesRemoved.add(word);
 		oldCommittedFiles.remove(word);
 	}
 	private String createTimeStamp() {

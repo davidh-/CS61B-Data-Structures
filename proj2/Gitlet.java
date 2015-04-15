@@ -17,6 +17,9 @@ import java.security.MessageDigest;
 
 /** 
  *  @author David Dominguez Hooper
+ *  Gitlet is a version contol system created 
+ *  as a project for the CS61B Data Structures course
+ *  at UC Berkeley.
  */
 
 public class Gitlet {
@@ -33,7 +36,12 @@ public class Gitlet {
     private File lastCommits = new File(GITLET_DIR + "commits.ser");
     private File lastBranches = new File(GITLET_DIR + "branches.ser");
     private File lastCurrentBranchName = new File(GITLET_DIR + "currentBranchName.ser");
-
+    
+    /**
+     * init() initializes Gitlet by checking 
+     * to see if .gitlet folder is already made.
+     * Creates master branch and initital commit.
+     */
     private void init() {
         File dir = new File(GITLET_DIR);
         if (dir.exists()) {
@@ -45,15 +53,16 @@ public class Gitlet {
             filesToRemove = new HashSet<String>();
             commits = new HashMap<Integer, Commit>();
             branches = new HashMap<String, Branch>();
-
             Commit firstCommit = new Commit();
             commits.put(firstCommit.getId(), firstCommit);
-
             Branch master = new Branch();
             branches.put(master.getBranchName(), master);
             currentBranchName = master.getBranchName();
         }
     }
+    /**
+     * add() stages files to Gitlet to be ready to be committed.
+     */
     private void add(String[] args) {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String fileName = args[1];
@@ -72,6 +81,10 @@ public class Gitlet {
             addedFiles.add(fileName);
         }
     }
+    /**
+     * commit() adds all the staged files to a Commit and also removes
+     * any pending files that need to be removed.
+     */
     private void commit(String[] args) {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
@@ -88,7 +101,6 @@ public class Gitlet {
             newCommit.removeFileFromInheritedCommits(file); 
         }
         filesToRemove.clear();
-
         for (String curFile : addedFiles) {
             File direct = new File(GITLET_DIR + "/" + curFile);
             if (!direct.exists()) {
@@ -105,6 +117,9 @@ public class Gitlet {
         currentBranch.updateLastCommit(newCommit.getId());
         addedFiles.clear();
     }
+    /**
+     * remove() adds files to be removed from Gitlet.
+     */
     private void remove(String[] args) {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String removeMessage = args[1];
@@ -119,10 +134,16 @@ public class Gitlet {
             }
         }
     }
+    /**
+     * log() provides a printed-out log of the last commit's history.
+     */
     private void log() {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         System.out.println(lastCommit.getCommitHistory());
     }
+    /**
+     * global-log() prints out every commit made in Gitlet.
+     */
     private void globalLog() {
         String globalLog = "";
         boolean firstRun = true;
@@ -136,6 +157,9 @@ public class Gitlet {
         }
         System.out.println(globalLog);
     }
+    /**
+     * find() finds any commits with a certain message and prints them for the user.
+     */
     private void find(String[] args) {
         String foundCommitIDs = "";
         boolean firstRun = true;
@@ -155,8 +179,12 @@ public class Gitlet {
         } else {
             System.out.println(foundCommitIDs);
         }
-
     }
+    /**
+     * status() prints the current Gitlet status 
+     * of the current branch, staged files, and
+     * marked files for removal.
+     */
     private void status() {
         String status = "=== Branches ===\n";
         for (String branch : branches.keySet()) {
@@ -175,6 +203,12 @@ public class Gitlet {
         }
         System.out.print(status);
     }
+    /**
+     * checkout() either reverts the given file back 
+     * to the current commit or the supplied commit, 
+     * or it reverts the workspace back to the supplied
+     * branch.
+     */
     private void checkout(String[] args) {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
@@ -212,6 +246,10 @@ public class Gitlet {
             } 
         }
     }
+    /**
+     * branch() creates a new branch in gitlet with the 
+     * supplied name from the user.
+     */
     private void branch(String[] args) {
         String branchName = args[1];
         if (branches.containsKey(branchName)) {
@@ -222,6 +260,10 @@ public class Gitlet {
             branches.put(branchName, newBranch);
         }
     }
+    /**
+     * removeBranch() removes the requested branch 
+     * if there exists a branch with that name.
+     */
     private void removeBranch(String[] args) {
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
@@ -232,6 +274,11 @@ public class Gitlet {
             branches.remove(branchName);
         }
     }
+    /**
+     * reset() restores all files to their versions 
+     * in the commit with the given id. Also moves the 
+     * current branch's head to that commit node.
+     */
     private void reset(String[] args) {
         int commitId = Integer.parseInt(args[1]);
         if (!commits.containsKey(commitId)) {
@@ -244,6 +291,10 @@ public class Gitlet {
             branches.get(currentBranchName).updateLastCommit(commitId);
         }
     }
+    /**
+     * merge() merges files from the head of the given branch
+     * into the head of the current branch.
+     */
     private void merge(String[] args) {
         Branch currentBranch = branches.get(currentBranchName);
         Commit lastCommit = commits.get(currentBranch.getLastCommit());
@@ -276,9 +327,19 @@ public class Gitlet {
             }
         }
     }
+    /**
+     * rebase() finds the split point of the current branch 
+     * and the given branch, then snaps off the current branch 
+     * at this point, then reattaches the current branch to 
+     * the head of the given branch.
+     */
     private void rebase(String[] args) {
         interactiveRebase(args, false);
     }
+    /**
+     * interactiveRebase() does the same thing as rebase, but 
+     * also allows you to step through each commit and decide what to do.
+     */
     private void interactiveRebase(String[] args, boolean interactive) {
         String branchName = args[1];
         if (!branches.containsKey(branchName)) {
@@ -338,8 +399,12 @@ public class Gitlet {
                 HashMap<String, String> newFiles = curOldCommit.getNewCommittedFiles();
                 lastCommit = commits.get(currentBranch.getLastCommit());
                 Commit newCommit = new Commit(newMessage, lastCommit, commits.size());
+                HashSet<String> removedFiles = curOldCommit.getRemovedFiles();
                 for (String curFile : newFiles.keySet()) {
                     newCommit.addFile(curFile, newFiles.get(curFile));
+                }
+                for (String removedFile : removedFiles) {
+                    newCommit.removeFileFromInheritedCommits(removedFile);
                 }
                 commits.put(newCommit.getId(), newCommit);
                 currentBranch.updateLastCommit(newCommit.getId());
@@ -350,6 +415,10 @@ public class Gitlet {
             }
         }
     }
+    /**
+     * main() is where the processing of user commands happen
+     * as well as serialization.
+     */
     public static void main(String[] args) {
         Gitlet gitlet = new Gitlet();
         String command = args[0];
@@ -391,20 +460,24 @@ public class Gitlet {
                 gitlet.removeBranch(args);
                 break;
             case "reset":
-                gitlet.dangerous();
-                gitlet.reset(args);
+                if (gitlet.dangerous().equals("yes")) {
+                    gitlet.reset(args);
+                }
                 break;
             case "merge":
-                gitlet.dangerous();
-                gitlet.merge(args);
+                if (gitlet.dangerous().equals("yes")) {
+                    gitlet.merge(args);
+                }
                 break;
             case "rebase":
-                gitlet.dangerous();
-                gitlet.rebase(args);
+                if (gitlet.dangerous().equals("yes")) {
+                    gitlet.rebase(args);
+                }
                 break;
             case "i-rebase":
-                gitlet.dangerous();
-                gitlet.interactiveRebase(args, true);
+                if (gitlet.dangerous().equals("yes")) {
+                    gitlet.interactiveRebase(args, true);
+                }
                 break;
             default:
                 System.out.println("Invalid command.");  
@@ -412,6 +485,10 @@ public class Gitlet {
         }
         gitlet.serialize();
     }
+    /**
+     * calcFirstLastCommit() will generate an array containing 
+     * the first and last commits from all of a branch's commits.
+     */
     private int[] calcFirstLastCommit(TreeSet<Integer> commitsOfGBranch) {
         int i = 0;
         int initialCommitOfG = 0;
@@ -425,6 +502,10 @@ public class Gitlet {
         int[] firstLast = {initialCommitOfG, lastCommitOfG};
         return firstLast;
     }
+    /**
+     * iRebaseUserInput() is a helper method for interactiveRebase()
+     * and it mainly processes the user's choices for interactiveRebase.
+     */
     private String iRebaseUserInput(Commit curCommit, 
             int commitID, int initialCommitOfG, int lastCommitOfG) {
         System.out.println("Currently replaying:");
@@ -458,6 +539,11 @@ public class Gitlet {
             return "c";
         }
     }
+    /**
+     * findSplitPoint() will find the integer id of a commit 
+     * that is the split point of the given branch's commit 
+     * and the current branch's last commit.
+     */
     private int findSplitPoint(Commit gBranchCommit) {
         Branch currentBranch = branches.get(currentBranchName);
         HashSet<Integer> commitsOfGBranch = new HashSet<Integer>();
@@ -478,18 +564,22 @@ public class Gitlet {
         }
         return splitPointCommit;
     }
-
-    private void dangerous() {
+    /**
+     * dangerous() will print out a message to the user to 
+     * check if they agree to the command that may alter the workspace.
+     */
+    private String dangerous() {
         System.out.println("Warning: ");
         System.out.print("The command you entered may alter the files in your working directory. ");
         System.out.print("Uncommitted changes may be lost. ");
         System.out.print("Are you sure you want to continue? (yes/no)");
         Scanner in = new Scanner(System.in);
-        String answer = in.nextLine();
-        if (answer.equals("no")) {
-            System.exit(0);
-        }
+        return in.nextLine();
     }
+    /**
+     * restoreFile() will restore a file 
+     * to how it was in the given commit.
+     */
     private void restoreFile(String fileName, Commit curCommit) {
         File curFile = new File(fileName);
         String fileHashFromLastCommit = curCommit.getFileHash(fileName);
@@ -501,7 +591,10 @@ public class Gitlet {
                         + fileHashFromLastCommit + curFile.getName()));
         }
     }
-
+    /**
+     * readObject() reads in serialized files 
+     * that contain java class objects that Gitlet uses
+     */
     private <K> K readObject(File f) {
         try {
             FileInputStream fileIn = new FileInputStream(f);
@@ -519,6 +612,10 @@ public class Gitlet {
             return null;
         }
     }
+    /**
+     * writeObject() writes serialized files 
+     * that contain java class objects that Gitlet uses
+     */
     private <K> void writeObject(File fileName, K object) {
         try {
             FileOutputStream fileOut = new FileOutputStream(fileName);
@@ -530,6 +627,10 @@ public class Gitlet {
             i.printStackTrace();
         }
     }
+    /**
+     * serialize() automates the serialization of all 
+     * java class objects that Gitlet uses
+     */
     private void serialize() {
         writeObject(lastCurrentBranchName, currentBranchName);
         writeObject(lastAddedFiles, addedFiles);
@@ -537,6 +638,10 @@ public class Gitlet {
         writeObject(lastCommits, commits);
         writeObject(lastBranches, branches);  
     }
+    /**
+     * deserialize() automates the reading in of all 
+     * java class objects that Gitlet uses
+     */
     private void deserialize() {
         addedFiles = readObject(lastAddedFiles);
         filesToRemove = readObject(lastFilesToRemove);
@@ -544,14 +649,9 @@ public class Gitlet {
         branches = readObject(lastBranches);
         currentBranchName = readObject(lastCurrentBranchName); 
     }
-
 /**
- * A couple of utility
- * methods.
- * 
+ * A couple of utility methods.
  * @author Joseph Moghadam :
- *
- * 
  */
     /**
      * Returns the text from a standard text file (won't work with special
@@ -607,7 +707,9 @@ public class Gitlet {
     private static final int SECOND = 0xff;
     private static final int THIRD = 0x100;
     private static final int FOURTH = 16;
-
+    /**
+     * hashFile() creates a hash from a file
+     */
     private static String hashFile(File file, String algorithm) {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             MessageDigest digest = MessageDigest.getInstance(algorithm);

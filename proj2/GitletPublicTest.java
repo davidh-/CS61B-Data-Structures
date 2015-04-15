@@ -65,7 +65,7 @@ public class GitletPublicTest {
      * Tests that init creates a .gitlet directory. Does NOT test that init
      * creates an initial commit, which is the other functionality of init.
      */
-
+    @Test
     public void testBasicInitialize() {
         gitlet("init");
         File f = new File(GITLET_DIR);
@@ -76,7 +76,7 @@ public class GitletPublicTest {
      * Tests that checking out a file name will restore the version of the file
      * from the previous commit. Involves init, add, commit, and checkout.
      */
-
+    @Test
     public void testBasicCheckout() {
         String wugFileName = TESTING_DIR + "wug.txt";
         String wugText = "This is a wug.";
@@ -93,7 +93,7 @@ public class GitletPublicTest {
      * Tests that log prints out commit messages in the right order. Involves
      * init, add, commit, and log.
      */
-
+    @Test
     public void testBasicLog() {
         gitlet("init");
         String commitMessage1 = "initial commit";
@@ -151,7 +151,7 @@ public class GitletPublicTest {
     /**
      * Tests that basic rebase works as entended.
      */
-
+    @Test
     public void testBasicRebase() {
         gitlet("init");
         String wugFileName = TESTING_DIR + "wug.txt";
@@ -241,7 +241,7 @@ public class GitletPublicTest {
             System.setOut(originalOut);
             System.setIn(originalIn);
         }
-        System.out.println(printingResults.toString());
+        // System.out.println(printingResults.toString());
         return printingResults.toString();
     }
 
