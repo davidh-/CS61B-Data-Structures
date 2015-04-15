@@ -121,15 +121,14 @@ public class Gitlet {
     private void remove(String[] args) {
         Commit lastCommit = commits.get(branches.get(currentBranchName).getLastCommit());
         String removeMessage = args[1];
-        if (!lastCommit.getAllCommittedFiles().containsKey(removeMessage)) {
+        if (addedFiles.contains(removeMessage)) {
+            addedFiles.remove(removeMessage);
+        }
+        else if (!lastCommit.getAllCommittedFiles().containsKey(removeMessage)) {
             System.out.println("No reason to remove the file.");
             return;
         } else {
-            if (addedFiles.contains(removeMessage)) {
-                addedFiles.remove(removeMessage);
-            } else {
-                filesToRemove.add(removeMessage);
-            }
+            filesToRemove.add(removeMessage);
         }
     }
     /**
@@ -449,7 +448,9 @@ public class Gitlet {
                 gitlet.status();
                 break;
             case "checkout":
-                gitlet.checkout(args);
+                if (gitlet.dangerous().equals("yes")) {
+                    gitlet.checkout(args);
+                }
                 break;
             case "branch":
                 gitlet.branch(args);
