@@ -123,8 +123,7 @@ public class Gitlet {
         String removeMessage = args[1];
         if (addedFiles.contains(removeMessage)) {
             addedFiles.remove(removeMessage);
-        }
-        else if (!lastCommit.getAllCommittedFiles().containsKey(removeMessage)) {
+        } else if (!lastCommit.getAllCommittedFiles().containsKey(removeMessage)) {
             System.out.println("No reason to remove the file.");
             return;
         } else {
