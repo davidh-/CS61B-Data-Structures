@@ -18,14 +18,14 @@ public class User {
     }
 
     /**
-     *  getUserId() returns the user ID of the User.
+     *  getId() returns the user ID of the User.
      */
     public int getId(){
         return userId;
     }
 
     /**
-     *  getUserId() returns the number of pages this User has printed.
+     *  getPagesPrinted() returns the number of pages this User has printed.
      */
     public int getPagesPrinted(){
         return pagesPrinted;
