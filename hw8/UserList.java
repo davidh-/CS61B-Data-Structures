@@ -61,11 +61,11 @@ public class UserList {
     *       printed, sortFeatures equals "pages".
     *   @param qUnsorted is a CatenableQueue<User> of User objects.
     *   @param pivot is an integer used for partitioning.
-    *   @param qSmall is a CatenableQueue<User>, in which all Users with sortFeature less than pivot
+    *   @param qLess is a CatenableQueue<User>, in which all Users with sortFeature less than pivot
     *       will be enqueued.
-    *   @param qEquals is a CatenableQueue<User>, in which all Users with sortFeature equal to the pivot
+    *   @param qEqual is a CatenableQueue<User>, in which all Users with sortFeature equal to the pivot
     *       will be enqueued.
-    *   @param qLarge is a CatenableQueue<User>, in which all Users with sortFeature greater than pivot
+    *   @param qGreater is a CatenableQueue<User>, in which all Users with sortFeature greater than pivot
     *       will be enqueued.  
     **/ 
     public static void partition(String sortFeature, CatenableQueue<User> qUnsorted, int pivot, 
