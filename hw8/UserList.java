@@ -70,8 +70,8 @@ public class UserList {
     **/ 
     public static void partition(String sortFeature, CatenableQueue<User> qUnsorted, int pivot, 
         CatenableQueue<User> qLess, CatenableQueue<User> qEqual, CatenableQueue<User> qGreater){
-        //Replace with solution.
         return null;
+        //Replace with solution.
     }
 
     /**
@@ -98,12 +98,11 @@ public class UserList {
 
     /**
     *  makeQueueOfQueues() makes a queue of queues, each containing one User
-    *  of q.  Upon completion of this method, q is empty.
-    *  @param q is a CatenableQueue<User> of User objects.
+    *  of userQueue.  Upon completion of this method, userQueue is empty.
     *  @return a CatenableQueue<CatenableQueue<User>>, where each CatenableQueue
-    *    contains one User from q.
+    *    contains one User from userQueue.
     **/
-    public static CatenableQueue<CatenableQueue<User>> makeQueueOfQueues(CatenableQueue<User> q){
+    public CatenableQueue<CatenableQueue<User>> makeQueueOfQueues(){
         //Replace with solution.
         return null;
     }
