@@ -70,7 +70,6 @@ public class UserList {
     **/ 
     public static void partition(String sortFeature, CatenableQueue<User> qUnsorted, int pivot, 
         CatenableQueue<User> qLess, CatenableQueue<User> qEqual, CatenableQueue<User> qGreater){
-        return null;
         //Replace with solution.
     }
 
@@ -83,7 +82,6 @@ public class UserList {
     **/
     public static void quickSort(String sortFeature, CatenableQueue<User> q){ 
         //Replace with solution.
-        return null;
     }
 
     /**
@@ -192,7 +190,7 @@ public class UserList {
         list.add(new User(1, 0));
         list.add(new User(2, 10));
 
-        CatenableQueue<CatenableQueue<User>> queues = list.makeQueueOfQueues(list.userQueue);
+        CatenableQueue<CatenableQueue<User>> queues = list.makeQueueOfQueues();
         String queueOfQueues = 
         "[ [ User ID: 0, Pages Printed: 20 ],\n  [ User ID: 1, Pages Printed: 0 ],\n  [ User ID: 2, Pages Printed: 10 ] ]";
 
