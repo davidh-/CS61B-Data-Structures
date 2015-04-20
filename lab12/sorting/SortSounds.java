@@ -202,15 +202,16 @@ class SortSounds {
      */
     private void finish() {
         for (int i = 0; i < elements; i++) {
-            if (i % 4 == 3) {
-                drawRectangle(StdDraw.BLUE, i); 
-            } else if (i % 4 == 2) {
-                drawRectangle(StdDraw.GREEN, i); 
-            } else if (i % 4 == 1) {
-                drawRectangle(StdDraw.YELLOW, i); 
-            } else {
-                drawRectangle(StdDraw.RED, i);
-            }
+            // if (i % 4 == 3) {
+            //     drawRectangle(StdDraw.BLUE, i); 
+            // } else if (i % 4 == 2) {
+            //     drawRectangle(StdDraw.GREEN, i); 
+            // } else if (i % 4 == 1) {
+            //     drawRectangle(StdDraw.YELLOW, i); 
+            // } else {
+            //     drawRectangle(StdDraw.RED, i);
+            // }
+            drawRectangle(StdDraw.GREEN, i); 
             play(i);
             StdDraw.show(5);
         }

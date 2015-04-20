@@ -253,13 +253,22 @@ public final class Sort {
      **/
     private static void exch(int[] a, int index1, int index2) {
         /** YOUR CODE HERE! */
-
+        SortSounds.play(index2);
+        SortSounds.drawRectangle(StdDraw.GREEN, index1);
+        SortSounds.drawRectangle(StdDraw.RED, index2);
+        StdDraw.show(5);
+        SortSounds.clearRectangle(index1);
         int tmp = a[index1];
         a[index1] = a[index2];
+        SortSounds.clearRectangle(index2);
         a[index2] = tmp;
-
-        /** YOUR CODE HERE! */
-
+        SortSounds.drawRectangle(StdDraw.RED, index1);
+        SortSounds.drawRectangle(StdDraw.GREEN, index2);
+        StdDraw.show(5);
+        SortSounds.clearRectangle(index1);
+        SortSounds.clearRectangle(index2);
+        SortSounds.drawRectangle(StdDraw.CYAN, index1);
+        SortSounds.drawRectangle(StdDraw.CYAN, index2);
     }
 
 }

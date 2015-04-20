@@ -1,10 +1,10 @@
 /* Radix.java */
-
 package radix;
 
+import java.util.Arrays;
 /**
  * Sorts is a class that contains an implementation of radix sort.
- * @author
+ * @author David Dominguez Hooper
  */
 public class Sorts {
 
@@ -22,7 +22,26 @@ public class Sorts {
      *    and containing the same keys sorted according to the chosen digit.
      **/
     public static int[] countingSort(int[] keys, int whichDigit) {
-        //YOUR CODE HERE
+        int[] counts = new int[16];
+        for (int key : keys) {
+            int index = (key >> (whichDigit * 4)) & 0b1111;
+            counts[index] = counts[index] + 1;
+        }
+        int[] startingPoints = new int[16];
+        int total = 0;
+        for (int i = 0; i < counts.length; i++) {
+            if (i != 0) {
+                startingPoints[i] = total;
+            }
+            total += counts[i];
+        }
+        int[] sorted = new int[keys.length];
+        for (int key : keys) {
+            int digit = (key >> (whichDigit * 4)) & 0b1111;
+            sorted[startingPoints[digit]] = key;
+            startingPoints[digit] += 1;
+        }
+        return sorted;
     }
 
     /**
@@ -34,7 +53,9 @@ public class Sorts {
      *    and containing the same keys in sorted order.
      **/
     public static int[] radixSort(int[] keys) {
-        //YOUR CODE HERE
+        int[] sorted = new int[keys.length];
+        return sorted;
+
     }
 
 }
