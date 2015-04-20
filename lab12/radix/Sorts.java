@@ -55,7 +55,7 @@ public class Sorts {
 
     public static int[] radixSort(int[] keys) {
         int[] sorted = keys.clone();
-        int width = 0;
+        int width = 1;
         int max = 0;
         for (int key : keys) {
             if (key > max) {
@@ -72,5 +72,6 @@ public class Sorts {
             i += 1;
         }
         return sorted;
+
     }
 }
