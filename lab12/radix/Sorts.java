@@ -1,6 +1,6 @@
 /* Radix.java */
 package radix;
-
+import java.lang.Math;
 import java.util.Arrays;
 /**
  * Sorts is a class that contains an implementation of radix sort.
@@ -52,10 +52,25 @@ public class Sorts {
      *  @return an array of type int, having the same length as "keys"
      *    and containing the same keys in sorted order.
      **/
+
     public static int[] radixSort(int[] keys) {
-        int[] sorted = new int[keys.length];
+        int[] sorted = keys.clone();
+        int width = 0;
+        int max = 0;
+        for (int key : keys) {
+            if (key > max) {
+                max = key;
+            }
+        }
+        while (max != 0) {
+            width += 1;
+            max = (int) Math.floor(max / 10);
+        }
+        int  i = 0;
+        while (i < width) {
+            sorted = countingSort(sorted, i);
+            i += 1;
+        }
         return sorted;
-
     }
-
 }
