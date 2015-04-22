@@ -59,6 +59,15 @@
     <module name="FileTabCharacter"/>
 
     <module name="TreeWalker">
+        <module name="JavadocMethod">
+            <property name="allowUndeclaredRTE" value="true"/>
+            <property name="allowMissingThrowsTags" value="true"/>
+        </module>
+        <module name="JavadocType">
+            <property name="authorFormat" value="^\s*\w[-\w\s.]+"/>
+            <property name="allowMissingParamTags" value="true"/>
+        </module>
+
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
         <module name="ConstantName"/>
