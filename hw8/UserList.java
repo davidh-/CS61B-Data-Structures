@@ -201,10 +201,6 @@ public class UserList {
         while (queueOfQueues.size() > 1) {
             CatenableQueue<User> q1 = queueOfQueues.dequeue();
             CatenableQueue<User> q2 = queueOfQueues.dequeue();
-            if (q1 == null || q2 == null) {
-                System.out.println("JACK");
-                System.exit(0);
-            }
             queueOfQueues.enqueue(mergeTwoQueues(sortFeature, q1, q2));
         }
         userQueue.append(queueOfQueues.dequeue());
