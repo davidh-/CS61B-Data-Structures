@@ -96,6 +96,7 @@ public class UserList {
     *   @param q is an unsorted CatenableQueue containing User items.
     **/
     public static void quickSort(String sortFeature, CatenableQueue<User> q){
+        System.out.println(sortFeature + " " + q.toString());
         if (q.size() == 1) {
             return;
         }
@@ -197,9 +198,6 @@ public class UserList {
     *       printed, sortFeatures equals "pages".
     **/
     public void mergeSort(String sortFeature){
-        // merge and append to the main queue and until main queue is one, 
-        // going to have a queue with one queue inside, queue and one inside, 
-        // and .deque of that
         CatenableQueue<CatenableQueue<User>> queueOfQueues = makeQueueOfQueues();
         while (!queueOfQueues.isEmpty()) {
             CatenableQueue<User> q1 = queueOfQueues.dequeue();
@@ -217,7 +215,7 @@ public class UserList {
     *   If two Users have printed the same number of pages, the User with the smaller user ID is first.
     **/
     public void sortByBothFeatures(){
-        //Replace with solution. Don't overthink this one!
+
     }
 
 
