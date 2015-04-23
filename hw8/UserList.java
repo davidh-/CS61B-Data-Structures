@@ -96,7 +96,7 @@ public class UserList {
     *   @param q is an unsorted CatenableQueue containing User items.
     **/
     public static void quickSort(String sortFeature, CatenableQueue<User> q){
-        if (q.size() == 1) {
+        if (q.size() < 2) {
             return;
         }
         CatenableQueue<User> qLess = new CatenableQueue<User>();
