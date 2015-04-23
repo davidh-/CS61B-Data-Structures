@@ -159,12 +159,36 @@ public class UserList {
     *       sorted from smallest to largest by their sortFeature.
     **/
     public static CatenableQueue<User> mergeTwoQueues(String sortFeature, CatenableQueue<User> q1, CatenableQueue<User> q2){
-        // merge and append to the main queue and until main queue is one, 
-        // going to have a queue wiht one queue inside, quque and one inside, 
-        // and .deque of that
-        return null;
+        CatenableQueue<User> mergedQueue = new CatenableQueue<User>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            if (q1.isEmpty()) {
+                mergedQueue.append(q2);
+            } else if (q2.isEmpty()) {
+                mergedQueue.append(q1);
+            } else {
+                User q1CurUser = q1.nth(0);
+                User q2CurUser = q2.nth(0);
+                int q1SortBy = 0;
+                int q2SortBy = 0;
+                if (sortFeature.equals("id")) {
+                    q1SortBy = q1CurUser.getId();
+                    q2SortBy = q2CurUser.getId();
+                } else if (sortFeature.equals("pages")) {
+                    q1SortBy = q1CurUser.getPagesPrinted();
+                    q2SortBy = q2CurUser.getPagesPrinted();
+                }
+                if (q1SortBy < q2SortBy) {
+                    mergedQueue.enqueue(q1.dequeue());
+                } else if (q1SortBy > q2SortBy) {
+                    mergedQueue.enqueue(q2.dequeue());
+                } else {
+                    mergedQueue.enqueue(q1.dequeue());
+                    mergedQueue.enqueue(q2.dequeue());
+                }
+            }
+        }
+        return mergedQueue;
     }
-
     /**
     *   mergeSort() sorts this UserList from smallest to largest according to sortFeature using mergesort.
     *   You should complete this method without writing any helper methods.
@@ -173,7 +197,9 @@ public class UserList {
     *       printed, sortFeatures equals "pages".
     **/
     public void mergeSort(String sortFeature){
-        //Replace with solution.
+        // merge and append to the main queue and until main queue is one, 
+        // going to have a queue with one queue inside, queue and one inside, 
+        // and .deque of that
     }
 
     /**
@@ -299,7 +325,22 @@ public class UserList {
     public static void main(String [] args) {
         // Naive right-idea tests. Just because these tests pass does NOT mean
         // your code is bug-free!
+        CatenableQueue<User> q1 = new CatenableQueue<User>();
+        CatenableQueue<User> q2 = new CatenableQueue<User>();
+        q1.enqueue(new User(0, 20));
+        q2.enqueue(new User(1, 10));
 
+        CatenableQueue<User> merged = mergeTwoQueues("pages", q1, q2);
+        String mergeByPages = 
+        "[ User ID: 1, Pages Printed: 10,\n  User ID: 0, Pages Printed: 20 ]";
+        q1 = new CatenableQueue<User>();
+        q2 = new CatenableQueue<User>();
+        q1.enqueue(new User(0, 20));
+        q2.enqueue(new User(1, 10));
+        System.out.println("newwww");
+        merged = mergeTwoQueues("id", q1, q2);
+        String mergeById = 
+        "[ User ID: 0, Pages Printed: 20,\n  User ID: 1, Pages Printed: 10 ]";
         // Uncomment the following line when ready
         jh61b.junit.textui.runClasses(UserList.class);
     }
