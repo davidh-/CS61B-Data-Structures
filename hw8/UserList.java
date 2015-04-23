@@ -212,7 +212,7 @@ public class UserList {
     **/
     public void sortByBothFeatures(){
         quickSort("id");
-        mergeSort("pages");
+        quickSort("pages");
     }
 
 
