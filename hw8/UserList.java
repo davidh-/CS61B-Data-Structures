@@ -200,6 +200,16 @@ public class UserList {
         // merge and append to the main queue and until main queue is one, 
         // going to have a queue with one queue inside, queue and one inside, 
         // and .deque of that
+        CatenableQueue<CatenableQueue<User>> queueOfQueues = makeQueueOfQueues();
+        while (!queueOfQueues.isEmpty()) {
+            CatenableQueue<User> q1 = queueOfQueues.dequeue();
+            CatenableQueue<User> q2 = queueOfQueues.dequeue();
+            if (q2 == null) {
+                userQueue = mergeTwoQueues(sortFeature, userQueue, q1);
+            } else {
+                userQueue = mergeTwoQueues(sortFeature, userQueue, mergeTwoQueues(sortFeature, q1, q2));
+            }
+        }
     }
 
     /**
@@ -295,11 +305,12 @@ public class UserList {
         list.add(new User(2, 12));
         list.add(new User(0, 10));
         list.add(new User(1, 11));
+        list.add(new User(3, 13));
 
         list.mergeSort("id");
 
         String sorted =
-         "[ User ID: 0, Pages Printed: 10,\n  User ID: 1, Pages Printed: 11,\n  User ID: 2, Pages Printed: 12 ]";
+         "[ User ID: 0, Pages Printed: 10,\n  User ID: 1, Pages Printed: 11,\n  User ID: 2, Pages Printed: 12,\n  User ID: 3, Pages Printed: 13 ]";
 
         assertEquals(sorted, list.toString());
 
