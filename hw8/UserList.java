@@ -166,8 +166,8 @@ public class UserList {
             } else if (q2.isEmpty()) {
                 mergedQueue.append(q1);
             } else {
-                User q1CurUser = q1.nth(0);
-                User q2CurUser = q2.nth(0);
+                User q1CurUser = q1.front();
+                User q2CurUser = q2.front();
                 int q1SortBy = 0;
                 int q2SortBy = 0;
                 if (sortFeature.equals("id")) {
@@ -201,9 +201,13 @@ public class UserList {
         while (queueOfQueues.size() > 1) {
             CatenableQueue<User> q1 = queueOfQueues.dequeue();
             CatenableQueue<User> q2 = queueOfQueues.dequeue();
+            if (q1 == null || q2 == null) {
+                System.out.println("JACK");
+                System.exit(0);
+            }
             queueOfQueues.enqueue(mergeTwoQueues(sortFeature, q1, q2));
         }
-        userQueue = queueOfQueues.dequeue();
+        userQueue.append(queueOfQueues.dequeue());
     }
 
     /**
@@ -211,7 +215,8 @@ public class UserList {
     *   If two Users have printed the same number of pages, the User with the smaller user ID is first.
     **/
     public void sortByBothFeatures(){
-
+        quickSort("id");
+        mergeSort("pages");
     }
 
 
@@ -341,7 +346,6 @@ public class UserList {
         q2 = new CatenableQueue<User>();
         q1.enqueue(new User(0, 20));
         q2.enqueue(new User(1, 10));
-        System.out.println("newwww");
         merged = mergeTwoQueues("id", q1, q2);
         String mergeById = 
         "[ User ID: 0, Pages Printed: 20,\n  User ID: 1, Pages Printed: 10 ]";
