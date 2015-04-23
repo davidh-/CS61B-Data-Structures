@@ -198,14 +198,10 @@ public class UserList {
     **/
     public void mergeSort(String sortFeature){
         CatenableQueue<CatenableQueue<User>> queueOfQueues = makeQueueOfQueues();
-        while (queueOfQueues.size() != 1) {
+        while (queueOfQueues.size() > 1) {
             CatenableQueue<User> q1 = queueOfQueues.dequeue();
             CatenableQueue<User> q2 = queueOfQueues.dequeue();
-            if (q2 == null) {
-                queueOfQueues.enqueue(q1);
-            } else {
-                queueOfQueues.enqueue(mergeTwoQueues(sortFeature, q1, q2));
-            }
+            queueOfQueues.enqueue(mergeTwoQueues(sortFeature, q1, q2));
         }
         userQueue = queueOfQueues.dequeue();
     }
@@ -303,12 +299,11 @@ public class UserList {
         list.add(new User(2, 12));
         list.add(new User(0, 10));
         list.add(new User(1, 11));
-        list.add(new User(3, 13));
 
         list.mergeSort("id");
 
         String sorted =
-         "[ User ID: 0, Pages Printed: 10,\n  User ID: 1, Pages Printed: 11,\n  User ID: 2, Pages Printed: 12,\n  User ID: 3, Pages Printed: 13 ]";
+         "[ User ID: 0, Pages Printed: 10,\n  User ID: 1, Pages Printed: 11,\n  User ID: 2, Pages Printed: 12 ]";
 
         assertEquals(sorted, list.toString());
 
