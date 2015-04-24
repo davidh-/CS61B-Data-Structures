@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  */
@@ -16,6 +17,7 @@ public class Autocomplete {
      * @return
      */
     public double weightOf(String term) {
+        return 0;
     }
 
     /**
@@ -24,6 +26,7 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        return null;
     }
 
     /**
@@ -34,6 +37,7 @@ public class Autocomplete {
      * @return
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        return null;
     }
 
     /**
