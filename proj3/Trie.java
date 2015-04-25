@@ -8,18 +8,18 @@ import java.util.HashMap;
 
 public class Trie {
 
-    private Node root = new Node();
+    Node root = new Node();
     /** 
      * Node class
      */
-    private class Node {
-        private boolean exists;
-        private HashMap<Integer, Node> links;
+    public class Node {
+        boolean exists;
+        HashMap<Character, Node> links;
         /** 
          * Default Constructor for Node class
          */
         public Node() {
-            links = new HashMap<Integer, Node>();
+            links = new HashMap<Character, Node>();
             exists = false;
         }
     }
@@ -61,11 +61,11 @@ public class Trie {
         }
         char c = s.charAt(d);
         if (isFullWord) {
-            return get(x.links.get(Character.getNumericValue(c)), s, d + 1, 
+            return get(x.links.get(c), s, d + 1, 
                     current, isFullWord);
         } else {
-            return get(x.links.get(Character.getNumericValue(c)), s, d + 1, 
-                    current + Character.toString(c), isFullWord);
+            return get(x.links.get(c), s, d + 1, 
+                    current + c, isFullWord);
         }
     }
     /** 
@@ -93,8 +93,8 @@ public class Trie {
             return x;
         } 
         char c = s.charAt(d);
-        x.links.put(Character.getNumericValue(c), 
-            insert(x.links.get(Character.getNumericValue(c)), s, d + 1));
+        x.links.put(c, 
+            insert(x.links.get(c), s, d + 1));
         return x;
     }
     /**
