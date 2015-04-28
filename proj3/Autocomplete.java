@@ -1,5 +1,8 @@
 import java.util.LinkedList;
-
+import java.util.PriorityQueue;
+import java.util.Collections;
+import java.util.TreeSet;
+import java.util.ArrayList;
 
 
 /**
@@ -7,12 +10,45 @@ import java.util.LinkedList;
  * @author David Dominguez Hooper
  */
 public class Autocomplete {
+    private class WeightedString implements Comparable<WeightedString>{
+        
+        String string;
+        Double weight;
+
+        public WeightedString() {
+            string = "";
+            weight = 0.0;
+        }
+        public WeightedString(String string, Double weight) {
+            this.string = string;
+            this.weight = weight;
+        }
+        public int compareTo(WeightedString wString){
+            return wString.weight.compareTo(this.weight);
+        }
+    }
+    private WTrie words;
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
+        if (terms.length != weights.length) {
+            throw new IllegalArgumentException(
+                "The length of the terms and weights arrays are different");
+        }
+        words = new WTrie();
+        for (int i = 0; i < terms.length; i++) {
+            if (words.find(terms[i], true)) {
+                throw new IllegalArgumentException(
+                    "There are duplicate input terms");
+            } else if (weights[i] < 0) {
+                throw new IllegalArgumentException(
+                    "There are negative weights");
+            }
+            words.insert(terms[i], weights[i]);
+        }
     }
 
     /**
@@ -21,7 +57,12 @@ public class Autocomplete {
      * @return double
      */
     public double weightOf(String term) {
-        return 0;
+        Double weightOfTerm = words.findWeight(term, true);
+        if (weightOfTerm == null) {
+            return 0.0;
+        } else {
+            return weightOfTerm;
+        }
     }
 
     /**
@@ -30,7 +71,12 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
-        return null;
+        String match = "";
+        for (String word : topMatches(prefix, 1)) {
+            match = word;
+            break;
+        }
+        return match;
     }
 
     /**
@@ -41,9 +87,45 @@ public class Autocomplete {
      * @return an iterable of strings
      */
     public Iterable<String> topMatches(String prefix, int k) {
-        return null;
-    }
+        if (k < 0) {
+            throw new IllegalArgumentException(
+                "Cannot find the k top matches for non-positive k.");
+        }
+        WTrie.Node matchNode = words.get(words.root, prefix, 0, "", false);
 
+        PriorityQueue<WTrie.Node> maxPQ = new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
+        TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
+        for (Character c : matchNode.links.keySet()) {
+            maxPQ.add(matchNode.links.get(c));
+        }
+        while (maxPQ.size() > 0) {
+            WTrie.Node curNode = maxPQ.poll();
+            topMatchesR(curNode, maxPQ, matches, k);
+        }
+        ArrayList<String> finalMatches = new ArrayList<String>();
+        for (WeightedString wString : matches) {
+            finalMatches.add(wString.string);
+        }
+        return finalMatches;
+    }
+    private void topMatchesR(WTrie.Node x, PriorityQueue<WTrie.Node> maxPQ, TreeSet<WeightedString> matches, int k) {
+        if (x == null) {
+            return;
+        }
+        System.out.println(x.getCurrent() + " <--current");
+        for (Character c : x.links.keySet()) {
+            System.out.println(c);
+            maxPQ.add(x.links.get(c));
+        }
+        while (maxPQ.size() > 0) {
+            WTrie.Node curNode = maxPQ.poll();
+            if (curNode.val != null) {
+                System.out.println(curNode.getCurrent());
+                matches.add(new WeightedString(curNode.getCurrent(), curNode.val));
+            }
+            topMatchesR(curNode, maxPQ, matches, k);
+        }
+    }
     /**
      * Returns the highest weighted matches within k edit distance of the word.
      * If the word is in the dictionary, then return an empty list.
@@ -77,6 +159,7 @@ public class Autocomplete {
 
         Autocomplete autocomplete = new Autocomplete(terms, weights);
 
+        System.out.print("Ready for user input: ");
         // process queries from standard input
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
