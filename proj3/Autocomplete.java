@@ -10,24 +10,40 @@ import java.util.ArrayList;
  * @author David Dominguez Hooper
  */
 public class Autocomplete {
-    private class WeightedString implements Comparable<WeightedString>{
+    /**
+     * Class WeightedString
+     */
+    private class WeightedString implements Comparable<WeightedString> {
         
         String string;
         Double weight;
-
+        /**
+         * Default Constructor for WeightedString
+         */
         public WeightedString() {
             string = "";
             weight = 0.0;
         }
+        /**
+         * Two argument Constructor for WeightedString
+         * @param string string
+         * @param weight weight
+         */
         public WeightedString(String string, Double weight) {
             this.string = string;
             this.weight = weight;
         }
-        public int compareTo(WeightedString wString){
+        /**
+         * comapreTo method
+         * @param wString string
+         * @return compared weight
+         */
+        public int compareTo(WeightedString wString) {
             return wString.weight.compareTo(this.weight);
         }
     }
     private WTrie words;
+    private boolean finished;
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
@@ -39,6 +55,7 @@ public class Autocomplete {
                 "The length of the terms and weights arrays are different");
         }
         words = new WTrie();
+        finished = false;
         for (int i = 0; i < terms.length; i++) {
             if (words.find(terms[i], true)) {
                 throw new IllegalArgumentException(
@@ -92,38 +109,50 @@ public class Autocomplete {
                 "Cannot find the k top matches for non-positive k.");
         }
         WTrie.Node matchNode = words.get(words.root, prefix, 0, "", false);
-
-        PriorityQueue<WTrie.Node> maxPQ = new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
+        PriorityQueue<WTrie.Node> maxPQ = 
+            new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
         TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
-        for (Character c : matchNode.links.keySet()) {
-            maxPQ.add(matchNode.links.get(c));
-        }
-        while (maxPQ.size() > 0) {
-            WTrie.Node curNode = maxPQ.poll();
-            topMatchesR(curNode, maxPQ, matches, k);
-        }
         ArrayList<String> finalMatches = new ArrayList<String>();
+        if (matchNode.val != null) {
+            finalMatches.add(matchNode.current);
+        }
+        topMatchesR(matchNode, maxPQ, matches, k);
         for (WeightedString wString : matches) {
             finalMatches.add(wString.string);
         }
         return finalMatches;
     }
-    private void topMatchesR(WTrie.Node x, PriorityQueue<WTrie.Node> maxPQ, TreeSet<WeightedString> matches, int k) {
+    /**
+     * Returns the top k matching terms (in descending order of weight) as an iterable.
+     * If there are less than k matches, return all the matching terms.
+     * @param x does this
+     * @param maxPQ does this
+     * @param matches does this
+     * @param k does this
+     */
+    private void topMatchesR(WTrie.Node x, 
+            PriorityQueue<WTrie.Node> maxPQ, TreeSet<WeightedString> matches, int k) {
         if (x == null) {
             return;
         }
-        System.out.println(x.getCurrent() + " <--current");
+        // System.out.println(x.getCurrent() + " <--current");
         for (Character c : x.links.keySet()) {
-            System.out.println(c);
             maxPQ.add(x.links.get(c));
         }
         while (maxPQ.size() > 0) {
             WTrie.Node curNode = maxPQ.poll();
+
             if (curNode.val != null) {
-                System.out.println(curNode.getCurrent());
+                if (matches.size() == k && curNode.val.compareTo(matches.last().weight) <= 0) {
+                    return;
+                    // System.out.println("\n" + curNode.val + 
+                    // " " + matches.last().weight + ":" + matches.last().string);
+                }
+                // System.out.println(curNode.val + " " + curNode.getCurrent());
                 matches.add(new WeightedString(curNode.getCurrent(), curNode.val));
             }
             topMatchesR(curNode, maxPQ, matches, k);
+            // matches.size() > 1 && maxPQ.peek().max.compareTo(matches.last().weight) <= 0
         }
     }
     /**
