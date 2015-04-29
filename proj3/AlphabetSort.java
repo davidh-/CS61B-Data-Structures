@@ -5,33 +5,23 @@ import java.util.Scanner;
  */
 
 public class AlphabetSort {
-    private String sortedWords;
-    private boolean firstWordSorted;
     private HashMap<Integer, Character> dictionary;
     /**
      * No argument constructor for AlphabetSort
      */
     public AlphabetSort() {
-        sortedWords = "";
         dictionary = new HashMap<Integer, Character>();
-        firstWordSorted = false;
     }
     /**
      * @param x current node of the Trie
      * @param cur current built up string for the word to be sorted
      */
     private void sortWords(Trie.Node x, String cur) {
+        if (x.exists) {
+            System.out.println(cur);
+        }
         for (int i = 0; i < dictionary.size(); i++) {
             Character curC = dictionary.get(i);
-            if (x.exists) {
-                if (!firstWordSorted) {
-                    sortedWords += cur;
-                    firstWordSorted = true;
-                } else {
-                    sortedWords += "\n" + cur;
-                }
-                return;
-            }
             if (x.links.containsKey(curC)) {
                 sortWords(x.links.get(curC), cur + curC);
             }
@@ -67,6 +57,5 @@ public class AlphabetSort {
             throw new IllegalArgumentException("No words or alphabet are given.");
         }
         aS.sortWords(allWords.root, "");
-        System.out.println(aS.sortedWords);
     }
 }

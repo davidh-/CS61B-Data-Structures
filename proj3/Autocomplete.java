@@ -108,15 +108,23 @@ public class Autocomplete {
             throw new IllegalArgumentException(
                 "Cannot find the k top matches for non-positive k.");
         }
+        //this is the node
         WTrie.Node matchNode = words.get(words.root, prefix, 0, "", false);
+
         PriorityQueue<WTrie.Node> maxPQ = 
             new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
+
+
         TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
         ArrayList<String> finalMatches = new ArrayList<String>();
         if (matchNode.val != null) {
             finalMatches.add(matchNode.current);
         }
+
+
         topMatchesR(matchNode, maxPQ, matches, k);
+
+
         for (WeightedString wString : matches) {
             finalMatches.add(wString.string);
         }
@@ -144,9 +152,7 @@ public class Autocomplete {
 
             if (curNode.val != null) {
                 if (matches.size() == k && curNode.val.compareTo(matches.last().weight) <= 0) {
-                    return;
-                    // System.out.println("\n" + curNode.val + 
-                    // " " + matches.last().weight + ":" + matches.last().string);
+                    System.out.println("\n" + curNode.current + " " + curNode.val + " " + matches.last().weight + ":" + matches.last().string);
                 }
                 // System.out.println(curNode.val + " " + curNode.getCurrent());
                 matches.add(new WeightedString(curNode.getCurrent(), curNode.val));
@@ -188,7 +194,6 @@ public class Autocomplete {
 
         Autocomplete autocomplete = new Autocomplete(terms, weights);
 
-        System.out.print("Ready for user input: ");
         // process queries from standard input
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
