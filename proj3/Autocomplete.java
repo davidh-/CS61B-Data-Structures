@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.TreeSet;
 import java.util.ArrayList;
 
-
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * @author David Dominguez Hooper
