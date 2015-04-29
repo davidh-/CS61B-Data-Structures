@@ -108,23 +108,17 @@ public class Autocomplete {
             throw new IllegalArgumentException(
                 "Cannot find the k top matches for non-positive k.");
         }
-        //this is the node
+        //this is the node that matches the prefix.
         WTrie.Node matchNode = words.get(words.root, prefix, 0, "", false);
 
+        //creating maxPQ which orders by descending order
         PriorityQueue<WTrie.Node> maxPQ = 
             new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
-
-
         TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
-        ArrayList<String> finalMatches = new ArrayList<String>();
-        if (matchNode.val != null) {
-            finalMatches.add(matchNode.current);
-        }
-
 
         topMatchesR(matchNode, maxPQ, matches, k);
 
-
+        ArrayList<String> finalMatches = new ArrayList<String>();
         for (WeightedString wString : matches) {
             finalMatches.add(wString.string);
         }
@@ -140,25 +134,20 @@ public class Autocomplete {
      */
     private void topMatchesR(WTrie.Node x, 
             PriorityQueue<WTrie.Node> maxPQ, TreeSet<WeightedString> matches, int k) {
-        if (x == null) {
-            return;
-        }
-        // System.out.println(x.getCurrent() + " <--current");
-        for (Character c : x.links.keySet()) {
-            maxPQ.add(x.links.get(c));
-        }
-        while (maxPQ.size() > 0) {
-            WTrie.Node curNode = maxPQ.poll();
-
-            if (curNode.val != null) {
-                if (matches.size() == k && curNode.val.compareTo(matches.last().weight) <= 0) {
-                    System.out.println("\n" + curNode.current + " " + curNode.val + " " + matches.last().weight + ":" + matches.last().string);
-                }
-                // System.out.println(curNode.val + " " + curNode.getCurrent());
-                matches.add(new WeightedString(curNode.getCurrent(), curNode.val));
+        if (x != null) {
+            if (matches.size() >= k && x.max.compareTo(matches.last().weight) <= 0) {
+                return;
             }
-            topMatchesR(curNode, maxPQ, matches, k);
-            // matches.size() > 1 && maxPQ.peek().max.compareTo(matches.last().weight) <= 0
+            for (Character c : x.links.keySet()) {
+                maxPQ.add(x.links.get(c));
+            }
+            if (x.val != null) {
+                matches.add(new WeightedString(x.getCurrent(), x.val));
+            }
+            while (maxPQ.size() > 0) {
+                WTrie.Node curNode = maxPQ.poll();
+                topMatchesR(curNode, maxPQ, matches, k);
+            }
         }
     }
     /**
@@ -193,7 +182,7 @@ public class Autocomplete {
         }
 
         Autocomplete autocomplete = new Autocomplete(terms, weights);
-
+        System.out.println("Ready: ");
         // process queries from standard input
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {

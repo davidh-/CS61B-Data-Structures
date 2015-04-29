@@ -27,10 +27,11 @@ public class WTrie {
             links = new HashMap<Character, Node>();
         }
         /** 
-         * One argument Constructor for Node class
+         * three argument Constructor for Node class
          */
         public Node(double weight, String current) {
             this();
+            this.max = weight;
             this.current = current;
         }
         public int compareTo(Node oNode){
