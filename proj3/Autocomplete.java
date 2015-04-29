@@ -142,7 +142,7 @@ public class Autocomplete {
                 maxPQ.add(x.links.get(c));
             }
             if (x.val != null) {
-                matches.add(new WeightedString(x.getCurrent(), x.val));
+                matches.add(new WeightedString(x.current, x.val));
             }
             while (maxPQ.size() > 0) {
                 WTrie.Node curNode = maxPQ.poll();

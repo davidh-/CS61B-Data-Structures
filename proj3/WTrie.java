@@ -12,7 +12,7 @@ public class WTrie {
     /** 
      * Node class
      */
-    public class Node implements Comparable<Node>{
+    public class Node implements Comparable<Node> {
         Double val;
         Double max;
         String current;
@@ -28,20 +28,21 @@ public class WTrie {
         }
         /** 
          * three argument Constructor for Node class
+         * @param weight is the max weight of the node
+         * @param current the current string of the node
          */
         public Node(double weight, String current) {
             this();
             this.max = weight;
             this.current = current;
         }
-        public int compareTo(Node oNode){
+        /** 
+         * compareTo compares to Nodes
+         * @param oNode is the other Node
+         * @return the comparison to another Node
+         */
+        public int compareTo(Node oNode) {
             return this.max.compareTo(oNode.max);
-        }
-        public void updateChar(String current) {
-            this.current = current;
-        }
-        public String getCurrent() {
-            return current;
         }
     }
 
@@ -104,7 +105,7 @@ public class WTrie {
     }
     /** 
      * @param s is the string that needs to be inserted
-     * 
+     * @param weight is the weight of the string
      */
     public void insert(String s, Double weight) {
         insert(root, s, "", 0, weight);
@@ -112,7 +113,9 @@ public class WTrie {
     /** 
      * @param x is the current Node
      * @param s is the String to insert
+     * @param current is the current string
      * @param d is the current int 
+     * @param weight is weight
      * @return is the entire Node
      */
     private Node insert(Node x, String s, String current, int d, Double weight) {
@@ -132,7 +135,7 @@ public class WTrie {
         } 
         char c = s.charAt(d);
         x.links.put(c, 
-            insert(x.links.get(c), s, current + c,d + 1, weight));
+            insert(x.links.get(c), s, current + c, d + 1, weight));
         return x;
     }
     /**

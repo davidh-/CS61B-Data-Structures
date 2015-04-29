@@ -48,7 +48,6 @@ public class AlphabetSort {
         } else {
             throw new IllegalArgumentException("No words or alphabet are given.");
         }
-        System.out.println(aS.dictionary);
         if (in.hasNextLine()) {
             while (in.hasNextLine()) {
                 allWords.insert(in.nextLine());
