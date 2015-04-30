@@ -117,8 +117,8 @@ public class Autocomplete {
 
         topMatchesR(prefix, matchNode, maxPQ, matches, k);
         ArrayList<String> finalMatches = new ArrayList<String>();
-        for (WeightedString wString : matches) {
-            finalMatches.add(wString.string);
+        while (matches.size() > 0) {
+            finalMatches.add(matches.poll().string);
         }
         return finalMatches;
     }
