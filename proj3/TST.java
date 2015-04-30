@@ -8,7 +8,6 @@
 public class TST {
     int N;
     Node root;
-
     /** 
      * Node class
      */
