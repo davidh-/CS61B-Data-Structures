@@ -1,9 +1,7 @@
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Collections;
-import java.util.TreeSet;
 import java.util.ArrayList;
-
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * @author David Dominguez Hooper
@@ -43,7 +41,7 @@ public class Autocomplete {
             return wString.weight.compareTo(this.weight);
         }
     }
-    private WTrie words;
+    private TST words;
     private boolean finished;
     /**
      * Initializes required data structures from parallel arrays.
@@ -55,7 +53,7 @@ public class Autocomplete {
             throw new IllegalArgumentException(
                 "The length of the terms and weights arrays are different");
         }
-        words = new WTrie();
+        words = new TST();
         finished = false;
         for (int i = 0; i < terms.length; i++) {
             if (words.find(terms[i], true)) {
@@ -110,15 +108,14 @@ public class Autocomplete {
                 "Cannot find the k top matches for non-positive k.");
         }
         //this is the node that matches the prefix.
-        WTrie.Node matchNode = words.get(words.root, prefix, 0, "", false);
-
+        TST.Node matchNode = words.get(words.root, prefix, 0, "", false);
         //creating maxPQ which orders by descending order
-        PriorityQueue<WTrie.Node> maxPQ = 
-            new PriorityQueue<WTrie.Node>(PQSIZE, Collections.reverseOrder());
+        PriorityQueue<TST.Node> maxPQ = 
+            new PriorityQueue<TST.Node>(PQSIZE, Collections.reverseOrder());
 
         PriorityQueue<WeightedString> matches = new PriorityQueue<WeightedString>();
 
-        topMatchesR(matchNode, maxPQ, matches, k);
+        topMatchesR(prefix, matchNode, maxPQ, matches, k);
         ArrayList<String> finalMatches = new ArrayList<String>();
         for (WeightedString wString : matches) {
             finalMatches.add(wString.string);
@@ -128,26 +125,33 @@ public class Autocomplete {
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
      * If there are less than k matches, return all the matching terms.
+     * @param prefix is the prefix 
      * @param x does this
      * @param maxPQ does this
      * @param matches does this
      * @param k does this
      */
-    private void topMatchesR(WTrie.Node x, 
-            PriorityQueue<WTrie.Node> maxPQ, PriorityQueue<WeightedString> matches, int k) {
+    private void topMatchesR(String prefix, TST.Node x, 
+            PriorityQueue<TST.Node> maxPQ, PriorityQueue<WeightedString> matches, int k) {
         if (x != null) {
             if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
                 return;
             }
-            for (Character c : x.links.keySet()) {
-                maxPQ.add(x.links.get(c));
-            }
+            if (x.left != null && x.left.current.contains(prefix)) {
+                maxPQ.add(x.left);
+            } 
+            if (x.mid != null && x.mid.current.contains(prefix)) {
+                maxPQ.add(x.mid);
+            } 
+            if (x.right != null && x.right.current.contains(prefix)) {
+                maxPQ.add(x.right);
+            } 
             if (x.val != null) {
                 matches.add(new WeightedString(x.current, x.val));
             }
             while (maxPQ.size() > 0) {
-                WTrie.Node curNode = maxPQ.poll();
-                topMatchesR(curNode, maxPQ, matches, k);
+                TST.Node curNode = maxPQ.poll();
+                topMatchesR(prefix, curNode, maxPQ, matches, k);
             }
         }
     }
