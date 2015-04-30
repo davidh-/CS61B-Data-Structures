@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * @author David Dominguez Hooper
  */
 public class Autocomplete {
+    private static final int PQSIZE = 11;
     /**
      * Class WeightedString
      */
@@ -113,8 +114,8 @@ public class Autocomplete {
 
         //creating maxPQ which orders by descending order
         PriorityQueue<WTrie.Node> maxPQ = 
-            new PriorityQueue<WTrie.Node>(11, Collections.reverseOrder());
-            
+            new PriorityQueue<WTrie.Node>(PQSIZE, Collections.reverseOrder());
+
         PriorityQueue<WeightedString> matches = new PriorityQueue<WeightedString>();
 
         topMatchesR(matchNode, maxPQ, matches, k);
