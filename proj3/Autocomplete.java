@@ -87,7 +87,7 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
-        String match = "";
+        String match = null;
         for (String word : topMatches(prefix, 1)) {
             match = word;
             break;
@@ -112,7 +112,7 @@ public class Autocomplete {
 
         //creating maxPQ which orders by descending order
         PriorityQueue<WTrie.Node> maxPQ = 
-            new PriorityQueue<WTrie.Node>(matchNode.links.size() * 2, Collections.reverseOrder());
+            new PriorityQueue<WTrie.Node>(11, Collections.reverseOrder());
         TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
 
         topMatchesR(matchNode, maxPQ, matches, k);
@@ -181,7 +181,6 @@ public class Autocomplete {
         }
 
         Autocomplete autocomplete = new Autocomplete(terms, weights);
-        System.out.println("Ready: ");
         // process queries from standard input
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
