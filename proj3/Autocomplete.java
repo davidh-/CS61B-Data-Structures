@@ -16,6 +16,7 @@ public class Autocomplete {
         
         String string;
         Double weight;
+
         /**
          * Default Constructor for WeightedString
          */
@@ -113,10 +114,10 @@ public class Autocomplete {
         //creating maxPQ which orders by descending order
         PriorityQueue<WTrie.Node> maxPQ = 
             new PriorityQueue<WTrie.Node>(11, Collections.reverseOrder());
-        TreeSet<WeightedString> matches = new TreeSet<WeightedString>();
+            
+        PriorityQueue<WeightedString> matches = new PriorityQueue<WeightedString>();
 
         topMatchesR(matchNode, maxPQ, matches, k);
-
         ArrayList<String> finalMatches = new ArrayList<String>();
         for (WeightedString wString : matches) {
             finalMatches.add(wString.string);
@@ -132,9 +133,9 @@ public class Autocomplete {
      * @param k does this
      */
     private void topMatchesR(WTrie.Node x, 
-            PriorityQueue<WTrie.Node> maxPQ, TreeSet<WeightedString> matches, int k) {
+            PriorityQueue<WTrie.Node> maxPQ, PriorityQueue<WeightedString> matches, int k) {
         if (x != null) {
-            if (matches.size() >= k && x.max.compareTo(matches.last().weight) <= 0) {
+            if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
                 return;
             }
             for (Character c : x.links.keySet()) {
