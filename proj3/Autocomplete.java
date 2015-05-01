@@ -138,7 +138,7 @@ public class Autocomplete {
     private PriorityQueue<WeightedString> topMatchesR(
         String prefix, TST.Node x, PriorityQueue<TST.Node> maxPQ, 
         PriorityQueue<WeightedString> matches, int k) {
-        if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
+        if (x == null || (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0)) {
             return matches;
         } else {
             if (x.left != null && x.left.current.contains(prefix)) {
