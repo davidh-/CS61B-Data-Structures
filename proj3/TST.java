@@ -73,7 +73,7 @@ public class TST {
      * @return is the entire Node
      */
     public Node get(Node x, String s, int d, String current, boolean isFullWord) {
-        if (x == null) {
+        if (x == null || s.equals("")) {
             return null;
         }
         char c = s.charAt(d);

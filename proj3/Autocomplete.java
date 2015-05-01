@@ -149,12 +149,19 @@ public class Autocomplete {
             if (x.right != null && x.right.current.contains(prefix)) {
                 maxPQ.add(x.right);
             }
-            if (x.val != null && x.val.compareTo(x.max) == 0) {
+            if (x.val != null) {
+                if (x.val.compareTo(x.max) != 0) {
+                    if (maxPQ.size() > 0) {
+                        matches = topMatchesR(prefix, maxPQ.poll(), maxPQ, matches, k);
+                    }
+                    if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
+                        return matches;
+                    }
+                }
                 matches.add(new WeightedString(x.current, x.val));
             }
             while (maxPQ.size() > 0) {
-                TST.Node curNode = maxPQ.poll();
-                return topMatchesR(prefix, curNode, maxPQ, matches, k);
+                return topMatchesR(prefix, maxPQ.poll(), maxPQ, matches, k);
             }
         }
         return matches;
