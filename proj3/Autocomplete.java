@@ -1,8 +1,8 @@
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * @author David Dominguez Hooper
@@ -39,7 +39,7 @@ public class Autocomplete {
          * @return compared weight
          */
         public int compareTo(WeightedString wString) {
-            return wString.weight.compareTo(this.weight);
+            return this.weight.compareTo(wString.weight);
         }
     }
     private TST words;
@@ -117,11 +117,13 @@ public class Autocomplete {
         PriorityQueue<WeightedString> matches = new PriorityQueue<WeightedString>();
 
         topMatchesR(prefix, matchNode, maxPQ, matches, k);
-        ArrayList<String> finalMatches = new ArrayList<String>();
+        int i = matches.size();
+        HashMap<Integer, String> fMatches = new HashMap<Integer, String>();
         while (matches.size() > 0) {
-            finalMatches.add(matches.poll().string);
+            fMatches.put(i, matches.poll().string);
+            i -= 1;
         }
-        return finalMatches;
+        return fMatches.values();
     }
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
@@ -136,13 +138,12 @@ public class Autocomplete {
     private PriorityQueue<WeightedString> topMatchesR(
         String prefix, TST.Node x, PriorityQueue<TST.Node> maxPQ, 
         PriorityQueue<WeightedString> matches, int k) {
-        if (x != null) {
-            if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
-                return matches;
-            }
+        if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
+            return matches;
+        } else {
             if (x.left != null && x.left.current.contains(prefix)) {
                 maxPQ.add(x.left);
-            } 
+            }
             if (x.mid != null && x.mid.current.contains(prefix)) {
                 maxPQ.add(x.mid);
             } 
@@ -150,21 +151,19 @@ public class Autocomplete {
                 maxPQ.add(x.right);
             }
             if (x.val != null) {
-                if (x.val.compareTo(x.max) != 0) {
-                    if (maxPQ.size() > 0) {
-                        matches = topMatchesR(prefix, maxPQ.poll(), maxPQ, matches, k);
-                    }
-                    if (matches.size() >= k && x.max.compareTo(matches.peek().weight) <= 0) {
-                        return matches;
-                    }
+                if (matches.size() >= k && matches.peek().weight.compareTo(x.val) < 0) {
+                    matches.poll();
+                    matches.add(new WeightedString(x.current, x.val));
+                } else if (matches.size() < k) {
+                    matches.add(new WeightedString(x.current, x.val));
                 }
-                matches.add(new WeightedString(x.current, x.val));
             }
-            while (maxPQ.size() > 0) {
+            if (maxPQ.size() != 0) {
                 return topMatchesR(prefix, maxPQ.poll(), maxPQ, matches, k);
+            } else {
+                return matches;
             }
-        }
-        return matches;
+        } 
     }
     /**
      * Returns the highest weighted matches within k edit distance of the word.

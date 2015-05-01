@@ -116,7 +116,7 @@ public class TST {
         }
         char c = s.charAt(d);
         if (x == null) {
-            x = new Node(weight, current);
+            x = new Node(weight, current + c);
             x.c = c;
         } else {
             if (x.max.compareTo(weight) < 0) {
@@ -131,7 +131,6 @@ public class TST {
             x.mid = insert(x.mid, s, current + c, d + 1, weight);
         } else {
             x.val = weight;
-            x.current += c;
         }
         return x;
     }
