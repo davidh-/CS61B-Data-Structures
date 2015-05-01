@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.HashMap;
+import java.util.ArrayList;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * @author David Dominguez Hooper
@@ -118,12 +118,12 @@ public class Autocomplete {
 
         topMatchesR(prefix, matchNode, maxPQ, matches, k);
         int i = matches.size();
-        HashMap<Integer, String> fMatches = new HashMap<Integer, String>();
+        ArrayList<String> fMatches = new ArrayList<String>();
         while (matches.size() > 0) {
-            fMatches.put(i, matches.poll().string);
-            i -= 1;
-        }
-        return fMatches.values();
+            fMatches.add(matches.poll().string);
+        } 
+        Collections.reverse(fMatches);
+        return fMatches;
     }
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
