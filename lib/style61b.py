@@ -44,7 +44,7 @@ skipfiles = set([])
 if os.path.isfile('styleskip.txt'):
 	with open("styleskip.txt", "r") as f:
 		for line in f:
-			skipfiles.add(line) 
+			skipfiles.add(line.strip()) 
 else:
 	print("No styleskip.txt found. Create one if you'd like to skip some files.")
 
